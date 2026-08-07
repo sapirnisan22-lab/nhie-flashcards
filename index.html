@@ -1,0 +1,526 @@
+<title>כרטיסיות NHIE — משחק חזרה</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #F5F4EF;
+    --grid-line: rgba(34, 48, 60, 0.055);
+    --surface: #FFFFFF;
+    --surface-2: #EFEDE5;
+    --ink: #22303C;
+    --ink-2: #5A6B79;
+    --line: #DEDCD2;
+    --accent: #E8A400;
+    --accent-text: #8A6200;
+    --accent-soft: rgba(232, 164, 0, 0.14);
+    --good: #3E8E5A;
+    --good-soft: rgba(62, 142, 90, 0.12);
+    --redo: #C9503B;
+    --redo-soft: rgba(201, 80, 59, 0.10);
+    --logic: #3B6EA5;
+    --logic-soft: rgba(59, 110, 165, 0.10);
+    --shadow: 0 12px 32px rgba(34, 48, 60, 0.10), 0 2px 6px rgba(34, 48, 60, 0.07);
+    --mono: "Cascadia Code", "SF Mono", Consolas, "Courier New", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #14212E;
+      --grid-line: rgba(255, 255, 255, 0.045);
+      --surface: #1D2F40;
+      --surface-2: #182A3A;
+      --ink: #EAF0F4;
+      --ink-2: #9DB0BF;
+      --line: #2C4257;
+      --accent: #FFC53D;
+      --accent-text: #FFC53D;
+      --accent-soft: rgba(255, 197, 61, 0.13);
+      --good: #55B07E;
+      --good-soft: rgba(85, 176, 126, 0.15);
+      --redo: #E06A54;
+      --redo-soft: rgba(224, 106, 84, 0.14);
+      --logic: #7FA8D4;
+      --logic-soft: rgba(127, 168, 212, 0.13);
+      --shadow: 0 14px 34px rgba(0, 0, 0, 0.42), 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F5F4EF;
+    --grid-line: rgba(34, 48, 60, 0.055);
+    --surface: #FFFFFF;
+    --surface-2: #EFEDE5;
+    --ink: #22303C;
+    --ink-2: #5A6B79;
+    --line: #DEDCD2;
+    --accent: #E8A400;
+    --accent-text: #8A6200;
+    --accent-soft: rgba(232, 164, 0, 0.14);
+    --good: #3E8E5A;
+    --good-soft: rgba(62, 142, 90, 0.12);
+    --redo: #C9503B;
+    --redo-soft: rgba(201, 80, 59, 0.10);
+    --logic: #3B6EA5;
+    --logic-soft: rgba(59, 110, 165, 0.10);
+    --shadow: 0 12px 32px rgba(34, 48, 60, 0.10), 0 2px 6px rgba(34, 48, 60, 0.07);
+  }
+  :root[data-theme="dark"] {
+    --paper: #14212E;
+    --grid-line: rgba(255, 255, 255, 0.045);
+    --surface: #1D2F40;
+    --surface-2: #182A3A;
+    --ink: #EAF0F4;
+    --ink-2: #9DB0BF;
+    --line: #2C4257;
+    --accent: #FFC53D;
+    --accent-text: #FFC53D;
+    --accent-soft: rgba(255, 197, 61, 0.13);
+    --good: #55B07E;
+    --good-soft: rgba(85, 176, 126, 0.15);
+    --redo: #E06A54;
+    --redo-soft: rgba(224, 106, 84, 0.14);
+    --logic: #7FA8D4;
+    --logic-soft: rgba(127, 168, 212, 0.13);
+    --shadow: 0 14px 34px rgba(0, 0, 0, 0.42), 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background:
+      repeating-linear-gradient(0deg, var(--grid-line) 0 1px, transparent 1px 28px),
+      repeating-linear-gradient(90deg, var(--grid-line) 0 1px, transparent 1px 28px),
+      var(--paper);
+    color: var(--ink);
+    font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+  }
+  #app { direction: rtl; max-width: 780px; margin: 0 auto; padding: 20px 16px 40px; }
+
+  /* ---------- topic picker ---------- */
+  .masthead { margin: 8px 0 22px; }
+  .masthead .kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    color: var(--accent-text); text-transform: uppercase; direction: ltr; text-align: right;
+  }
+  .masthead h1 { margin: 4px 0 6px; font-size: 30px; letter-spacing: -0.01em; text-wrap: balance; }
+  .masthead p { margin: 0; color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+
+  .topics { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 12px; }
+  .topic {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 14px 12px; cursor: pointer; text-align: right;
+    display: flex; flex-direction: column; gap: 6px; min-height: 116px;
+    font: inherit; color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .topic:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent); }
+  .topic:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .topic .num {
+    font-family: var(--mono); font-size: 11px; color: var(--ink-2); letter-spacing: 0.1em;
+    direction: ltr; text-align: right;
+  }
+  .topic .he { font-weight: 700; font-size: 16px; line-height: 1.25; }
+  .topic .en { font-family: var(--mono); font-size: 10.5px; color: var(--ink-2); letter-spacing: 0.06em; text-transform: uppercase; direction: ltr; text-align: right; }
+  .topic .meta { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+  .topic .count {
+    background: var(--accent-soft); color: var(--accent-text);
+    font-family: var(--mono); font-size: 11px; padding: 2px 8px; border-radius: 999px;
+  }
+  .topic .last { font-size: 11px; color: var(--ink-2); }
+  .topic.all { border-style: dashed; background: transparent; }
+
+  /* ---------- deck header ---------- */
+  .deckbar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .backbtn {
+    background: var(--surface); border: 1px solid var(--line); color: var(--ink);
+    border-radius: 999px; padding: 7px 14px; font-size: 13px; cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .backbtn:hover { border-color: var(--accent); }
+  .decktitle { font-weight: 700; font-size: 15px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .counter { font-family: var(--mono); font-size: 12.5px; color: var(--ink-2); direction: ltr; }
+  .tallies { display: flex; gap: 6px; }
+  .tally { font-family: var(--mono); font-size: 11.5px; padding: 2px 8px; border-radius: 999px; direction: ltr; }
+  .tally.good { background: var(--good-soft); color: var(--good); }
+  .tally.redo { background: var(--redo-soft); color: var(--redo); }
+
+  .progress { height: 4px; background: var(--line); border-radius: 999px; overflow: hidden; margin-bottom: 18px; }
+  .progress > div { height: 100%; background: var(--accent); width: 0%; transition: width 0.25s ease; }
+
+  .roundflag {
+    text-align: center; font-size: 12.5px; color: var(--redo); margin: -8px 0 10px;
+    font-weight: 600;
+  }
+
+  /* ---------- the card ---------- */
+  .flip { display: grid; perspective: 1600px; }
+  .flip-inner {
+    grid-area: 1 / 1; display: grid; transform-style: preserve-3d; position: relative;
+    transition: transform 0.55s cubic-bezier(0.2, 0.7, 0.25, 1);
+    cursor: pointer;
+  }
+  .flip.flipped .flip-inner { transform: rotateY(180deg); }
+  .face {
+    grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: var(--shadow); padding: 26px 22px; min-height: 340px;
+    display: flex; flex-direction: column;
+  }
+  .face-front { align-items: center; justify-content: center; text-align: center; gap: 14px; position: relative; }
+  .face-front::before {
+    content: ""; position: absolute; inset: 10px; border: 1px dashed var(--line); border-radius: 10px; pointer-events: none;
+  }
+  .face-front .eyebrow { font-size: 12.5px; color: var(--ink-2); }
+  .face-front .term {
+    direction: ltr; font-size: clamp(26px, 6vw, 40px); font-weight: 800; letter-spacing: -0.015em;
+    line-height: 1.15; text-wrap: balance; max-width: 100%;
+  }
+  .face-front .hint { font-size: 12px; color: var(--ink-2); }
+  .face-front .hint b { color: var(--accent-text); font-weight: 600; }
+
+  .face-back { transform: rotateY(180deg); gap: 12px; overflow-y: auto; max-height: 64vh; }
+  .face-back .term-small {
+    direction: ltr; text-align: left; font-family: var(--mono); font-size: 12px;
+    color: var(--ink-2); letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--line); padding-bottom: 8px;
+  }
+  .row { display: flex; flex-direction: column; gap: 3px; }
+  .row .lbl {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 4px; align-self: flex-start;
+  }
+  .row.tr .lbl { background: var(--accent-soft); color: var(--accent-text); align-self: flex-start; }
+  .row.num .lbl { background: var(--accent-soft); color: var(--accent-text); }
+  .row.def .lbl { background: var(--redo-soft); color: var(--redo); }
+  .row.log .lbl { background: var(--logic-soft); color: var(--logic); }
+  .row .txt { font-size: 15.5px; line-height: 1.55; }
+  .row.tr .txt { font-size: 17px; font-weight: 600; line-height: 1.5; }
+  .row.num .txt, .row.def .txt, .row.log .txt { direction: ltr; text-align: left; }
+  .row.num .txt { font-family: var(--mono); font-size: 13.5px; }
+  .row.log .txt { color: var(--ink-2); }
+
+  /* ---------- controls ---------- */
+  .controls { display: flex; gap: 10px; margin-top: 16px; }
+  .controls button {
+    flex: 1; border-radius: 12px; padding: 14px 10px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: inherit; border: 1px solid transparent;
+    transition: transform 0.1s ease, filter 0.15s ease;
+  }
+  .controls button:active { transform: scale(0.98); }
+  .btn-good { background: var(--good); color: #fff; }
+  .btn-redo { background: transparent; color: var(--redo); border-color: var(--redo) !important; }
+  .btn-good:hover, .btn-redo:hover { filter: brightness(1.06); }
+  .keyshint { text-align: center; color: var(--ink-2); font-size: 11.5px; margin-top: 10px; }
+  .keyshint span { font-family: var(--mono); background: var(--surface-2); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; direction: ltr; display: inline-block; }
+
+  /* ---------- end screen ---------- */
+  .endcard {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    box-shadow: var(--shadow); padding: 34px 24px; text-align: center; margin-top: 8px;
+  }
+  .endcard .stamp {
+    font-family: var(--mono); letter-spacing: 0.14em; font-size: 11px; text-transform: uppercase;
+    color: var(--accent-text);
+  }
+  .endcard h2 { margin: 8px 0 2px; font-size: 26px; }
+  .endcard .big {
+    font-family: var(--mono); font-size: 44px; font-weight: 700; direction: ltr; margin: 12px 0 2px;
+  }
+  .endcard .big .known { color: var(--good); }
+  .endcard p { color: var(--ink-2); margin: 6px 0 0; font-size: 14.5px; line-height: 1.55; }
+  .endactions { display: flex; gap: 10px; margin-top: 22px; }
+  .endactions button {
+    flex: 1; border-radius: 12px; padding: 13px 10px; font-size: 15px; font-weight: 700;
+    cursor: pointer; font-family: inherit; border: 1px solid var(--line);
+    background: var(--surface); color: var(--ink);
+  }
+  .endactions button.primary { background: var(--accent); border-color: var(--accent); color: #1E2A36; }
+  .endactions button:hover { filter: brightness(1.05); }
+
+  .hidden { display: none !important; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flip-inner { transition: none; }
+    .topic, .progress > div, .controls button { transition: none; }
+  }
+  @media (max-width: 430px) {
+    #app { padding: 14px 10px 30px; }
+    .face { padding: 20px 16px; min-height: 300px; }
+    .tallies { display: none; }
+  }
+</style>
+
+<div id="app">
+  <!-- ============ topic picker ============ -->
+  <section id="view-topics">
+    <header class="masthead">
+      <div class="kicker">NHIE · FLASH CARDS</div>
+      <h1>כרטיסיות אוצר מילים</h1>
+      <p>בחרי נושא ותתחילי. מקישים על הכרטיס כדי להפוך, ואז מסמנים — ידעת או לחזרה. מה שלא ידעת חוזר בסוף הסבב עד שהכל יושב.</p>
+    </header>
+    <div class="topics" id="topicGrid"></div>
+  </section>
+
+  <!-- ============ deck ============ -->
+  <section id="view-deck" class="hidden">
+    <div class="deckbar">
+      <button class="backbtn" id="btnBack">&#8594; לנושאים</button>
+      <div class="decktitle" id="deckTitle"></div>
+      <div class="tallies">
+        <span class="tally good" id="tallyGood">&#10003; 0</span>
+        <span class="tally redo" id="tallyRedo">&#8635; 0</span>
+      </div>
+      <div class="counter" id="deckCounter">0/0</div>
+    </div>
+    <div class="progress"><div id="progressFill"></div></div>
+    <div class="roundflag hidden" id="roundFlag"></div>
+
+    <div class="flip" id="flip">
+      <div class="flip-inner" id="flipInner" role="button" tabindex="0" aria-label="הפיכת הכרטיס">
+        <div class="face face-front">
+          <div class="eyebrow" id="cardTopic"></div>
+          <div class="term" id="cardTerm"></div>
+          <div class="hint">הקישי על הכרטיס כדי להפוך · <b>מה זה אומר?</b></div>
+        </div>
+        <div class="face face-back">
+          <div class="term-small" id="cardTermBack"></div>
+          <div id="cardRows"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-redo" id="btnRedo">&#8635; לחזרה</button>
+      <button class="btn-good" id="btnGood">&#10003; ידעתי</button>
+    </div>
+    <div class="keyshint">מקלדת: <span>Space</span> הפיכה · <span>1</span> ידעתי · <span>2</span> לחזרה</div>
+  </section>
+
+  <!-- ============ end screen ============ -->
+  <section id="view-end" class="hidden">
+    <div class="deckbar">
+      <button class="backbtn" id="btnBack2">&#8594; לנושאים</button>
+      <div class="decktitle" id="endTopicName"></div>
+    </div>
+    <div class="endcard">
+      <div class="stamp">INSPECTION COMPLETE</div>
+      <h2>סיימת את הנושא!</h2>
+      <div class="big"><span class="known" id="endKnown">0</span><span id="endTotal">/0</span></div>
+      <p id="endDetail"></p>
+      <div class="endactions">
+        <button id="btnAgain" class="primary">עוד סבב על אותו נושא</button>
+        <button id="btnPick">נושא אחר</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+const TOPICS = [{"id": "01", "en": "SITE CONDITIONS", "he": "תנאי שטח וסביבה", "cards": [{"tr": "חוק בנייה מקומי או מדינתי שנועד להגן על בריאות ובטיחות הציבור. חשוב למבחן: מפקח בית לא קובע התאמה לקוד (code compliance) בבדיקה.", "t": "Building Code"}, {"tr": "שקיעת המבנה כלפי מטה — נגרמת ממחזורי קיפאון-הפשרה בקרקע, הכנת שטח לקויה או ניהול מים גרוע (מרזבים וצינורות ירידה).", "def": "Signs of ongoing or differential settlement — stair-step cracks, sloping floors, doors that will not latch.", "log": "Water + gravity — poor water management around the foundation is the usual cause.", "t": "Settlement"}, {"tr": "שקיעה דיפרנציאלית — חלק אחד של הבית שוקע והשני לא. חמורה יותר משקיעה אחידה.", "def": "Stair-step cracking along mortar joints; a crack wider at the top indicates settlement at one end.", "t": "Differential settlement"}, {"tr": "עיבוי — אדי מים שהופכים לנוזל (או כפור) על הצד הפנימי של מעטפת הבניין. אוורור עליית גג וחוסם אדים מפחיתים אותו.", "def": "Condensation or frost in the attic — indicates inadequate ventilation.", "log": "Water force — warm moist air meets a cold surface.", "t": "Condensation"}, {"tr": "עופרת — מתכת רעילה בצבע ובצנרת של בתים ישנים. הטיפול וההסרה לפי הנחיות הרשות הסביבתית.", "def": "Peeling / deteriorated paint in an older home = potential lead hazard; recommend evaluation by a qualified specialist.", "t": "Lead"}, {"tr": "אסבסט — חומר סיבי טבעי בבתים ישנים (בידוד, אריחי תקרה, רצפות). מסוכן כשיש סיבים נשימים באוויר.", "def": "Damaged or deteriorated suspected asbestos-containing material — do not disturb; recommend specialist evaluation.", "t": "Asbestos"}, {"tr": "פריך — חומר (אסבסט) שמתפורר לאבקה בלחיצת יד קלה. אסבסט פריך = משחרר סיבים לאוויר = הסיכון האמיתי.", "t": "Friable"}, {"tr": "כליאה — מריחת חומר אוטם על חומר מכיל אסבסט כדי למנוע שחרור סיבים, במקום הסרה.", "t": "Encapsulation"}, {"tr": "גז רדיואקטיבי חסר צבע וריח שעולה מהקרקע אל תוך הבית. בדיקת רדון היא מעבר להיקף הבדיקה הסטנדרטית — ממליצים על בדיקה ייעודית.", "t": "Radon"}, {"tr": "חד-תחמוצת הפחמן — תוצר בעירה חסר צבע וריח, \"הרוצח השקט\". מקורות: מחליף חום סדוק, ארובה חסומה, מכונית במוסך.", "num": "CO alarms outside each sleeping area · on every floor · required when there is a fuel-burning appliance or attached garage.", "def": "Fuel-burning appliances or attached garage without CO alarms.", "log": "Heat/fire family — combustion gases must exit up and out; when they don't, CO enters the home.", "t": "Carbon Monoxide (CO)"}, {"tr": "תרכובות אורגניות נדיפות — גזים שנפלטים ממוצרים ביתיים (צבעים, דבקים, חומרי ניקוי).", "t": "Volatile Organic Compounds (VOCs)"}, {"tr": "פורמלדהיד — גז שנפלט מלוחות עץ מעובד ודבקים, בעיקר בבתים משנות ה-70.", "t": "Formaldehyde"}, {"tr": "עובש — נוצר מלחות. כלל הזהב: קודם מתקנים את בעיית המים, אחר כך את העובש.", "def": "Visible mold-like staining and the moisture source that feeds it.", "log": "Water force — no moisture, no mold.", "t": "Mold"}, {"tr": "קיר תמך — מבנה אנכי שמרסן תזוזת קרקע או מים.", "num": "weep holes 4 in.", "def": "Leaning, bulging or cracked retaining wall; missing or clogged weep holes (hydrostatic pressure buildup).", "log": "Water force — trapped water pushes the wall; weep holes relieve the pressure.", "t": "Retaining Wall"}, {"tr": "גביון — קיר תמך כובד העשוי סלים ממולאים באבנים.", "t": "Gabion"}, {"tr": "עוגן קבור בקרקע שקושר קיר תמך אחורה (tieback) נגד התהפכות.", "t": "Dead man"}, {"tr": "שיפוע הקרקע סביב הבית — חייב להוליך מים הרחק מהיסוד.", "num": "6 in drop over the first 10 ft · finish grade 1 in per foot, minimum 6 ft.", "def": "Flat or negative grade directing surface water toward the foundation.", "log": "Slopes family — water flows downhill; make downhill point away from the house.", "t": "Grading"}, {"tr": "הטופוגרפיה — צורת פני הקרקע סביב הבית (ערוצים, עמקים). לימוד הטופוגרפיה קובע לאן זורמים מי הנגר.", "t": "Topography"}, {"tr": "מפלס מי התהום — הגבול העליון של המים בקרקע.", "t": "Water table"}, {"tr": "סחף קרקע. שיפוע חד מדי סביב הבית = סחיפת קרקע במקום ניקוז מבוקר.", "t": "Erosion"}, {"tr": "חלחול — נזילה איטית של מים דרך קרקע או קיר.", "t": "Seepage"}, {"tr": "ציפוי מונע רטיבות על קיר היסוד — מאט מעבר לחות (פחות מאיטום מלא waterproofing).", "t": "Damp proofing"}, {"tr": "נקז היקפי — צינור פלסטיק מחורר 3–4 אינץ' לאורך תחתית קיר היסוד, אוסף מי תהום ומרחיק אותם; מתנקז לבור שאיבה או החוצה. ניקוז היסוד לא תמיד מגיע למשאבה.", "def": "Evidence of basement / crawl space water intrusion suggesting failed or absent perimeter drainage.", "log": "Water force — collect the water before it finds the foundation wall.", "t": "Drain Tile / Perimeter Drain"}, {"tr": "משאבת בור — משאבה חשמלית בבור במרתף; המים מתנקזים אליו ונשאבים החוצה מהבית.", "def": "Sump pump inoperative at the time of inspection.", "t": "Sump Pump"}, {"tr": "מי נגר (גשם) — אסור לנקז אותם למערכת הביוב; מנקזים לשטח, לחלחול או לניקוז ייעודי.", "def": "Storm water (downspouts, sump discharge) connected to the sewer system.", "t": "Storm water"}, {"tr": "מערכת טיהור שפכים פרטית בשטח — מיכל רקב (עיכול ביולוגי) + שדה חלחול. גודל המערכת נקבע לפי מספר חדרי השינה.", "num": "typical tank ~1,000 gal · pumping every 3–5 years · well to drain field ~100 ft.", "def": "Lush green grass, soggy soil or odor over the drain field = failing system; vehicles or trees over the field.", "t": "Septic System"}, {"tr": "שדה חלחול — השפכים המסוננים מהמיכל מחלחלים בו לקרקע; באזורים בלי ביוב עירוני. הסדר: Tank → Distribution box → Drain field.", "def": "Driving, parking or planting trees over the drain field.", "t": "Leech Field (Drain Field)"}, {"tr": "בור שפכים ישן — מיכל תת-קרקעי לאגירת שפכי הבית (בטון, מתכת או דפנות בלוקים/אדנים), בלי שדה חלחול. קדם למערכת הספטית.", "t": "Cesspool"}, {"tr": "באר מים פרטית — מכסה אטום, מיכל לחץ, משאבה טבולה (מודרני) לעומת Jet pump (ישן).", "num": "well to septic drain field ~100 ft (varies by state).", "def": "Unsealed / damaged well cap; well located too close to the septic drain field.", "t": "Well"}, {"tr": "גדר בטיחות סביב בריכה — הדרישות נועדו למנוע כניסת ילד ללא השגחה.", "num": "fence 48 in min · latch 54 in from grade · max 4 in gap under the fence · gate self-closing + self-latching, opens outward · pool equipment GFCI clearance 5 ft horizontal / 12 ft vertical.", "def": "Gate that is not self-closing/self-latching; missing anti-entrapment drain cover.", "t": "Pool barrier"}, {"tr": "סוגי קרקע — הבית חייב להיות מהונדס לקרקע שעליה הוא יושב: Clay (חרסית) סופחת מים ומתרחבת/מתכווצת, Sand (חול) מנקז מהר, Loam (מעורבת) — המאוזנת ביותר.", "def": "Foundation movement consistent with expansive clay soil.", "log": "Water force — clay swells when wet, shrinks when dry; the foundation rides the movement.", "t": "Soil Types"}, {"tr": "חדירות — מידת הקלות שבה מים (או אדים) עוברים דרך חומר.", "t": "Permeability"}, {"tr": "ראוי לשתייה (מי שתייה).", "t": "Potable"}, {"tr": "מים אפורים — מכיורים, אמבטיות, מדיח ומכונת כביסה; ללא שפכי שירותים (ההפך מ-Blackwater).", "t": "Greywater"}, {"tr": "בנייה \"ירוקה\" — חומרים מתחדשים, לא רעילים ולעיתים מקומיים, לרוב עם רכיב חסכוני באנרגיה.", "t": "Green (building)"}, {"tr": "מדד יעילות אנרגטית של Certified HERS Raters. שימי לב להיפוך: ציון גבוה = בית פחות יעיל; 0 = בית שמייצר את כל האנרגיה שהוא צורך (net zero).", "log": "Reversed scale — the exam trap is assuming higher is better.", "t": "HERS (Home Energy Rating System)"}, {"tr": "דירוג צד-שלישי ליעילות אנרגטית ובנייה ירוקה; מוענק ע\"י USGBC (מועצת הבנייה הירוקה האמריקאית).", "t": "LEED"}, {"tr": "נגיעות מזיקים (לרוב חרקים) — אחד הגורמים שפוגעים במעטפת הבניין.", "t": "Infestation"}, {"tr": "צינור חרס צרוף — חרס שעבר שריפה בטמפרטורה גבוהה והפך לקרמיקה קשה ואינרטית; משמש לביוב. היתרון: אורך חיים ארוך.", "t": "VCP (Vitrified Clay Pipe)"}, {"tr": "זיקת הנאה — זכות מעבר (right of way) של גורם חיצוני בשטח הנכס, למשל לקווי חשמל או תשתיות תת-קרקעיות.", "t": "Easement"}]}, {"id": "02", "en": "EXTERIOR", "he": "חוץ הבית", "cards": [{"tr": "חיפוי חוץ — חומר הגימור על קירות החוץ (עץ, ויניל, אלומיניום). ההגנה העיקרית של קיר חוץ היא צבע.", "num": "wood siding 6 in above ground.", "def": "Siding in contact with soil or below required ground clearance; peeling paint (moisture indicator).", "log": "Ground-clearance ladder — the more moisture-sensitive the material, the higher above grade it must be.", "t": "Siding"}, {"tr": "חיפוי עץ — הבעיה העיקרית היא רטיבות; העץ שואב לחות דרך קצוות הסיבים (end grains).", "num": "6 in above ground.", "def": "Wood siding closer than 6 in to grade; swelling or flaking paint indicating moisture.", "log": "\"6\" family + water force.", "t": "Wood siding"}, {"tr": "חיפוי ויניל — הצבע הוא חלק מהחומר עצמו; עמיד וזול, פופולרי עד היום.", "num": "nail head 3/8 in.", "log": "Thicknesses family — 3/8 is the small-parts number.", "t": "Vinyl siding"}, {"tr": "חיפוי פיברצמנט — לוח דחוס של סיבי בטון; עמיד ולא נרקב.", "num": "5/16 in thickness.", "log": "Thicknesses family.", "t": "Fiber cement siding"}, {"tr": "טיח חוץ — אגרגטים + חומר מקשר + מים על גבי רשת. נוטה להיסדק.", "num": "weep screed 2 in above ground / 4 in above pavement.", "def": "Weep screed missing or buried below grade; cracks admitting moisture behind the stucco.", "log": "\"2 inch\" family + water force — the screed lets trapped water weep out at the bottom.", "t": "Stucco"}, {"tr": "חיפוי אלומיניום עם גימור אמייל אפוי בתנור.", "t": "Aluminum siding"}, {"tr": "לוח קשיח — שבבי עץ + סיבים בדבק תחת חום ולחץ (Masonite הוא שם מותג). רגיש מאוד לרטיבות.", "def": "Swelling or deterioration at bottom edges from moisture absorption.", "t": "Masonite / Hardboard"}, {"tr": "חיפוי גרגירים צבעוניים מודבקים לאספלט — נפוץ משנות ה-30 עד ה-50.", "t": "Composition Asphalt Siding"}, {"tr": "חיפוי לוחות רחבים לסירוגין עם פסי עץ צרים (battens) שמכסים את התפרים.", "t": "Board and Batten Siding"}, {"tr": "לבני בוץ — מחומרי הבנייה הקדומים: אדמה, קש/זבל ומים.", "t": "Adobe"}, {"tr": "אבן — קירות ויסודות בבתים ישנים; כיום קיימת גם אבן מהונדסת/חיקוי לחיפוי.", "t": "Stone"}, {"tr": "ציפוי לבנים על שלד עץ — קיר ציפוי אינו קיר נושא. נשען דרך עוגני מתכת.", "num": "22 gauge metal ties · weep holes at the bottom course.", "def": "Missing / sealed weep holes; deteriorated mortar joints requiring re-pointing.", "log": "Veneer carries no load; water that gets behind it must weep out.", "t": "Brick veneer"}, {"tr": "חורי ניקוז מכוונים בציפוי לבנים — מוציאים לחות שנכנסה מאחורי הציפוי ומשווים לחץ אוויר.", "num": "retaining wall weep holes 4 in.", "def": "Weep holes missing, blocked or caulked shut.", "log": "Water force — every gap exists to let water out, never to keep it in.", "t": "Weep Holes"}, {"tr": "התקלפות/התפוררות של פני לבנה או בטון — לרוב ממים שנכנסו וקפאו.", "def": "Spalling brick or concrete surfaces (crumbling bricks = spalling).", "log": "Water force — freeze-thaw pops the face off the material.", "t": "Spalling"}, {"tr": "חידוש מלט — מילוי מחדש של תפרי מלט חסרים או מתפוררים בין לבנים. התשובה לשאלת \"מלט חסר/תיקון מלט\".", "t": "Re-pointing"}, {"tr": "כף טייחים — הכלי שאיתו עובדים את המלט (mortar).", "t": "Trowel"}, {"tr": "מלט + מים — תערובת נוזלית שזורמת לחריצים ואוטמת סדקים בין רכיבי בנייה או אריחים. באח משתמשים בגרסה עמידת-חום (refractory mortar).", "t": "Grout"}, {"tr": "לבנה שהונחה זקופה (על צידה הצר, הפנים הרחבות קדימה) — מונח מדוגמאות הנחת לבנים.", "t": "Sailor"}, {"tr": "דוגמת ההנחה הנפוצה בציפוי לבנים — כל שורה מוזזת חצי לבנה מהשורה שמתחתיה.", "t": "Running bond"}, {"tr": "החלקה ראשונית של משטח בטון טרי בכלי ארוך — מעלה את האגרגט הדק אל פני השטח.", "t": "Bull floating"}, {"tr": "גימור מטאטא לבטון — יוצר משטח מחוספס מונע החלקה.", "t": "Broom finish"}, {"tr": "תפר קר — נוצר כשיוצקים בטון בשני זמנים שונים; מישור חולשה ונקודת כניסת מים.", "t": "Cold joint"}, {"tr": "אבני פינה — בלוקים או לבנים בפינת מבנה לחיזוק או לקישוט; לרוב מחומר שונה מהקיר.", "t": "Quoin"}, {"tr": "הפנסטרציה — סידור הדלתות והחלונות בחזית המבנה.", "t": "Fenestration"}, {"tr": "פורניר/ציפוי — יריעות עץ דקות מאוד, או שכבת ציפוי דקה של עץ, לבנים או אבן על קיר ממוסגר.", "t": "Veneer"}, {"tr": "משקוף ישר — רכיב אופקי מעל פתח (חלון/דלת) שנושא את העומס שמעליו; בקיר לבנים לרוב פרופיל פלדה.", "def": "Cracked or displaced masonry above openings — lintel movement or failure.", "t": "Lintel"}, {"tr": "קשת — משקוף מעוגל מעל פתח; מעבירה את העומס לצדדים. Lintel וגם Arch = תמיכה מעל פתח בציפוי לבנים.", "t": "Arch"}, {"tr": "זכוכית מחוסמת — מתנפצת לגרגירים (\"pelletize\") ולא לרסיסים. נדרשת במקלחות/אמבטיות, בזכוכית דלתות כניסה וצידיהן, ובזיגוג נמוך מהרצפה.", "num": "safety glazing required below 18 in from the floor.", "def": "Non-safety glass in a tub/shower enclosure or other hazardous location.", "t": "Tempered glass"}, {"tr": "אגף החלון — המסגרת שמחזיקה את הזכוכית בחלון או בדלת.", "t": "Sash"}, {"tr": "הזיגוג — הזכוכית (או החומר השקוף) בתוך מסגרת החלון.", "t": "Glazing"}, {"tr": "סרגלי חלוקה — פסים אנכיים ואופקיים שמחלקים את הזכוכית לריבועים בתוך אגף אחד.", "t": "Muntins"}, {"tr": "מוליון — מחיצה אנכית בין שני חלונות או פתחים, נותנת תמיכה מבנית.", "log": "Mullion בין חלונות · Muntin בתוך החלון.", "t": "Mullion"}, {"tr": "הרכיב האנכי של אגף דלת או חלון (המסגרת האנכית).", "t": "Stile"}, {"tr": "המדף הפנימי מתחת לאדן החלון (bottom inside window sill).", "t": "Stool"}, {"tr": "חלון גיליוטינה כפול — שני האגפים (עליון ותחתון) נעים אנכית.", "t": "Doublehung Window"}, {"tr": "חלון גיליוטינה יחיד — רק האגף התחתון נע; העליון קבוע.", "t": "Single Hung Window"}, {"tr": "חלון ציר צד — נפתח החוצה על צירים כמו דלת.", "t": "Casement Window"}, {"tr": "חלון סוכך — ציר למעלה, נפתח החוצה ולמעלה.", "t": "Awning Window"}, {"tr": "חלון הופר — ציר למטה, נפתח פנימה; נפוץ במרתפים.", "t": "Hopper Window"}, {"tr": "חלון הזזה — מחליק מצד לצד.", "t": "Sliding Window"}, {"tr": "חלון קבוע שאינו נפתח כלל (fixed pane window).", "t": "Fixed / Picture Window"}, {"tr": "חלון קלרסטורי — ממוקם גבוה על הקיר, מעל גובה העיניים.", "t": "Clerestory Window"}, {"tr": "חלון סערה — חלון נוסף חיצוני להגנה ממזג אוויר ולבידוד נוסף.", "t": "Storm Window"}, {"tr": "חלון סערה משולב — שתי זגוגיות (עליונה ותחתונה) + רשת בשלוש מסילות; בקיץ מרימים זגוגית ומורידים רשת.", "t": "Triple Track Storm and Screen Combination"}, {"tr": "פיר חלון — חלל פתוח מתחת לפני הקרקע סביב חלון מרתף.", "t": "Window Well"}, {"tr": "חלון גג — הבעיה העיקרית שלו: נזילות.", "num": "plastic skylights 4 in from each other.", "def": "Staining or evidence of leakage at the skylight.", "log": "Water force — every roof penetration is a leak waiting for flashing.", "t": "Skylight"}, {"tr": "פלשינג Z — פח מכופף מעל קרש גימור אופקי של חלון/דלת/לבנים; מונע כניסת מים מאחורי הגימור.", "def": "Missing head flashing above exterior openings.", "log": "Water force.", "t": "Z-bar Flashing"}, {"tr": "נייר בניין — יריעות נייר/לבד בגלילים מאחורי החיפוי, שכבת הגנה משנית מרטיבות.", "t": "Building Paper"}, {"tr": "סף דלת — פס מתכת, עץ או שיש בבסיס הדלת שמונע כניסת גשם ושלג (נקרא גם Saddle).", "t": "Threshold"}, {"tr": "חלון מילוט — נדרש בכל חדר שינה, נפתח מבפנים ללא מפתח או כלי.", "num": "24 in clear opening height · 20 in clear opening width · 5.7 sq ft clear opening area · max sill height 44 in from floor.", "def": "Bedroom window smaller than minimum clear opening, sill height above 44 in, or bars/locks that prevent immediate escape from inside.", "log": "Egress family — the window is always smaller than the door (36 in) except the sill.", "t": "Egress window"}, {"tr": "דלת מילוט — דלת היציאה הראשית; חייבת להיפתח מבפנים בלי מפתח או ידע מיוחד.", "num": "36 in wide · clear opening 32 in × 78 in · minimum door height 78 in.", "def": "Egress door requiring a key or tool to open from the inside (double-cylinder deadbolt).", "log": "Egress family + 3-feet family — the door is the big 36; the window is smaller in everything but the sill.", "t": "Egress door"}, {"tr": "מנעול בריח בדלת.", "num": "max 48 in from the floor.", "def": "Double-keyed deadbolt on an egress door — blocks emergency escape.", "t": "Deadbolt"}, {"tr": "מרזב (נקרא גם Eave trough) — תעלה בשולי הגג שמרחיקה מים דרך צינורות ירידה. מרזבי פח מגולוון מחלידים בקלות; רשת מרזב מונעת פסולת גדולה; מרזב שקוע (built-in) לא מקובל בבית מגורים.", "num": "overflow drain 2 in above the roof drain (flat roofs).", "def": "Corrosion holes at downspout elbow sections; rusted galvanized gutters.", "log": "Water force + \"2 inch\" family — the overflow sits 2 in higher as a backup path.", "t": "Gutter / Downspout"}, {"tr": "קורת החיבור של דק לבית — מחוברת ב-lag bolts או through-bolts מוזזים (staggered), לעולם לא במסמרים בלבד; חובה פלשינג מעליה.", "def": "Ledger fastened with nails only or missing flashing — the #1 cause of deck collapse.", "log": "Exam favorite — deck ledger failure is the classic deck question.", "t": "Deck ledger"}, {"tr": "תליוני קורות — חיבור מתכת לכל קורת דק, עם מסמרים מגולוונים ייעודיים בכל החורים (לא ברגי גבס).", "def": "Missing hangers, improper fasteners (screws), or corroded connectors.", "t": "Joist hangers"}, {"tr": "עמודי דק — על יסודות מתחת לקו הכפור, מחוברים במחברים (לא בהצמדה בלבד); קורות מדרגות חוץ (stringers) לא נוגעות בקרקע; עץ במגע קרקע/לחות = pressure-treated עם מחברים מגולוונים.", "def": "Posts bearing directly on soil; wood stair stringers in ground contact.", "log": "Ground-clearance ladder — wood and soil don't touch.", "t": "Deck posts & stringers"}, {"tr": "מפגע מעידה — הפרש גובה בין מרצפות בשביל או בחניה.", "num": "1/4 in or more height difference = reportable.", "def": "Walkway / driveway surface offsets of 1/4 in or more (settled or heaved concrete — tree roots, frost).", "t": "Trip hazard"}, {"tr": "החשיפה — החלק הגלוי (הלא-מכוסה) של רעף או לוח סיידינג.", "t": "Exposure"}, {"tr": "אנודייז — טיפול שטח אלקטרוכימי לאלומיניום.", "t": "Anodized"}, {"tr": "צריח — מגדל קטן על מבנה (אדריכלות ויקטוריאנית).", "t": "Turret"}]}, {"id": "03", "en": "ROOF", "he": "גג", "cards": [{"tr": "שיפוע הגג — עלייה אנכית חלקי מהלך אופקי, תמיד ביחס ל-12 (למשל 6:12).", "num": "low slope / flat below 2:12 · steep slope above 4:12 · shake & shingle minimum 4:12.", "log": "Slopes family — the border between flat and steep (4:12) is exactly what a shingle needs.", "t": "Roof Pitch"}, {"tr": "Rise — הגובה מרצפת עליית הגג עד שיא הגג; Run — המרחק ממרכז הגג עד מושב הרפטרים בצד אחד; Span — כל רוחב הגג מצד לצד (שני Runs = Span).", "t": "Rise / Run / Span"}, {"tr": "Ridge — הקו הגבוה ביותר שבו נפגשים שני מישורי גג; Roof plane — משטח גג בצד אחד, ללא רכסים או עמקים.", "t": "Roof Ridge / Roof Plane"}, {"tr": "גג גמלון — שיפוע יחיד מכל צד של רכס מרכזי, עם גמלון (משולש קיר) בקצוות; צורת הגג הנפוצה ביותר.", "t": "Gable Roof"}, {"tr": "גג הולנדי — עולה במישורים משופעים מכל ארבעת צדי המבנה.", "t": "Hip Roof"}, {"tr": "גג אסם — שני שיפועים בכל צד (שבירת שיפוע באמצע); אופייני לאסמים.", "t": "Gambrel Roof"}, {"tr": "גג מנסרד — שני שיפועים נפרדים, התחתון תלול מהעליון; לרוב עם גג שטוח למעלה.", "t": "Mansard Roof"}, {"tr": "גג סלטבוקס — קצר בחזית וארוך ומשתפל מאחור; חזית שתי קומות, גב קומה אחת.", "t": "Saltbox Roof"}, {"tr": "גג משופע חד-כיווני — מישור אחד בשיפוע; נפוץ במרפסות ותוספות בנייה.", "t": "Shed Roof"}, {"tr": "גג שטוח — שיפוע מזערי שמאפשר ניקוז.", "num": "flat / low slope = less than 2:12 · overflow drain 2 in above the roof drain.", "def": "Ponding water; clogged primary drain with no functioning overflow.", "log": "Slopes family + \"2 inch\" family.", "t": "Flat Roof"}, {"tr": "גג שכבות — 3–5 שכבות לבד אספלט (\"plys\") מודבקות בזפת, בגימור חצץ; לגגות שטוחים ונמוכי שיפוע.", "t": "Built-Up Roof (BUR)"}, {"tr": "גג יריעות — הבעיה האופיינית: תפרים פתוחים (loose joints / open seam).", "def": "Open or separated seams in membrane roofing.", "t": "Membrane / Roll roofing"}, {"tr": "גג צפחה — גג פרימיום; מסמרי נחושת או נירוסטה; תיקון יקר.", "t": "Slate Roof"}, {"tr": "רעפי חרס שרוף.", "t": "Clay Tile"}, {"tr": "גג רעפי בטון — כבד; דורש יריעת תשתית 30 פאונד.", "num": "30 lb felt underlayment.", "t": "Concrete tile roof"}, {"tr": "גג מתכת — פאנלים או לוחות מתכת.", "t": "Metal Roof"}, {"tr": "רעפי פיברגלס — כמו רעפי אספלט אבל הבסיס עשוי פיברגלס.", "t": "Fiberglass Shingles"}, {"tr": "רעפי אספלט — סוג הרעף הנפוץ ביותר. שקעים עגולים (dimples) = נזק ברד; סדקי \"עור תנין\" (alligatoring) = פגם מדווח; טחב (moss) מעיד על גיל הגג.", "num": "15 lb felt underlayment · two layers in severe climates.", "def": "Alligatoring, hail damage, curling or missing shingles.", "t": "Asphalt shingles"}, {"tr": "Shake — מבוקע (split), מראה גס; Shingle — מנוסר (sawn), מראה אחיד. שניהם עץ, נמכרים בחבילות (bundles), שני מסמרים לכל יחידה; המרווח ביניהם נקרא Keyway.", "num": "minimum slope 4 in 12 · 2 nails each.", "log": "Shake = Split — זכרי לפי ה-S הגסה; Slopes family for the 4:12.", "t": "Wood Shake vs Wood Shingle"}, {"tr": "הלשונית — החלק החשוף של רעף רצועות, מוגדר ע\"י החיתוכים (cutouts).", "t": "Tab"}, {"tr": "דירוג האש הגבוה ביותר לחיפויי גג — עמידות מרבית לחשיפת אש חיצונית.", "log": "Heat/fire family.", "t": "Class A (roof fire rating)"}, {"tr": "יריעת תשתית מתחת לרעפים (וגם: שכבת החלקה מתחת לריצוף פנים).", "num": "shingle roof 15 lb felt · concrete tile 30 lb · severe climates two layers.", "def": "Missing / deteriorated underlayment exposed at eaves.", "log": "Water force — the backup layer when water gets past the shingles.", "t": "Underlayment"}, {"tr": "לוחות הסיכוך שעליהם יושב הגג — הבסיס למסמור הרעפים.", "num": "roof sheathing 5/8 in.", "log": "Thicknesses family — 5/8 = fire and roof.", "t": "Sheathing (roof)"}, {"tr": "קליפס H — מהדק מתכת בצורת H בין שני לוחות סיכוך; מקשיח את התפר בין הלוחות בגג.", "t": "H Clip"}, {"tr": "חפיפת הרעפים — Head lap: החפיפה האנכית מעל התפר; Side lap: החפיפה הצידית.", "num": "head lap 2 in · side lap 4–6 in · rakes 1 in.", "log": "\"2 inch\" family — water can't climb 2 inches uphill.", "t": "Head lap / Side lap"}, {"tr": "פח איטום — פחי מתכת דקים בכל חדירה ומפגש בגג: ארובות, צינורות, עמקים, דורמרים ושולי גג; מנתבים מים החוצה.", "num": "galvanized valley flashing 26 gauge · roof nail flashing — nails only to the roof.", "def": "Missing, rusted or improperly lapped flashing at roof penetrations.", "log": "Water force — every hole in the roof needs a metal detour for water.", "t": "Flashing"}, {"tr": "עמק — מפגש ה-V של שני מישורי גג, שם זורמים המים; פח העמק מונח בתוכו. מפגש עמק עם קיר אנכי = נקודת חדירת מים קלאסית.", "num": "galvanized valley flashing 26 gauge.", "def": "Debris-filled or rusted valleys; water intrusion at valley-to-wall transitions.", "t": "Valley / Valley Flashing"}, {"tr": "פלשינג נגדי — שכבת פלשינג שנייה שמכסה את הראשונה; בקיר לבנים נכנס לחריץ במלט (groove / mortar joint).", "def": "Counter flashing pulled out of the mortar joint or sealed with caulk only.", "t": "Counter flashing"}, {"tr": "פלשינג סינר — הפח בצד הנמוך (downhill) של ארובה או פתח בגג.", "t": "Apron flashing"}, {"tr": "צווארון סערה — טבעת איטום סביב צינור שחודר את הגג (vent boot).", "t": "Storm collar"}, {"tr": "פס משופע משולש במעבר גג-קיר (roof-to-wall) — מרכך את זווית ה-90° ליריעות האיטום.", "t": "Cant strip"}, {"tr": "אוכף — גג משני קטן מאחורי הארובה שמפצל את זרימת המים סביבה ומונע הצטברות שלג וקרח.", "def": "Missing cricket behind a wide chimney — ice / debris buildup and leakage.", "log": "Water force — water must be steered around the obstacle, not dammed behind it.", "t": "Cricket (Saddle)"}, {"tr": "סכר קרח — שלג נמס מחום שבורח מהבית, קופא בקצה הגג הקר וחוסם את הניקוז; המים נערמים ונכנסים מתחת לרעפים. מניעה: בידוד + אוורור עליית הגג. אופייני לגג בשיפוע נמוך עם soffit רחב.", "def": "Staining at eaves / exterior walls consistent with ice damming; inadequate attic insulation and ventilation.", "log": "Heat force — escaping heat melts the snow; the cold eave refreezes it.", "t": "Ice dam"}, {"tr": "שולי הגג הבולטים מעבר לקיר. שלושת הרכיבים: Soffit — התחתית האופקית; Fascia — הלוח האנכי בקצה; Frieze board — הלוח שצמוד לקיר מתחת לבליטה.", "t": "Eave"}, {"tr": "הסופיט — התחתית האופקית של בליטת הגג; לרוב מחורר כדי להכניס אוויר לאוורור עליית הגג.", "def": "Blocked soffit vents (insulation stuffed into the eaves).", "log": "Ventilation — air enters low at the soffit and exits high at the ridge.", "t": "Soffit"}, {"tr": "השפה המשופעת של הגג — הקצה שרץ מה-eave עד הרכס בצד הגמלון.", "num": "rake overhang 1 in.", "t": "Rake"}, {"tr": "כרכוב — האזור הבולט שמתחת לקצה הגג; מגן על קירות המבנה (בוויקטוריאני — מקושט). גם: פס גימור עליון (trim piece).", "t": "Cornice"}, {"tr": "קישוט רכס — עיטור ברזל מחושל או מעקה דקורטיבי לאורך רכס הגג בבתים ויקטוריאניים.", "t": "Cresting"}, {"tr": "צריח מחודד — גג מתחדד או עיטור מתכת בראש מגדל/צריח.", "t": "Spire"}, {"tr": "מעקה גג — קיר בשולי גג (שטוח) שמונע נפילה.", "t": "Parapet"}, {"tr": "דורמר — מבנה שבולט דרך גג משופע ויוצר חלל שמיש עם חלון וגובה ראש.", "t": "Dormer"}, {"tr": "רפטר — קורת הגג המשופעת; נמשכת מקצות קורות התקרה עד לוח הרכס.", "t": "Rafter"}, {"tr": "Hip rafter — יוצר את הזווית החיצונית של הגג; Valley rafter — את הזווית הפנימית (לרוב כפול, שני רכיבים בעובי 2 אינץ'); Jack rafter — רפטר מקוצר מהקיר אל hip או מעמק אל רכס.", "t": "Hip Rafter / Jack Rafter / Valley Rafter"}, {"tr": "Ridge board — לוח חיבור בלבד בראש הרפטרים, לא נושא עומס; Ridge beam — קורה נושאת שדורשת תמיכה בקצוות. ההבחנה קריטית בשאלות מבנה.", "def": "Ridge beam without end support; rafter separation at the ridge.", "log": "Gravity — a board just connects; a beam carries load down to posts.", "t": "Ridge Board vs Ridge Beam"}, {"tr": "אגדים מהונדסים — מסגרת רפטרים, מוטות וקורות שיוצרת את תמיכת הגג. אסור לחתוך, לקדוח או לשנות בשום צורה.", "def": "Cut, drilled or field-modified engineered truss = reportable structural defect.", "log": "Exam favorite — any truss modification is automatically a defect.", "t": "Trusses"}, {"tr": "קורות צווארון — קורות אופקיות בין שני רפטרים בעליית הגג; נושאות עומס נוסף ומונעות מהקירות להידחף החוצה.", "log": "Collar tie = Attic — זה הרכיב שרואים גבוה בין הרפטרים.", "t": "Collar Beams (Collar Ties)"}, {"tr": "זיז — הארכת רפטר מעבר לקו הקיר; רכיב קטן שממוסמר לרפטר גדול ליצירת בליטת הגג.", "t": "Outrigger"}, {"tr": "הבליטה — אזור ה-eave/soffit שמשתרבב החוצה מהקיר (ר' Cornice).", "t": "Overhang"}, {"tr": "Ridge vent — פתח אוורור רציף לאורך הרכס, בנקודה הגבוהה ביותר; Ridge shingles — הרעפים שמכסים את הרכס.", "log": "Heat force — hot air exits at the top; the ridge is the top.", "t": "Ridge Vent / Ridge Shingles"}, {"tr": "מנתבי אוויר (Rafter vents / Channel vents / Vent chutes) — פסי קלקר בצד הפנימי של גג עליית הגג ששומרים על מעבר אוויר מהסופיט אל עליית הגג, שהבידוד לא יחסום.", "def": "Insulation blocking soffit-to-attic airflow (missing baffles).", "t": "Attic Baffles"}, {"tr": "כדור מלט בקצה רעפי Hip & Ridge — סוגר את קצה הרעף.", "t": "Mud ball"}, {"tr": "מלט גגות — מסטיק לתיקוני גג נקודתיים; Lap cement — דבק החפיפה שמצמיד יריעות/רעפים זה לזה.", "t": "Roofing cement / Lap cement"}, {"tr": "חיבור מרזב לפשיה — מסמר ארוך (Spike) דרך צינורית מרווח (Ferrule).", "t": "Gutter to fascia"}]}, {"id": "04", "en": "STRUCTURAL", "he": "שלד ויסודות", "cards": [{"tr": "היסוד — הבסיס שעליו נבנה כל המבנה. יסוד גבוה = מרתף מרווח; יסוד נמוך = חלל זחילה צר.", "log": "Gravity — everything above ends up here.", "t": "Foundation"}, {"tr": "פוטינג — בסיס הבטון מתחת לקיר היסוד, יושב מתחת לקו הכפור (frost line) ותומך בכל המבנה.", "def": "Footing above the frost line — frost heave movement.", "log": "Gravity — the last stop of the load path; below frost so the ground under it never moves.", "t": "Footings"}, {"tr": "יציקה מונוליטית — הפוטינג וקיר היסוד (או המשטח) נוצקים יחד ביציקה אחת. לעומת Floating slab — קודם פוטינג, אחר כך משטח, בשתי יציקות.", "t": "Monolithic Construction"}, {"tr": "חריץ נעילה — שקע שנוצר בפוטינג לפני יציקת הקיר מעליו; נועל את שני חלקי הבטון יחד ומחזק את התפר.", "t": "Keyway (foundation)"}, {"tr": "קורת המסד — הקורה האופקית שיושבת על קיר היסוד ועליה נבנה שלד העץ (בפתחים: המדף בבסיס חלון/דלת).", "num": "wood framing on concrete/masonry foundation 8 in above grade.", "def": "Rot or insect damage at the sill plate; sill not anchored to the foundation.", "log": "Ground-clearance ladder — the first wood the ground water looks for.", "t": "Sill (Sill Plate)"}, {"tr": "סדקי יסוד — שאלת אבחון קלאסית: אנכי = התכווצות בטון, לרוב מינורי; אלכסוני = שקיעה קלה, לעקוב; מדורג (stair-step) = שקיעה דיפרנציאלית, רציני; אופקי = לחץ קרקע/מים — החמור ביותר.", "def": "Horizontal crack with bowing/bulging wall = serious structural problem; measure width and check displacement between the two sides.", "log": "Water force — horizontal cracks mean the soil and water are pushing the wall in.", "t": "Foundation cracks"}, {"tr": "לחץ הידרוסטטי — לחץ מים בקרקע שדוחף את קיר היסוד פנימה. התנפחות/בליטה ביסוד (foundation bulge) = לחץ הידרוסטטי.", "def": "Bowed or bulging foundation wall; horizontal cracking.", "log": "Water force — water that can't drain pushes.", "t": "Hydrostatic pressure"}, {"tr": "פריחת מלחים — משקע לבן אבקתי על בטון או לבנים; מוכיח שמים עברו דרך החומר והשאירו מלחים.", "def": "Efflorescence near a crack = water has moved through it.", "log": "Water force — the salt is the water's signature.", "t": "Efflorescence"}, {"tr": "אנכי מדויק — 90° מהמאוזן (level). קיר \"out of plumb\" = נוטה.", "t": "Plumb"}, {"tr": "חלל זחילה — החלל הנמוך בין תחתית קומת הקרקע לאדמה.", "num": "access opening 16 × 24 in · wood joists above exposed ground 18 in · ventilation 1/150 · vents within 3 ft of each corner.", "def": "Standing water / moisture, wood below required clearance, blocked vents or inaccessible access.", "log": "Working-clearances family (16×24) + ground-clearance ladder (18) + ventilation ratios (1/150).", "t": "Crawl Space"}, {"tr": "קורה ראשית — קורת עץ או פלדה גדולה שנושאת עומסים מרוכזים לאורכה (הקורה שמתחת לקורות הרצפה).", "num": "untreated girder above exposed earth 12 in · air space at a girder end entering masonry 1/2 in.", "def": "Girder end in a masonry pocket without an air space — trapped moisture and rot.", "log": "Ground-clearance ladder — 18 joist → 12 girder; the ½ in air gap lets the wood breathe.", "t": "Girder"}, {"tr": "קורות רצפה/תקרה — קורות ארוכות שמגשרות בין קירות נושאים או עמודי היסוד.", "num": "wood joists above exposed ground (crawl space) 18 in · joist notch 0 in (אין לחתוך).", "def": "Cut / notched / sagging joists; joists below required ground clearance.", "log": "Ground-clearance ladder — joists are the most exposed wood, so they get the biggest number (18).", "t": "Joists"}, {"tr": "קורת שפה — הקורה שרצה סביב היקף קורות הרצפה וסוגרת אותן.", "t": "Rim Joist"}, {"tr": "האחות — חיזוק קורת רצפה פגומה או מוחלשת ע\"י הצמדת קורה נוספת לצידה לכל האורך.", "log": "The fix for a damaged or weakened floor joist.", "t": "Sistering"}, {"tr": "קיר נושא — כל קירות החוץ + כל קיר פנים שמיושר מעל קורה/גירדר; מעביר את העומס האנכי עד ליסוד ונושא את מערכת אגדי הגג.", "def": "Load-bearing wall altered or removed without proper support.", "log": "Gravity — the load path must be continuous from roof to foundation.", "t": "Load Bearing Wall"}, {"tr": "קיר לא נושא — נושא רק את משקל עצמו (ציפוי לבנים = לא נושא; לבני זכוכית אסורות בקיר נושא). Bearing partition — מחיצת פנים שכן נושאת עומס אנכי.", "t": "Nonbearing Wall / Bearing Partition"}, {"tr": "מסגור בלון — בנייה ישנה: זקפים רצים ברצף מקורת המסד עד הגג (מעל 10 רגל), בלי הפסקת פלטפורמה בין קומות.", "def": "Open stud cavities acting as chimneys — missing fire blocking.", "log": "Heat/fire force — a continuous cavity is a fire highway; that's why fire blocking exists.", "t": "Balloon Framed Construction"}, {"tr": "מסגור פלטפורמה — הסטנדרט המודרני: בונים שכבה על שכבה — פלטפורמה, זקפים, פלטפורמה נוספת, עד הגג.", "t": "Platform Framing"}, {"tr": "מסגור עמודים וקורות — רכיבים גדולים מזקפים רגילים, לרוב 4 או 6 אינץ' מרובע.", "t": "Post and Beam Framing"}, {"tr": "חצי עץ — שיטת בנייה עם שלד עץ חשוף וטיח או לבנים שממלאים את המרווחים (סגנון טיודור).", "t": "Half Timber"}, {"tr": "בנייה מחבילות קש עם גימור דמוי טיח מעליהן.", "t": "Straw Bale"}, {"tr": "תבניות בידוד מבטון — בלוקים/פאנלים מקלקר שנערמים, ממולאים בטון ונשארים במקומם כבידוד קבוע.", "t": "Insulating Concrete Forms (ICFs)"}, {"tr": "פלטה — רכיב 2x4/2x6 אופקי בשלד; Soleplate — הפלטה התחתונה בבסיס קיר הזקפים (Top plate — העליונה).", "t": "Plate / Soleplate"}, {"tr": "קורת פתח — הקורה מעל חלון/דלת שמעבירה את העומס לצדי הפתח.", "def": "Sagging header — cracked drywall / sticking door above an opening.", "log": "Gravity — the load detours around the hole.", "t": "Header"}, {"tr": "Jack (Trimmer) — הזקף הקצר שתומך ב-header משני הצדדים; King — הזקף המלא שצמוד אליו מהרצפה עד התקרה; Cripple — זקף קצר מעל ה-header או מתחת לאדן החלון.", "t": "Jack stud / King stud / Cripple stud"}, {"tr": "חסימת אש — רכיבים אופקיים קצרים בין זקפים, בערך באמצע גובה הקיר.", "log": "Heat/fire force — breaks the vertical chimney inside the wall; every gap buys time.", "t": "Fire Block"}, {"tr": "עצירת אש — סגירה אטומה של חלל נסתר נגד התפשטות אש ועשן: cross blocking, מילוי חורי חיווט בבידוד, חסימות בקו הסופיט.", "def": "Open chases / unsealed penetrations between floors.", "t": "Fire Stop"}, {"tr": "אלכסון משוקע — לוח 1 אינץ' בחריצים אלכסוניים בזקפים, או רצועת מתכת בצורת L (~10 רגל) לייצוב קיר חוץ או פינה.", "t": "Let-in Brace"}, {"tr": "חיזוק רוח — רצועות מתכת או בלוקי עץ באלכסון מהפלטה התחתונה לעליונה; מונעים מהקיר להתעוות או ליפול \"כמו דומינו\" (racking).", "t": "Wind Bracing"}, {"tr": "זיז — קומה או רצפה שבולטת מעבר ליסוד או לקיר התמיכה שמתחתיה.", "t": "Cantilever"}, {"tr": "עמוד — רכיב אנכי שתומך בקורות ובגג. עמודים קלאסיים: דורי, יוני, קורינתי, טוסקני, קומפוזיטי (אדריכלות Greek Revival).", "t": "Column / Post"}, {"tr": "עמוד לאלי — עמוד פלדה עגול ממולא בטון במרתף, עם התאמת גובה הברגה למעלה; תמיכה נוספת לבית.", "t": "Lally Column"}, {"tr": "עמוד ג'ק — תמיכת מתכת מתכווננת (פינים + בורג) שמחליפה רכיב תמיכה ישן.", "def": "Temporary jack posts used as permanent support without footings.", "t": "Jack Post (Monopost)"}, {"tr": "לוחית חיזוק — לוח שמחזק חיבור בין רכיבים (למשל בצמתי אגדים).", "t": "Gusset"}, {"tr": "עץ מהונדס — אגדים, קורות, gluelam, microlam ו-joists המיוצרים מחתיכות עץ קטנות בהדבקה/חיבור מכני לרכיב גדול וחזק.", "t": "Engineered Lumber"}, {"tr": "קורת לוחות מודבקים בלחץ — דירוג חוזק גבוה מעץ מנוסר מלא.", "t": "Microlam (LVL)"}, {"tr": "קורת I מהונדסת — רכיב מבני בצורת האות I; משמש כקורות רצפה ורפטרים.", "t": "TJI (I-Joist)"}, {"tr": "לוח שבבים מכוונים — לוח עץ מהונדס, שבבים מודבקים בדחיסה.", "t": "Oriented Strand Board (OSB)"}, {"tr": "לוח שבבים גדולים (1–2 אינץ') — תחליף דיקט לסיכוך קירות וגג.", "t": "Wafer Board"}, {"tr": "סיכוך — שכבת לוחות על הזקפים, הקורות והרפטרים; מקשיחה את השלד ומשמשת בסיס לכיסוי החיצוני.", "t": "Sheathing (wall)"}, {"tr": "עץ מטופל בלחץ — מוספג בכימיקלים (כמו CCA) נגד ריקבון וחרקים; חובה בכל מגע עם קרקע ומים.", "def": "Untreated wood in ground contact.", "log": "Ground-clearance ladder — if you can't lift the wood, treat it.", "t": "Pressure-Treated Wood"}, {"tr": "היפרדות שכבות — שכבות לוח (דיקט) שנפרדות כשהדבק כושל; נגרם כמעט תמיד מלחות עודפת.", "def": "Delaminated sheathing / panels.", "log": "Water force.", "t": "Delamination"}, {"tr": "קימוט/כיפוף — התעקמות חומר בנייה מבלאי או ממגע עם חומר זר (או עומס).", "t": "Buckling"}, {"tr": "מעטפת הבניין — כל הבית מהיסוד עד הגג; עוטפת את חלל המגורים ומגינה מפגעי מזג האוויר.", "t": "Building Envelope"}, {"tr": "בנייה קשה — בנייה באריח, לבנים, בטון או אבן. לקיר בנייה בידוד תרמי נמוך.", "t": "Masonry"}, {"tr": "ר' Grout בפרק החוץ — מלט + מים לאיטום חריצים.", "t": "Grout (masonry)"}, {"tr": "חריץ — חיתוך רוחבי בקצה קורה. במחברת: joist notch = 0 אינץ' — לא חותכים חריץ בקורה.", "def": "Notched or over-bored floor joists.", "t": "Notch"}, {"tr": "מרכז-למרכז — מדידת המרווח בין זקפים/קורות/רפטרים ממרכז רכיב אחד למרכז הבא (למשל 16\" OC).", "t": "On Center (OC)"}, {"tr": "יארד מעוקב בטון = 3'x3'x3' = 27 רגל מעוקב; מספיק ל-80 רגל רבוע של משטח בעובי 3 אינץ'.", "t": "Yard of Concrete"}, {"tr": "קימור — עקמומיות מכוונת (או לא) בקורה. Curvature — עקמומיות כללית.", "t": "Camber"}, {"tr": "טרמיטים תת-קרקעיים — חיים באדמה, צריכים לחות, ובונים מנהרות בוץ (shelter tubes / mud tubes) אל העץ. המזיק ההרסני ביותר בארה\"ב; נכנסים לרוב מאזור המוסך אל שלד העץ.", "def": "Mud tubes on the foundation; wood-to-soil contact — the #1 invitation for termites.", "log": "Water force — they need moisture; dry, separated wood doesn't feed them.", "t": "Subterranean termites"}, {"tr": "טרמיטי עץ יבש — חיים בתוך העץ עצמו בלי מגע עם אדמה. הסימן: גלולות צואה (fecal pellets).", "t": "Drywood termites"}, {"tr": "חיפושיות אבקה — הסימן: אבק צהוב דק + חורי יציאה עגולים בעץ.", "def": "Fresh yellow frass and exit holes in structural wood.", "t": "Powderpost beetles"}, {"tr": "נמלים נגריות — לא אוכלות עץ, חופרות בו; ערימות נסורת נקייה. מעידות על עץ רטוב/רקוב.", "log": "Water force — find the ants, find the moisture.", "t": "Carpenter ants"}, {"tr": "פטריות וריקבון — הורסות את העץ; צריך בערך 20% לחות בעץ. עץ רך, מתפורר וכהה. קודם מתקנים את המים, אחר כך מטפלים.", "def": "Decayed structural wood and the moisture source feeding it.", "log": "Water force — every pest/rot problem is a water problem first.", "t": "Fungi / Rot"}, {"tr": "תנאים מזמינים — מה שמזמין מזיקים ורקב: צמחייה צמודה לבית, ערימות עץ, לחות בחלל זחילה, ניקוז לקוי, מגע עץ-קרקע.", "def": "Wood-to-soil contact, vegetation against the structure, poor drainage.", "t": "Conducive conditions"}]}, {"id": "05", "en": "ELECTRICAL", "he": "חשמל", "cards": [{"tr": "כניסת החשמל העילית — הכבלים מעל הקרקע מחברת החשמל אל הבית (מתחת לקרקע = Service lateral).", "num": "10 ft above grade/walkable area · 12 ft above a driveway · 18 ft above a public road · 3 ft from windows, doors, porches, decks.", "def": "Service drop below required clearances or within reach of windows and decks.", "log": "Service-drop ladder — the taller the thing passing under, the higher the wire: אדם 10 → מכונית 12 → משאית 18.", "t": "Service Drop"}, {"tr": "תורן השירות — צינור אנכי קשיח עם כובע שירות בראשו, על הגג או הקיר; דרכו נכנסים כבלי החשמל.", "def": "Loose, bent or rusted service mast.", "t": "Service Mast"}, {"tr": "Weatherhead — הכובע האטום בקצה העליון של התורן; Drip loop — לולאת כבל כלפי מטה מתחתיו, כדי שמי גשם יטפטפו מהלולאה ולא ייכנסו פנימה בצינור.", "def": "Missing drip loop — water entry into the service equipment.", "log": "Water force — water runs to the bottom of the loop and drips off.", "t": "Weatherhead & Drip loop"}, {"tr": "לוח הכניסה הראשי — הארון שבו החשמל נכנס למערכת הבית; ציוד השירות = המפסקים, הנתיכים והמתגים הראשיים בכניסה.", "num": "minimum service 100 amp · 200 amp service = home with electric heat · 3 wires: Hot + Hot + Neutral = 120/240 V.", "log": "Wire & amps family.", "t": "Service Entrance Panel / Service Equipment"}, {"tr": "Line — הצד שלפני המפסק הראשי (תמיד \"חי\", לא מנותק); Load — הצד שאחרי המפסקים, שיוצא אל מעגלי הבית.", "t": "Line side / Load side"}, {"tr": "בלוח הראשי האפס וההארקה מחוברים יחד (bonded) — זו הנקודה היחידה במערכת שבה זה קורה; בלוח משנה הם מופרדים, וההזנה היא 4 חוטים (2 hot + neutral + ground).", "def": "Neutral and ground bonded together in a sub panel.", "log": "One bonding point only — at the service.", "t": "Main Panel (bonded) vs Sub Panel"}, {"tr": "מרווח העבודה מול לוח החשמל. אסור לוח בארון בגדים, באמבטיה, מעל מדרגות או במקום שדורש טיפוס.", "num": "depth 36 in · width 30 in · height 6 ft 6 in.", "def": "Panel blocked by storage, in a prohibited location, or lacking working clearance.", "log": "Working-clearances family — the more dangerous the equipment, the more room it gets.", "t": "Panel working clearance"}, {"tr": "מפסק אוטומטי — מתג שמנתק את המעגל בעומס-יתר או קצר; \"קופץ\" (trips) וניתן לדריכה ידנית מחדש.", "log": "Breaker trips · Fuse melts.", "t": "Circuit Breaker"}, {"tr": "נתיך — מוליך שנמס כשעובר זרם עודף ופותח את המעגל; חד-פעמי. נתיך יושב רק על המוליך החי.", "def": "Oversized fuse for the circuit conductor (fire hazard).", "t": "Fuse"}, {"tr": "קופסת נתיכים / לוח מפסקים — הארון שמחלק את ההזנה למעגלי משנה עם הגנה (נתיך או מפסק) לכל מעגל.", "t": "Fuse Box / Breaker Box (Circuit Panel)"}, {"tr": "מעגלים סופיים — המעגלים שיוצאים מהלוח ומחלקים את החשמל לחדרים ולשקעים.", "t": "Branch Circuits"}, {"tr": "מעגל ייעודי — מעגל נפרד למכשיר אחד.", "num": "water heater & dryer 30 A / 240 V · electric range 40 amp · refrigerator / gas closet dryer 20 amp.", "log": "Wire & amps family.", "t": "Dedicated circuit"}, {"tr": "שקע — 120V לתאורה ומכשירים רגילים, 240V לתנור/מייבש/מזגן. חריץ צר = Hot, חריץ רחב = Neutral, החור העגול = Ground.", "num": "outlet spacing 6–12 ft.", "def": "Open ground, reversed polarity, or damaged receptacles.", "log": "\"6\" family — a lamp cord reaches 6 ft, so no point on a wall is more than 6 ft from an outlet.", "t": "Receptacle (Outlet)"}, {"tr": "קוטביות הפוכה — חוט חי ואפס שהוחלפו בשקע; קל לתיקון אבל מסוכן — המכשיר \"חי\" גם כשהוא כבוי.", "def": "Reversed polarity at receptacles — potential shock hazard.", "t": "Reversed polarity"}, {"tr": "מפסק פחת — מזהה חוסר איזון בין הזרם היוצא לחוזר = דליפת זרם, ומנתק מיד. נדרש בכל מקום שבו מים + חשמל: מטבח, אמבטיות, חוץ, מוסך, מרתף, כיורי בר וכביסה.", "num": "trips at ~5 milliamps.", "def": "Missing GFCI protection in wet locations; GFCI that fails the test button.", "log": "Wire & amps family — 5 mA is the tiny leak that saves a life; GFCI protects people, AFCI protects the house.", "t": "GFCI (Ground Fault Circuit Interrupter)"}, {"tr": "מפסק קשת — מזהה דפוס של קשת חשמלית (ניצוץ מכבל פגום) ומנתק; מגן מפני שריפה. בקוד ישן — חדרי שינה; בקוד עדכני — כמעט כל אזורי המגורים.", "def": "Missing AFCI protection where required (per adopted code).", "log": "GFCI = shock (people, water areas) · AFCI = fire (living areas). Dual-function breaker does both.", "t": "AFCI (Arc Fault Circuit Interrupter)"}, {"tr": "הארקה — מסלול בטוח לזרם תקלה אל האדמה דרך מוט הארקה (grounding rod) או הארקת יסוד (UFER); מגינה מהתחשמלות ומברקים.", "def": "Broken / loose grounding conductor or clamp; missing ground rod connection.", "t": "Grounding"}, {"tr": "Hot (ungrounded, שחור/אדום) — מביא את המתח; Neutral (grounded, לבן) — מחזיר את הזרם; Ground (ירוק/נחושת חשופה) — הגנה בלבד. Multi-wire circuit = שני Hot + Neutral משותף.", "t": "Conductors (Hot / Neutral / Ground)"}, {"tr": "כושר הולכה — הזרם המרבי שחוט יכול לשאת בבטחה. הכלל: דירוג המפסק ≤ כושר ההולכה של המוליך.", "num": "14 AWG = 15 amp · 12 AWG = 20 amp · 10 AWG = 30 amp · 8 AWG = 40 amp · 6 AWG = 55–60 amp.", "def": "Oversized breaker on a small conductor (14 AWG on a 20 A breaker) — fire hazard.", "log": "Wire & amps family — start at 14=15, every 2-gauge jump down adds 5–10 amps; smaller AWG number = thicker wire.", "t": "Ampacity"}, {"tr": "חיווט אלומיניום — כיום מותר רק למעגלי 240V גדולים; חיבורים דורשים משחה נגד חמצון (antioxidant paste). אלומיניום נושא פחות מנחושת: 12 AWG = 15A בלבד.", "def": "Solid aluminum branch wiring (1960s–70s) — overheating connections; recommend evaluation.", "t": "Aluminum wiring"}, {"tr": "חיווט ישן על גלילי חרסינה — אין בו חוט הארקה, ואסור שיהיה קבור בתוך בידוד (מתחמם).", "def": "Active knob-and-tube wiring; K&T buried in insulation.", "log": "Heat force — old wiring needs air around it to shed heat.", "t": "Knob and tube"}, {"tr": "BX — כבל בציפוי מתכת שדרוך, לשימוש פנימי; UF — כבל לשימוש חיצוני/קבור באדמה.", "t": "BX cable / UF cable"}, {"tr": "קופסת חיבורים — כל חיבור חוטים (splice) חייב להיות בתוך קופסה נגישה ומכוסה.", "def": "Open splices outside a box; missing cover plates; buried junction boxes.", "t": "Junction Box"}, {"tr": "Splice — חיבור חוטים; Wire nut — כובעון פלסטיק שמחבר חוטים חשופים; Pigtail — חוט קצר שמחבר כמה חוטים לנקודה אחת.", "t": "Splices / Wire Nut / Pigtail"}, {"tr": "שני חוטים תחת בורג אחד במפסק — פגם נפוץ שמדווחים עליו (אלא אם המפסק מאושר לשניים).", "def": "Double-tapped breaker.", "t": "Double tapping"}, {"tr": "תעלת חיווט — מערכת שמובילה, עוטפת ומגינה על מוליכים.", "t": "Raceway"}, {"tr": "איגוד — חיבור כל חלקי המתכת (צנרת מים מתכתית, צנרת גז, ציוד) יחד ולהארקה, כדי שלא ייווצרו הפרשי מתח. סביב בריכה — equipotential bonding grid.", "def": "Metallic water / gas piping not bonded; CSST without its required separate bonding.", "t": "Bonding"}, {"tr": "קוד החשמל הלאומי — כללי חיווט בטוח; הקוד המקומי (המחייב בחוק) יכול להיות שונה ממנו.", "t": "NEC (National Electrical Code)"}, {"tr": "מעבדת בדיקות עצמאית — בודקת ומאשרת מוצרי חשמל (UL listed = נבדק ואושר).", "t": "Underwriters' Laboratories (UL)"}, {"tr": "זרם חילופין — מחליף כיוון במחזוריות (רשת הבית); זרם ישר — כיוון אחד בלבד (סוללות, תאים סולאריים).", "t": "Alternating Current (AC) / Direct Current (DC)"}, {"tr": "Voltage — הלחץ החשמלי שדוחף את הזרם בחוטים; Amp — יחידת הזרם עצמו. Watts = Volts × Amps.", "num": "240 V × 30 A = 7,200 watts (חישוב מבחן קלאסי).", "t": "Voltage / Amp"}, {"tr": "Ammeter מודד זרם (Amps) · Voltmeter מודד מתח (Volts) · Ohmmeter מודד התנגדות (Ohms) — וגם רציפות (Continuity) ואיגוד.", "t": "Ammeter / Voltmeter / Ohmmeter"}, {"tr": "מפסק הניתוק החיצוני ליד יחידת המזגן — חובה ניתוק חיצוני בטווח ראייה מהיחידה.", "def": "Missing exterior disconnect at the condenser.", "t": "A/C Disconnect"}, {"tr": "גופי תאורה שקועים בעליית גג/תקרה מבודדת חייבים דירוג IC (Insulation Contact) — מותרים במגע עם בידוד.", "def": "Non-IC recessed fixtures buried in insulation — fire hazard.", "log": "Heat force.", "t": "IC rated (recessed lights)"}, {"tr": "כבל מאריך — פתרון זמני בלבד; מכשיר קבוע דורש חיווט קבוע.", "def": "Extension cords used as permanent wiring.", "t": "Extension cord"}, {"tr": "מערכת תאורה במתח נמוך — לא נכללת בבדיקת הבית הסטנדרטית.", "t": "Low voltage lighting"}, {"tr": "גלאי עשן — בכל קומה כולל מרתף, מחוץ לכל אזור שינה, ובתוך כל חדר שינה. בבנייה חדשה: מחווטים + גיבוי סוללה + מקושרים (אחד מצפצף — כולם).", "def": "Missing / non-functional smoke alarms at required locations.", "t": "Smoke alarms"}, {"tr": "נקודת החיבור בין מספר חוטים (וגם: חיבורי המתנה של החשמלאי בשלב ה-Rough).", "t": "Electrical Pigtails (service)"}]}, {"id": "06", "en": "COOLING", "he": "קירור", "cards": [{"tr": "מחזור הקירור — הסדר הנכון: Compressor → Condenser → Metering device → Evaporator. המערכת סגורה: לא \"ממלאים גז\" אלא אם יש דליפה.", "log": "דחיסה → עיבוי בחוץ → ויסות → אידוי בפנים.", "t": "The Cooling Cycle"}, {"tr": "המדחס — הרכיב הראשי ביחידה החיצונית; דוחס ומסחרר את חומר הקירור.", "t": "Compressor"}, {"tr": "המעבה — יחידת המאוורר החיצונית; פולטת את החום החוצה והופכת את הגז חזרה לנוזל (Liquefy → Condenser).", "def": "Condenser not level, fins damaged/clogged, or missing exterior disconnect.", "t": "a/c Condenser"}, {"tr": "סליל המאייד — בתוך הבית; סופג את החום מהאוויר הפנימי ומקרר אותו.", "log": "Evaporator absorbs (בפנים) · Condenser rejects (בחוץ).", "t": "Evaporator Coil"}, {"tr": "שסתום ההתפשטות — מווסת את כניסת חומר הקירור למאייד.", "t": "Metering device (Thermal expansion valve)"}, {"tr": "חומר הקירור (בעבר פריאון) — נוזל/גז שמעביר את החום במחזור סגור.", "t": "Refrigerant"}, {"tr": "טון קירור.", "num": "1 ton = 12,000 BTU/h · 3-ton system = 36,000 BTU/h.", "t": "One ton (AC)"}, {"tr": "מי עיבוי — תופעה נורמלית בזמן קירור; מתנקזים מאגן הניקוז של סליל המאייד, רצוי בכוח הכבידה אל ניקוז רצפה.", "def": "Rust / overflow at the drain pan; condensate line not draining with the flow.", "log": "Gravity — the desirable drain goes with the flow.", "t": "Condensate"}, {"tr": "מצנן אידוי — מעביר אוויר דרך רפידות רטובות; מתאים לאקלים יבש (מדבר, דרום-מערב ארה\"ב).", "t": "Swamp Cooler (Evaporative cooler)"}, {"tr": "מדד יעילות הקירור העונתי של מזגן (כמו AFUE לחימום, HSPF למשאבת חום).", "t": "SEER"}, {"tr": "משאבת חום — מעבירה חום מאזור קר לחם; מזגן הפיך (מחמם בחורף, מקרר בקיץ). הגודל נקבע לפי עומס הקירור; אדים מהיחידה החיצונית בהפשרה (defrost) = נורמלי.", "num": "balance point ~35°F — מתחת לזה נכנס חימום עזר (auxiliary / emergency heat).", "def": "Heat pump running on emergency heat continuously.", "log": "Temperatures family — the pump gives up at 35, the same number as the refrigerator.", "t": "Heat Pump"}, {"tr": "תעלות האוויר — מובילות אוויר מחומם/מקורר מהמערכת לכל הבית וחזרה. תעלות באזור לא ממוזג (עליית גג, חלל זחילה) חייבות להיות מבודדות ואטומות.", "def": "Disconnected, crushed or uninsulated ducts in unconditioned spaces.", "t": "Ductwork / Duct"}, {"tr": "הרשתות/מפזרי האוויר — מווסתים את זרימת האוויר בפתחי התעלות.", "t": "Registers"}, {"tr": "Supply — האוויר שיוצא אל החדרים; Return — האוויר שחוזר למערכת. חוסר בפתחי חזרה = לחצים לא מאוזנים בבית.", "t": "Supply / Return"}, {"tr": "תרמוסטט — בקר שמדליק ומכבה חימום/קירור אוטומטית לפי טמפרטורה מכוונת.", "t": "Thermostat"}, {"tr": "חלוקת הבית לאזורי טמפרטורה נפרדים; שסתום אזור (ליד הדוד) שולט בזרימת מים/קיטור לכל אזור לפי תרמוסטט אזורי.", "t": "Zone System / Zone Valve"}, {"tr": "טווח טמפרטורת החוץ שבו בודקים מערכת קירור בלי לסכן אותה.", "num": "60–65°F.", "log": "Temperatures family.", "t": "Outdoor temperature for HVAC inspection"}]}, {"id": "07", "en": "HEATING", "he": "חימום", "cards": [{"tr": "תנור אוויר מאולץ — מפוח שמעביר את החום מהדלק ומסחרר אותו בתעלות. אוויר מאולץ = שליטה מלאה: סינון, ניקוי סליל, הוספת לחות. התחזוקה העיקרית: המסנן (כיוון החץ — אל תוך התנור).", "def": "Dirty / missing filter; filter installed against the airflow arrow.", "t": "Force Air Furnace"}, {"tr": "מחליף החום — המקום בתנור שבו חום הבעירה עובר לאוויר הבית בלי שהגזים ייגעו בו. הסכנה הגדולה ביותר בחימום גז: סדק במחליף = דליפת CO, \"הרוצח השקט\". סימן: להבות \"רוקדות\". מחליף סדוק — מחליפים, לא מתקנים.", "def": "Cracked heat exchanger — dancing flames, soot, CO at registers; replace the furnace/exchanger.", "log": "Heat force — combustion gases must stay sealed on their way up and out.", "t": "Heat Exchanger"}, {"tr": "מכשיר אדים על התנור — הסיכון: חלודה במחליף החום.", "log": "Water force — water + steel = rust, even inside the furnace.", "t": "Humidifier (on furnace)"}, {"tr": "דוד הסקה — כלי סגור שמחמם מים ומסחרר אותם כמים חמים או קיטור. שסתום שחרור הלחץ יושב ישירות על הדוד; צנרת גז/מים חמים = ברזל שחור.", "def": "Missing / leaking pressure relief valve on the boiler.", "t": "Boiler"}, {"tr": "חימום הידרוני — חימום באמצעות נוזל/מים (Hydro = מים): דוד, צנרת, רדיאטורים או צינורות ברצפה.", "t": "Hydronic system"}, {"tr": "חימום קיטור — דוד וצנרת שמובילים קיטור לרדיאטורים (בתים ישנים).", "t": "Steam heat system"}, {"tr": "רדיאטור — גוף מתכת עם צינורות שדרכם עוברים קיטור או מים חמים ומקרינים חום לחדר.", "t": "Radiator"}, {"tr": "חימום קרינה — כבלים או צינורות בתוך הרצפה, הקירות או התקרה שמחממים את המסה עצמה.", "t": "Radiant heating system"}, {"tr": "חימום פנלים — גופי חימום (חשמל או מים חמים) לאורך היקף הקיר במקום הפנל.", "t": "Baseboard heat"}, {"tr": "משאבת הסחרור — מסחררת מים חמים/קיטור במערכת; במערכת מאולצת מחפשים משאבה. מאפשרת גם אזורי חימום נפרדים.", "t": "Circulating Motor / Pump"}, {"tr": "בקר טמפרטורת המים בדוד (Aqua = מים).", "t": "Aquastat"}, {"tr": "מיכל התפשטות — מיכל קטן במערכת מים חמים שנותן למים המתחממים לאן להתרחב; מונע פיצוץ צנרת ואביזרים.", "log": "Heat force — heated water expands; give it room or it finds its own.", "t": "Expansion Tank"}, {"tr": "שחרור אוויר — הוצאת אוויר כלוא ממערכת חימום מים (רדיאטור שקר בחלקו העליון = אוויר כלוא).", "t": "Bleeding"}, {"tr": "הולכה — מעבר חום דרך מוצקים; הסעה — מעבר חום ע\"י נוזלים/אוויר נעים (Convector = גוף חימום שמניע אוויר).", "t": "Conduction / Convection"}, {"tr": "מדף ויסות — לוחית/שסתום שמווסת את זרימת האוויר בארובת תנור או אח.", "t": "Damper"}, {"tr": "מעשנה — המעבר הסגור שמוציא עשן וגזי בעירה החוצה.", "log": "Heat force — smoke wants up; the flue is its road.", "t": "Flue"}, {"tr": "צינור/תעלת פליטה לאוויר וגזים החוצה (וגם: החלק הזז של אגף חלון).", "t": "Vent"}, {"tr": "ארובת מתכת כפולת דופן — לגז בלבד; אסורה לעץ או פחם.", "def": "Wood/coal appliance vented into a Type B gas vent.", "t": "Type B vent"}, {"tr": "קטגוריות ארובה לפי לחץ וטמפרטורה: I — לחץ שלילי, לא מעבה (Type B); III — לחץ חיובי, נירוסטה אטומה; IV — לחץ חיובי, מעבה (condensing) — צינור PVC/CPVC לבן מהקיר + ניקוז מי עיבוי. Category IV = יעילות גבוהה.", "num": "condensing furnace AFUE 90%+ (standard 80%).", "t": "Vent Categories (I–IV)"}, {"tr": "יעילות ניצול דלק שנתית של תנור חימום.", "num": "80% standard · 90%+ condensing.", "t": "AFUE"}, {"tr": "תרמוקפל — חיישן להבת הביקורת (pilot light); כשהלהבה כבית הוא סוגר את שסתום הגז.", "def": "Pilot won't stay lit — failed thermocouple.", "t": "Thermocouple"}, {"tr": "פרופאן — גז כבד מהאוויר; דליפה יורדת לרצפה ומצטברת למטה (בניגוד לגז טבעי שעולה).", "log": "Heavy gas falls — that's why propane appliances in pits/basements are riskier.", "t": "Propane"}, {"tr": "צינור העשן מהתנור לארובה — אסור אופקי לגמרי; חייב שיפוע כלפי מעלה לכיוון הארובה.", "def": "Smoke pipe in a dead-level position or sloping down.", "log": "Heat force — flue gases climb; give them a ramp.", "t": "Smoke pipe"}, {"tr": "ברז ניתוק גז — ליד כל מכשיר גז.", "num": "within 6 feet of the appliance.", "def": "Missing / inaccessible shutoff at a gas appliance.", "log": "\"6\" family.", "t": "Gas shutoff valve"}, {"tr": "מלכודת משקעים — קטע צינור אנכי קצר על קו הגז, ממש לפני המכשיר; אוסף לכלוך ולחות שלא ייכנסו לשסתום.", "def": "Missing sediment trap ahead of gas appliances.", "log": "Gravity — debris falls into the leg instead of the valve.", "t": "Sediment trap (Dirt leg)"}, {"tr": "צנרת ברזל שחור — הצנרת המסורתית לגז ולמים חמים של דוד.", "t": "Black iron pipe"}, {"tr": "צינור גז נירוסטה גמיש (צהוב) — חייב הארקה/איגוד נפרד בגלל סכנת ניקוב מפגיעת ברק. שאלה נפוצה במבחן.", "def": "CSST without separate bonding — lightning puncture and fire hazard.", "t": "CSST"}, {"tr": "מחבר גז גמיש למכשיר — אסור שיעבור דרך קיר, רצפה או תקרה.", "def": "Flexible gas connector passing through a wall or floor; unsupported, rusted or flaking gas piping.", "t": "Flexible connector (gas)"}, {"tr": "איתור דליפת גז — מי סבון בלבד, לעולם לא להבה. ריח גז חזק = לפנות את הבית ולהזעיק.", "t": "Gas leak detection"}, {"tr": "אוויר בעירה — אספקת אוויר טרי לתנור/דוד. חלל פתוח מספיק לבד; חלל סגור צריך שני פתחים — אחד גבוה ואחד נמוך.", "num": "unconfined space 50 cu ft per 1,000 BTU/h · confined indoor 1 sq in per 1,000 BTU/h × 2 openings · direct from outdoors 1 sq in per 4,000 BTU/h.", "def": "Furnace / water heater in a sealed closet without combustion air openings.", "log": "Ventilation ratios — outdoor air is cleaner, so it needs 4× less area (4,000 vs 1,000).", "t": "Combustion Air"}, {"tr": "זרימה הפוכה — גזי בעירה שחוזרים לתוך הבית במקום לצאת בארובה. סימנים: פיח, לחות, ריח וכתמים סביב ה-draft hood.", "def": "Soot / staining / melted grommets at the draft hood — evidence of backdrafting.", "log": "Heat force — when the house sucks harder than the flue, the gases turn around.", "t": "Backdrafting"}, {"tr": "שסתום שחרור — נפתח אוטומטית בטמפרטורה או לחץ עודפים (בדוד חימום — ישירות על הדוד).", "log": "Temperatures & pressures family.", "t": "Relief Valve"}]}, {"id": "08", "en": "INSULATION & VENTILATION", "he": "בידוד ואוורור", "cards": [{"tr": "התנגדות למעבר חום — גבוה יותר = בידוד טוב יותר. בידוד דחוס או רטוב מאבד R-value.", "num": "current code attic R-38 to R-60 · walls 2×4 R-13/15 · walls 2×6 R-19/21 (במחברת הישנה: R-30 attic / R-19 walls).", "def": "Compressed, wet or missing insulation.", "log": "R = Resistance = high is good · U = the opposite.", "t": "R-Value"}, {"tr": "מוליכות חום של חלון/דלת — ההפך מ-R: נמוך יותר = בידוד טוב יותר. חלונות נמדדים ב-U.", "log": "The exam trap — R high good, U low good.", "t": "U-Value"}, {"tr": "בידוד — חומר שמתנגד לאיבוד חום (פיברגלס, צמר סלעים, תאית, קלקר); בקירות, תקרות, מרתפים וחללי זחילה — יוצר את המעטפת התרמית. מותקן בהתזה (blown) או ביריעות (batts).", "t": "Insulation"}, {"tr": "בידוד תאית — 80–85% נייר ממוחזר.", "t": "Cellulose insulation"}, {"tr": "קצף תאים סגורים — בידוד בצפיפות (וב-R) הגבוהים ביותר.", "t": "Closed cell foam"}, {"tr": "יריעות בידוד גמישות — בין הזקפים בקירות.", "t": "Batts / Blankets"}, {"tr": "בידוד תפזורת — מפוזר בעליית הגג.", "t": "Loose (blown) insulation"}, {"tr": "חוסם אדים — יריעה עמידת לחות שמונעת מאדי מים חמים להיכנס לבידוד ולהתעבות בקיר. תמיד בצד החם של הקיר, פונה אל מקור החום. גבס עם גב נייר כסף = חוסם אדים.", "def": "Vapor barrier on the cold side of the assembly.", "log": "Water force — stop the vapor before it reaches a cold surface and condenses.", "t": "Vapor Barrier"}, {"tr": "נקודת הטל — הטמפרטורה שבה אוויר רווי מתחיל להתעבות: Saturated air → Condensation → Dew point.", "t": "Dew point"}, {"tr": "אמיסיביות — כושר פליטת חום קורן של משטח (Emit radiant heat).", "t": "Emissivity"}, {"tr": "הסתננות אוויר — מעבר אוויר פנימה והחוצה דרך סדקים, תפרים וחורים; מורגש כרוח פרצים (draft spot).", "t": "Infiltration"}, {"tr": "אוורור עליית הגג — אוויר נכנס נמוך בסופיט ויוצא גבוה ברכס; מונע עיבוי בחורף וסכרי קרח.", "num": "attic 1/300 · crawl space 1/150 · crawl vents within 3 ft of each corner.", "def": "Inadequate attic ventilation — condensation, frost or delaminated sheathing.", "log": "Ventilation ratios — the crawl space is smaller and wetter, so it needs double the venting (150 vs 300).", "t": "Attic ventilation"}, {"tr": "פתחי האוורור: Soffit — בתחתית הבליטה (כניסה); Ridge — לאורך הרכס (יציאה); Gable — בקיר הגמלון בצד.", "log": "Heat force — in low, out high.", "t": "Soffit vent / Ridge vent / Gable vent"}, {"tr": "אפקט הארובה — אוויר חם תמיד עולה; הבית עצמו מתנהג כמו ארובה ושואב אוויר קר מלמטה.", "t": "Stack effect"}, {"tr": "מאוורר כל-הבית — בתקרה; מושך אוויר קריר פנימה דרך החלונות ודוחף אוויר חם לעליית הגג והחוצה.", "t": "Whole House Fan"}, {"tr": "מערכת אוורור עם השבת חום — מעבירה חלק מהחום מהאוויר היוצא אל האוויר הטרי הנכנס.", "num": "exterior exhaust opening at least 3 ft from doors and windows.", "log": "3-feet family.", "t": "HRV / ERV"}, {"tr": "ונטה באמבטיה — חייבת לפלוט החוצה מהבית; אסור לעליית גג או לחלל נסתר.", "def": "Bath fan discharging into the attic — moisture and mold.", "log": "Water force — dump the moisture outside, not into the structure.", "t": "Bathroom exhaust fan"}, {"tr": "צינור פליטת מייבש — חלק, קצר וישר ככל האפשר, החוצה בלבד.", "num": "duct diameter 4 in · screws max 1/8 in (לא ברגים שחודרים לתעלה — אוספים מוך).", "def": "Plastic / screwed / lint-clogged dryer duct, or duct terminating indoors — fire hazard.", "log": "Heat/fire force — lint + heat is a fire recipe.", "t": "Dryer vent"}, {"tr": "מפוח המטבח — הבעיה האופיינית: הצטברות שומן (grease buildup).", "t": "Kitchen exhaust"}, {"tr": "מאוורר תקרה — התקלה הנפוצה: חוסר איזון (out of balance).", "t": "Ceiling paddle fan"}, {"tr": "חלון כפול/משולש — שתי שכבות זכוכית או יותר עם גז אינרטי ביניהן (ארגון; קריפטון ביקרים).", "def": "Fogging between panes — failed seal.", "t": "Thermal Window"}, {"tr": "גבס עם גב רדיד אלומיניום — משמש גם כחוסם אדים.", "t": "Foil back gypsum"}]}, {"id": "09", "en": "PLUMBING", "he": "אינסטלציה", "cards": [{"tr": "מערכת ניקוז-שפכים-אוורור — מוציאה מים אפורים ושחורים מהבית ומאווררת את צנרת השפכים דרך הגג. עיקרון בסיס: כל קבועה מחוברת למערכת השפכים והאוורור.", "log": "Gravity — waste falls; the vent lets air in so it can.", "t": "Drain-Waste-Vent (DWV) System"}, {"tr": "קווי אספקה — מובילים מים לקבועות. כיור, מכונת כביסה, אמבטיה ומקלחת — חם וקר; אסלה — קר בלבד.", "num": "water line entry 3/4 in · fixture branch line 1/2 in.", "log": "Thicknesses family — 3/4 in and out of the house, 1/2 to the fixture.", "t": "Supply Lines"}, {"tr": "לחץ המים בבית.", "num": "normal range 40–80 psi · hot water pressure 12–22 psi.", "def": "Pressure below 40 or above 80 psi.", "log": "Temperatures & pressures family. חמישה גורמים שמשפיעים על אספקה: pipe size, smoothness, direction changes, pressure, height.", "t": "Water pressure"}, {"tr": "דוד מים חמים — כשהדוד מתקלקל בודקים קודם את המים החמים. Dip tube — מכניס את המים הקרים לתחתית הדוד.", "num": "max setting 120°F · electric water heater 240 V / 30 amp · earthquake straps where required.", "def": "Temperature above 120°F (scald hazard); missing seismic straps (gas heater).", "log": "Temperatures family — 120 out of the tap, 210 at the valve.", "t": "Water Heater"}, {"tr": "שסתום ביטחון לטמפרטורה ולחץ על הדוד — נפתח לפני שהדוד הופך לפצצה.", "num": "opens at 210°F / 150 psi.", "def": "Missing, leaking, or capped T&P valve.", "log": "Temperatures & pressures family.", "t": "T&P Relief Valve (TPR)"}, {"tr": "צינור הפריקה של השסתום — באותו קוטר, יורד בכוח הכבידה, בלי ברז ובלי הברגה בקצה.", "num": "3/4 in pipe · ends 6 in above the floor.", "def": "Discharge tube reduced, threaded at the end, capped, or terminating too high.", "log": "Gravity + \"6\" family — down only, and low enough not to scald anyone standing there.", "t": "TPR Discharge Tube"}, {"tr": "מנתק מים נמוכים — מונע מהמבער לפעול כשאין מספיק מים בדוד/בוילר.", "t": "LWCO (Low Water Cut Out)"}, {"tr": "מלכודת מים — כיפוף בצנרת שמחזיק \"פקק מים\" וחוסם ריחות, גזים ומזיקים מלחזור לקבועה. ריח רע מקבועה שלא בשימוש = המים במלכודת התאדו.", "num": "water seal 2–4 in.", "def": "Missing / dry / leaking trap.", "log": "\"2 inch\" family — the 2–4 in of water is the seal.", "t": "Trap (P-trap)"}, {"tr": "מלכודת S — אסורה: היא מסוגלת לשאוב (siphon) את פקק המים של עצמה החוצה.", "def": "S-trap configuration at a fixture.", "t": "S-trap"}, {"tr": "מזין מלכודת — מוסיף מים למלכודות שמתייבשות; Air gap — הפרדת אוויר פיזית שמונעת זרימה חוזרת (גם בכיור וגם במדיח).", "t": "Trap primer / Air gap"}, {"tr": "מונע זרימה חוזרת — שסתום חד-כיווני שמונע ממים מזוהמים מהבית לחזור לקו האספקה הציבורי.", "def": "Hose bibb / irrigation without backflow protection.", "log": "Water force — contaminated water must never rejoin the clean side.", "t": "Backflow Preventer"}, {"tr": "פטיש מים — נקישות בצנרת כשסוגרים ברז מהר; נגרם מחוסר תאי אוויר (air chambers) שסופגים את ההלם.", "t": "Water hammer"}, {"tr": "ברז ויסות — מווסת או עוצר את הזרימה (לעומת gate valve שרק פתוח/סגור).", "t": "Globe valve"}, {"tr": "רקורד — אביזר שמחבר צינורות קצה-לקצה ומאפשר פירוק בלי לחתוך.", "t": "Union"}, {"tr": "רקורד מבודד — חובה בחיבור שתי מתכות שונות (נחושת + מגולוון) כדי למנוע קורוזיה גלוונית (Electrolysis — קורוזיה חשמלית בין מתכות שונות).", "def": "Copper joined directly to galvanized steel — galvanic corrosion at the joint.", "t": "Dielectric union"}, {"tr": "צנרת נחושת — חומר האספקה הנפוץ ביותר. M — הדופן הדקה ביותר, K — העבה ביותר.", "t": "Copper (types M / L / K)"}, {"tr": "פוליאתילן מוצלב — צנרת גמישה מודרנית; כחול = קר, אדום = חם. משמשת גם לחימום רצפתי.", "t": "PEX"}, {"tr": "פלסטיק לבן/קרם עמיד חום — לאספקת מים חמים וקרים.", "t": "CPVC"}, {"tr": "פלסטיק לבן — בעיקר לניקוז ושפכים (ולעיתים אספקה קרה).", "t": "PVC"}, {"tr": "פלסטיק שחור לניקוז — קשיח מ-PVC אבל מתעוות בשמש.", "t": "ABS"}, {"tr": "פלדה מגולוונת — צנרת ישנה לאספקה ושפכים; מחלידה ונסתמת מבפנים, הלחץ יורד עם השנים.", "def": "Corroded / restricted galvanized supply piping — low flow at fixtures.", "t": "Galvanized Steel (plumbing)"}, {"tr": "פוליבוטילן — צנרת אפורה משנות ה-70 עד 1990; כשל נרחב, ירדה מהשוק.", "def": "Polybutylene supply piping present — known failure history; reportable.", "t": "PB (Polybutylene)"}, {"tr": "עופרת — צנרת ישנה מסוכנת לבריאות; מזהים בגירוד עדין (מבריק ורך).", "def": "Lead supply piping / lead solder suspected.", "t": "Lead (plumbing)"}, {"tr": "ברזל יצוק — צנרת שפכים ישנה; שקטה וכבדה, מחלידה ונסדקת עם הזמן.", "t": "Cast Iron"}, {"tr": "פליז — נחושת + אבץ; לקווי אספקה ואביזרים.", "t": "Brass"}, {"tr": "צינור סיבי עץ וזפת (Fiber Conduit) — צנרת ביוב מהשנים 1950–1960; מתמוטט עם הזמן.", "def": "Orangeburg sewer lateral — recommend sewer scope.", "t": "Orangeburg"}, {"tr": "סיבי קנבוס ספוגי זפת — אטימת מחברי צנרת ישנים (ברזל יצוק) ותפרים רחבים.", "t": "Oakum"}, {"tr": "הקולטן הראשי — הצינור האנכי הגדול שאוסף את כל השפכים; House drain → Main soil — קו הניקוז הראשי של הבית.", "t": "Soil stack"}, {"tr": "צינור האוורור של האינסטלציה — משווה לחץ אוויר במערכת ומונע שאיבת מלכודות; חייב לעבור דרך הגג.", "num": "6 in above the roof.", "def": "Vent terminating in the attic; vent too close to windows / air intakes.", "log": "\"6\" family.", "t": "Vent Pipe / Plumbing vent"}, {"tr": "אוורור רטוב — קטע צינור שמשמש גם ניקוז וגם אוורור לקבועות סמוכות באותו מפלס.", "t": "Wet vent"}, {"tr": "שסתום אוויר חד-כיווני — נפתח כשנוצר לחץ שלילי ומכניס אוויר בלי צינור דרך הגג (איפה שמאושר).", "t": "Air admittance valve (AAV)"}, {"tr": "פתח ניקוי — גישה לצינור הביוב לפתיחת סתימות.", "num": "10 ft from the junction (במחברת).", "t": "Sewer cleanout"}, {"tr": "משאבת שפכים — \"מרימה\" שפכים מקבועות שנמצאות מתחת לקו הביוב (מרתף) אל קו הכבידה.", "log": "Gravity — when the fixture is below the sewer, you must pump uphill.", "t": "Sewage Ejector"}, {"tr": "מים שחורים — שפכי אסלות (לעומת Greywater מהכיורים והמקלחות).", "t": "Blackwater"}, {"tr": "קבועת אינסטלציה — כל מכשיר שדורש אספקת מים וניקוז (כיור, אסלה, אמבטיה).", "t": "Plumbing Fixture"}, {"tr": "חרס מזוגג — החומר הנפוץ ביותר לאסלות.", "t": "Vitreous china"}, {"tr": "אסלה (המונח הרשמי).", "num": "clearance wall-to-wall 30 in · center to side wall 15 in.", "log": "Kitchen & bath family — 30 בין קירות, 15 מהמרכז — תמיד חצי.", "t": "Water Closet"}, {"tr": "אוסמוזה הפוכה — סינון מומסים (מלחים) מהמים ע\"י דחיפת מי הברז דרך ממברנה חצי-חדירה בלחץ הבית.", "t": "Reverse Osmosis"}, {"tr": "איטום גמיש — חומר גמיש שסוגר תפרים בין רצפה לקבועות, סביב חלונות, דלתות, מקלחות ואמבטיות.", "t": "Caulking"}, {"tr": "טוחן אשפה — טוחן שאריות מזון לניקוז; מוגן במפסק עומס תרמי (thermal overload), מחובר בכבל ותקע.", "t": "Disposer / Disposal"}, {"tr": "היוק — נקודת התקנת מד המים בין שני צינורות נחושת, בפיר מד המים בחצר.", "t": "Yoke"}, {"tr": "מיכל סולר שיצא משימוש — חייב להיות מוסר מהקרקע (או מטופל לפי הדין המקומי).", "def": "Abandoned underground oil tank present.", "t": "Oil tank (out of service)"}]}, {"id": "10", "en": "INTERIOR", "he": "פנים הבית", "cards": [{"tr": "טיח — תערובת סיד/גבס, חול ומים (לעיתים עם שיער — Horsehair plaster) שנמרחת רטובה ומתקשה. סדקים דקים = הטיח נמרח דק מדי.", "log": "Three-coat system: Scratch coat → Brown coat → Finish coat.", "t": "Plaster"}, {"tr": "הרשת/פסי הבסיס שעליהם נמרח הטיח; רשת מתכת חייבת מערכת שלוש שכבות. אחיזת הטיח ברשת = Key (mechanical bond).", "t": "Lathing (Lath)"}, {"tr": "לוח גבס — גבס בין שתי שכבות נייר (נקרא גם Plasterboard, Wallboard, Gypsum board). Gypsum — מינרל הגבס עצמו.", "num": "screws: one layer 1¼ in · two layers 1⅝ in · Type X fire-rated 5/8 in.", "log": "Thicknesses family.", "t": "Drywall"}, {"tr": "Type X — גבס עמיד אש 5/8 אינץ' (מוסך, תקרות); Type W — בורג לעץ; Type S — בורג לפלדה. ראש הבורג לגבס = Bugle head.", "log": "X = fire · 5/8 = the fire-and-roof thickness.", "t": "Type X / Type W / Type S"}, {"tr": "גבס כחול — לוח עם נייר כחול שמיועד לטיח מיוחד מעליו.", "t": "Blueboard"}, {"tr": "לוח ירוק — גבס עמיד לחות (לא לרטיבות ישירה); באזורים רטובים ממש — לוח פיברצמנט / glass mat.", "def": "Regular gypsum board as a tile backer in a shower.", "t": "Green board / Fiber cement board"}, {"tr": "שפכטל התפרים; קצה הלוח משופע (tapered) כדי שהתפר לא יבלוט. תפר שנראה דרך הצבע = \"Shadow\".", "t": "Joint compound / Tapered edge"}, {"tr": "פרופיל פינה — מגן מתכת על פינות גבס חיצוניות לגימור ישר (פנימית — נייר).", "t": "Corner Bead"}, {"tr": "פרופיל J — גימור מתכת לקצה לוח גבס חשוף (למשל קיר מדרגות מרתף).", "t": "J Channel"}, {"tr": "רצועות יישור — פסי עץ שמיישרים קיר לפני חיפוי (wall finish); Sleepers — אותו רעיון על רצפת בטון מתחת לרצפת עץ (floor finish).", "t": "Furring (strips)"}, {"tr": "אריחי תקרה — תלויים על מסילות או מודבקים; מסתירים נזק, וחלקם הישנים מכילים אסבסט.", "def": "Ceiling tiles concealing damage; suspected asbestos-containing tiles.", "t": "Ceiling Tiles"}, {"tr": "חיפוי פנלים — עץ מלא, לוחות סיביים או למינציה דמוית טפט.", "t": "Paneling"}, {"tr": "עץ טרופי (מהגוני פיליפיני) — שכבת החלקה מתחת לשטיח/ויניל ובדלתות חלולות.", "t": "Luan (Lauan)"}, {"tr": "קרניז/פרופיל קישוט — פסי עץ שמכסים תפרים בין רצפה-קיר, קיר-תקרה וסביב פתחים.", "t": "Moulding"}, {"tr": "פנל תחתית הקיר; Base shoe — הפרופיל הקטן שמשלים אותו בקו הרצפה.", "t": "Baseboard / Base shoe"}, {"tr": "מסגרת הגימור הפנימית סביב חלון או דלת.", "t": "Casing"}, {"tr": "חיבור גרונג — שני חיתוכים של 45° שנפגשים ל-90° (בפינות מסגרות).", "t": "Mitre joint"}, {"tr": "חיבור אצבעות — עץ שחובר מקטעים בשיניים משולבות; מתאים לצביעה בלבד, לא ללכה שקופה.", "t": "Finger joint"}, {"tr": "דלת חלולה — פנים דמוי חלת דבש בין שתי שכבות דקות; לדלתות פנים.", "t": "Hollow-core Door"}, {"tr": "שכבת החלקה — מעל תת-הרצפה ומתחת לחיפוי הסופי (ויניל); מתחת לשטיח — Pad.", "t": "Underlayment (flooring)"}, {"tr": "ריצוף גמיש — ויניל וכדומה; Resilient = חומר גמיש שחוזר לצורתו.", "t": "Resilient flooring"}, {"tr": "רצפה צפה — לא מחוברת לתת-הרצפה (למינציה, engineered) ; רצפת עץ על בטון דורשת Sleepers.", "t": "Floating floor"}, {"tr": "פרקט הנדסי — שכבות מודבקות של עץ וחומרים מורכבים.", "t": "Engineered floor"}, {"tr": "דבק/טיט דק להדבקת קרמיקה (Adhered = מודבק).", "t": "Thin set"}, {"tr": "רצפה שוקעת — שקיעה ברצפה או בקורות = בעיה מבנית, לא קוסמטית.", "def": "Sagging / sloping floors — structural framing issue; evaluate further.", "log": "Gravity — the floor is telling you the framing below gave up.", "t": "Sagging floors"}, {"tr": "המדרגות — רצף המספרים של משפחת המדרגות, מהדריכה עד הראש.", "num": "riser max 7.75 in · tread min 10 in · max variation 3/8 in · nosing 3/4–1¼ in · handrail 34–38 in · headroom 80 in · clear width 31 in · max rise between landings 12 ft · landing min 36 in.", "def": "Uneven risers (more than 3/8 in variation) — trip hazard; missing handrail.", "log": "The stair sequence — עולים במדרגות: דורכת (10) ← עולה (7¾) ← אחידות (3/8) ← מאחז (34–38) ← ראש חופשי (80).", "t": "Stairs (the stair sequence)"}, {"tr": "Tread — המדרך האופקי; Riser — הפאה האנכית שסוגרת בין המדרכים; Nosing — בליטת שפת המדרגה (נדרשת כשהמדרך קטן מ-11 אינץ').", "num": "tread min 10 in · riser max 7.75 in · nosing 3/4–1¼ in.", "log": "Stair sequence family.", "t": "Tread / Riser / Nosing"}, {"tr": "מאחז יד — לאורך גרם המדרגות, בגובה אחיזה טבעי וניתן להקפת כף יד.", "num": "height 34–38 in · grip diameter 1¼–2 in · clearance from wall 1½ in.", "def": "Missing handrail; grip too large to grasp; rail too close to the wall.", "log": "Stair sequence family.", "t": "Handrail"}, {"tr": "מעקה נפילה — נדרש בכל משטח (מדרגות, דק, מרפסת) שגבוה מספיק ליפול ממנו.", "num": "required when the drop exceeds 30 in · height 36 in · openings reject a 4 in sphere.", "def": "Missing guard at a drop over 30 in; guard below 36 in; baluster spacing passing a 4-inch sphere.", "log": "3-feet family — הטריגר 30, הגובה 36; זה פותר את הבלבול בין שני המספרים.", "t": "Guard / Guardrail"}, {"tr": "העמודים האנכיים במעקה (Spindles); Balustrade — המעקה השלם: המאחז + שורת העמודים.", "num": "spacing — a 4 in sphere must not pass.", "t": "Balusters / Balustrade"}, {"tr": "עמוד הפתיחה — העמוד הגדול בתחילת גרם המדרגות שאליו מעוגן המעקה.", "t": "Newel Post"}, {"tr": "Winders — מדרגות מניפה שמשנות כיוון; Skirt board — הלוח בין הקיר למדרגות.", "t": "Winders / Skirt board"}, {"tr": "פודסט — משטח ביניים במדרגות ומול דלתות.", "num": "minimum dimension 36 in · max vertical rise between landings 12 ft.", "log": "3-feet family.", "t": "Landing"}, {"tr": "הגובה החופשי מעל המדרגות.", "num": "80 in (6 ft 8 in).", "log": "Stair sequence — הראש חופשי (80).", "t": "Headroom (stairs)"}, {"tr": "מידות המטבח והאמבטיה.", "num": "kitchen base cabinet 24 in · bathroom vanity 21 in · upper cabinet to countertop 18 in · modular increments 3 in · dishwasher width 24 in · shower stall 22 in (דלת נפתחת החוצה).", "log": "Kitchen & bath family — ארון 24, כיור אמבטיה 21, הרווח לעליון 18.", "t": "Kitchen & bath cabinets"}, {"tr": "מדיח — חייב כבל ותקע (לא חיווט קבוע), צינור ניקוז ב-High loop (למניעת זרימה חוזרת), מחובר לצד החי.", "num": "width 24 in.", "def": "Dishwasher drain without a high loop / air gap.", "t": "Dishwasher"}, {"tr": "מקרר.", "num": "32 in cabinet width → 20 amp circuit · temperature 35°F.", "log": "Temperatures family — 35 גם מקרר וגם balance point של משאבת חום.", "t": "Refrigerator"}, {"tr": "הפרדת אש בין מוסך צמוד לבית: קיר משותף, תקרה ודלת עמידים; אסורה דלת ישירה ממוסך לחדר שינה; רצפת המוסך נמוכה מהבית ומשופעת החוצה.", "num": "garage side of common wall 1/2 in gypsum · ceiling with living space above 5/8 in Type X · door 1⅜ in solid wood / 20-minute rated + self-closing.", "def": "Pet door or gaps in the fire separation; door to a sleeping room; non-rated or non-self-closing door.", "log": "Thicknesses family + heat force — the garage is the fire room; the wall buys time.", "t": "Garage (attached) — fire separation"}, {"tr": "פותחן דלת מוסך — שני מנגנוני בטיחות: חיישני עין נמוכים ומנגנון היפוך במגע.", "num": "photo-eye sensors 4–6 in above the floor.", "def": "Door fails to auto-reverse on resistance; sensors missing or mounted too high.", "t": "Garage door opener"}, {"tr": "הקפיצים נושאים את משקל הדלת (מסוכנים בכשל); ההנעה — שרשרת או בורג (two-car garage).", "def": "Broken spring; missing safety cables on extension springs.", "t": "Garage door springs / drive"}, {"tr": "ארונות עליונים — מחוברים לקיר (לזקפים), לא לגבס בלבד.", "t": "Wall cabinets"}]}, {"id": "11", "en": "FIREPLACE & CHIMNEY", "he": "אח וארובה", "cards": [{"tr": "כלל גובה הארובה — הכלל היחיד שחייבים בעל-פה.", "num": "3 ft above the roof penetration · 2 ft higher than anything within 10 ft.", "def": "Chimney terminating below the 3-2-10 requirement.", "log": "Chimney family — heat and smoke must clear the roof and everything near it.", "t": "Chimney rule (3-2-10)"}, {"tr": "מרווחי הארובה — ארובה שלגמרי בין הקירות אינה מעוגנת; ארובה טרומית בתוך מסגרת = Metal pan.", "num": "unsupported chimney above roof max 6 ft · metal chimney clearance 2 in · clearance to combustibles: interior masonry 2 in / exterior 1 in.", "def": "Combustibles in contact with the chimney; unsupported stack above 6 ft.", "log": "\"2 inch\" family + heat force — every gap buys time.", "t": "Chimney (support & clearance)"}, {"tr": "המעשנה — התעלה שדרכה עולים גזי השרפה החוצה.", "t": "Flue"}, {"tr": "בטנת המעשנה — קטעי חרס/טרקוטה באורך 2 רגל בתוך הארובה, מחוברים ב-refractory mortar (מלט עמיד חום); מרצים מרגל מתחת לחיבור עד ראש הארובה.", "def": "Cracked / missing flue liner sections.", "t": "Flue Lining"}, {"tr": "מדף העשן — סוגר את הארובה כשהאח לא בשימוש; חייב להיפתח ולהיסגר.", "def": "Damper missing, rusted open/shut, or inoperable.", "t": "Damper (fireplace)"}, {"tr": "Smoke shelf — מדף מעל תא הבעירה שמונע מהעשן (ומהגשם) לחזור פנימה; Throat — הצוואר הצר שמעל תא הבעירה.", "t": "Smoke shelf / Throat"}, {"tr": "תא הבעירה — הקירות שסביב האש.", "num": "masonry wall 8 in — or 6 in with 2 in firebrick lining.", "log": "\"2 inch\" family — the firebrick buys the missing 2 inches.", "t": "Firebox"}, {"tr": "רצפת האח + ההארכה חסינת האש אל תוך החדר (הגנה מגיצים).", "num": "small opening (under 6 sq ft): 16 in front / 8 in sides · large opening (6 sq ft+): 20 in front / 12 in sides.", "def": "Hearth extension smaller than required; combustible flooring at the opening.", "log": "Chimney & fireplace family — הצד תמיד חצי מהחזית (16/8, 20/12); הסף בין קטן לגדול = 6 sq ft.", "t": "Hearth / Hearth extension"}, {"tr": "מדף האח — רכיב עץ דקורטיבי מעל הפתח.", "num": "at least 6 in from the fireplace opening.", "log": "\"6\" family + heat force.", "t": "Mantel"}, {"tr": "קריאוזוט — תוצר שרפת עץ (עשן, אדים, זפת) שמתעבה על דפנות המעשנה הקרה ונדבק; דליק מאוד.", "def": "Heavy creosote buildup in the flue — chimney fire hazard; recommend cleaning.", "log": "Heat force — the colder the flue, the more it condenses.", "t": "Creosote"}, {"tr": "פירוליזה — שינוי כימי בעץ מחשיפה ממושכת לחום; העץ נדלק בטמפרטורה נמוכה יותר עם הזמן. זו הסיבה למרווחי הבטיחות מסביב.", "log": "Heat force — clearances exist because wood \"learns\" to burn.", "t": "Pyrolysis"}, {"tr": "קורבל — שכבות לבנים שבולטות זו מעל זו ויוצרות מדף/הרחבה בארובה.", "t": "Corbel"}, {"tr": "מכסה הארובה — מונע כניסת גשם ובעלי חיים ויציאת גיצים.", "def": "Missing cap / spark arrestor.", "t": "Chimney cap / Spark arrestor"}, {"tr": "מלט עמיד חום — המלט שמחבר את בטנת החרס של המעשנה.", "t": "Refractory mortar"}]}, {"id": "12", "en": "APPLIANCES & ENERGY", "he": "מכשירים ואנרגיה", "cards": [{"tr": "המדבקות הצהובות על מכשירים — צריכת האנרגיה הצפויה של המוצר לעומת הממוצע במוצרים דומים.", "t": "Energy Guide Labels"}, {"tr": "תוכנית דירוג ליעילות אנרגטית של בתים ומכשירים; המדרגים מאושרי RESNET.", "t": "ENERGY STAR"}, {"tr": "רשת מומחי האנרגיה למגורים — מבצעת דירוגי יעילות ומכשירה מדרגים.", "t": "RESNET"}, {"tr": "רצועת רעידות אדמה — מקבעת דוד גז לשלד/יסוד; מונעת נפילה ודליפת גז ברעידה.", "def": "Unstrapped gas water heater (seismic zones).", "t": "Earthquake Strap"}]}, {"id": "13", "en": "REPORTING & PROFESSIONAL PRACTICE", "he": "דיווח ואתיקה", "cards": [{"tr": "פגם חבוי — קיים אבל לא ניתן לגילוי בבדיקה סבירה. ההגנה של המפקח: הבדיקה ויזואלית ולא הרסנית.", "t": "Latent Defect"}, {"tr": "פגם מוסתר — לא ניתן לזיהוי בבדיקה רגילה בלי בדיקה הרסנית (פתיחת קירות).", "t": "Concealed Defect"}, {"tr": "פגם מהותי — פגם שמשפיע על הערך או על הבטיחות. זה מה שחייבים לדווח.", "log": "Value or Safety — the two words that define what goes in the report.", "t": "Material Defect"}, {"tr": "דוח מילולי — כתוב בפסקאות, לא רק צ'קליסט. המפקח מספק: דוח מילולי + רשימת סימון + מערכת דירוג.", "t": "Narrative Report"}, {"tr": "תקן העבודה — הבדיקה ויזואלית, לא הרסנית ולא ממצה טכנית; רק מערכות מותקנות ונגישות; מדווחים פגמים משמעותיים ורכיבים בסוף חייהם; מערכת שלא נבדקה — כותבים שלא נבדקה ולמה.", "t": "Standards of Practice"}, {"tr": "מה שהמפקח לא חייב: להזיז ריהוט/שטיחים, לפרק ציוד, לעלות על גג לא בטוח, לקבוע התאמה לקוד, לחזות תוחלת חיים או עלויות, חישובי הנדסה, בדיקות סביבתיות (עובש/רדון) בלי הסמכה, רכיבים נסתרים ועונתיים.", "t": "Not required (out of scope)"}, {"tr": "הסכם טרום-בדיקה — חוזה בכתב לפני תחילת הבדיקה: היקף, מגבלות ועלות; מגן על המפקח ועל הלקוח.", "def": "(למבחן) Inspection performed without a signed agreement = the classic liability mistake.", "t": "Pre-Inspection Agreement"}, {"tr": "ביטוח אחריות מקצועית — טעויות והשמטות של הבודק (לעומת General Liability — נזק פיזי לגוף/רכוש בשטח).", "t": "Errors and Omissions Insurance (E&O)"}, {"tr": "הגבלת סעדים — סעיף בחוזה שמגביל את הפיצוי ללקוח (למשל להחזר עלות הבדיקה).", "t": "Limitation of remedies"}, {"tr": "טופס גילוי מצב הנכס — המוכר הוא שממלא ועונה עליו, לא המפקח.", "t": "Residential Disclosure Statement"}, {"tr": "אתיקה — בלי ניגוד עניינים (לא בודקים נכס עם עניין כספי); אסור לתקן את מה שבדקת (~12 חודשים); אסור דמי הפניה מקבלנים; הדוח סודי — שייך ללקוח ששילם בלבד; בלי פרסום מטעה.", "num": "repair restriction ~12 months · professional practice ≈ 10% of the exam.", "t": "Ethics"}, {"tr": "סיור מסירה — בדיקה אחרונה של הקונה לפני ה-Closing לתיעוד בעיות שדורשות תיקון (זה לא Home Inspection).", "t": "Walk-Through"}, {"tr": "ניתוח ממצאים — לא \"מה זה\" אלא \"מה עושים עם מה שראית\": Observe (מה ראית — עובדה) → Identify (איזה רכיב) → Determine implication (בטיחות? מבנה? כסף?) → Recommend (תיקון / מומחה / מעקב).", "log": "מדווחים את שנצפה, לא מנחשים סיבה; מפנים למומחה מורשה כשזה מעבר להיקף.", "t": "Analysis of Findings"}, {"tr": "סיווג ממצאים — Safety hazard: סכנה מיידית, עדיפות עליונה; Major/Material: משפיע על ערך או בטיחות; Minor/Maintenance: תחזוקה; Monitor: לעקוב; Further evaluation: להפנות למומחה.", "t": "Findings classification"}, {"tr": "ICC — מועצת הקודים הבינלאומית, מפתחת קודים ותקנים; NAHB — איגוד בוני הבתים, מרכז המחקר שלו עזר לפתח תקני בנייה ירוקה.", "t": "ICC / NAHB"}, {"tr": "חוק עזר מקומי — תקנה של הרשות המקומית.", "t": "Community ordinance"}, {"tr": "חישובי המבחן שחוזרים.", "num": "Watts = Volts × Amps (240 × 30 = 7,200) · 1 ton = 12,000 BTU/h · attic 1,500 sq ft ÷ 300 = 5 sq ft vents · 1 ft = 12 in · 1 sq ft = 144 sq in · 1 yard = 3 ft · 1 cu yd concrete = 27 cu ft.", "log": "Ventilation ratios + wire & amps — the same family numbers, just asked as arithmetic.", "t": "Exam calculations"}]}, {"id": "14", "en": "GENERAL VOCABULARY", "he": "אוצר מילים כללי", "cards": [{"tr": "יציאה / כניסה.", "t": "Egress / Ingress"}, {"tr": "קובע / מכריע.", "t": "Determining"}, {"tr": "נבדק.", "t": "Examined"}, {"tr": "מתרחש / קורה.", "t": "Occur"}, {"tr": "קבוע ועקבי / משתנה ומתנודד.", "t": "Consistent / Fluctuates"}, {"tr": "נתיב / מסלול מעבר.", "t": "Pathway"}, {"tr": "חדירה (של מים, או חדירת צינור דרך גג/קיר).", "t": "Penetration"}, {"tr": "לח / לחות. קו כהה על קיר = רטיבות (Dark line = damp).", "t": "Damp / Dampness"}, {"tr": "טפטוף.", "t": "Dribbles"}, {"tr": "נקודת פרצת רוח — איטום לקוי.", "t": "Draft spot"}, {"tr": "מחובר במסמרות.", "t": "Riveted"}, {"tr": "הונח (לבנה שהונחה).", "t": "Laid"}, {"tr": "משולש.", "t": "Triangular"}, {"tr": "הצטלבות / מפגש.", "t": "Intersection"}, {"tr": "קוטר.", "t": "Diameter"}, {"tr": "בריח (ר' כרטיס Deadbolt בפרק החוץ).", "t": "Dead bolt"}]}];
+
+const LS_KEY = "nhieFlashScores.v1";
+const $ = (id) => document.getElementById(id);
+
+const state = {
+  topic: null,      // topic object being played
+  queue: [],        // cards left this round
+  reviewPile: [],   // cards marked "redo" this round
+  idx: 0,
+  round: 1,
+  firstRoundTotal: 0,
+  firstRoundKnown: 0,
+  goodCount: 0,
+  redoCount: 0,
+  flipped: false,
+};
+
+/* ---------- helpers ---------- */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function loadScores() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || {}; } catch (e) { return {}; }
+}
+function saveScore(topicId, known, total) {
+  const s = loadScores();
+  s[topicId] = { known, total, when: Date.now() };
+  try { localStorage.setItem(LS_KEY, JSON.stringify(s)); } catch (e) { /* private mode */ }
+}
+function show(viewId) {
+  ["view-topics", "view-deck", "view-end"].forEach((v) => $(v).classList.toggle("hidden", v !== viewId));
+  window.scrollTo(0, 0);
+}
+
+/* ---------- topic picker ---------- */
+function renderTopics() {
+  const scores = loadScores();
+  const grid = $("topicGrid");
+  grid.innerHTML = "";
+  const allCards = TOPICS.flatMap((t) => t.cards.map((c) => ({ ...c, _topicHe: t.he })));
+
+  const makeTile = (id, num, he, en, count, extraClass) => {
+    const btn = document.createElement("button");
+    btn.className = "topic" + (extraClass ? " " + extraClass : "");
+    const last = scores[id];
+    btn.innerHTML =
+      '<span class="num">' + num + "</span>" +
+      '<span class="he">' + he + "</span>" +
+      '<span class="en">' + en + "</span>" +
+      '<span class="meta"><span class="count">' + count + ' כרטיסים</span>' +
+      (last ? '<span class="last">קודם: ' + last.known + "/" + last.total + "</span>" : "") +
+      "</span>";
+    grid.appendChild(btn);
+    return btn;
+  };
+
+  TOPICS.forEach((t) => {
+    const btn = makeTile(t.id, t.id, t.he, t.en, t.cards.length, "");
+    btn.addEventListener("click", () => startDeck(t));
+  });
+  const allBtn = makeTile("all", "00", "כל הנושאים", "FULL SWEEP", allCards.length, "all");
+  allBtn.addEventListener("click", () =>
+    startDeck({ id: "all", he: "כל הנושאים", en: "FULL SWEEP", cards: allCards })
+  );
+}
+
+/* ---------- deck flow ---------- */
+function startDeck(topic) {
+  state.topic = topic;
+  state.queue = shuffle(topic.cards);
+  state.reviewPile = [];
+  state.idx = 0;
+  state.round = 1;
+  state.firstRoundTotal = state.queue.length;
+  state.firstRoundKnown = 0;
+  state.goodCount = 0;
+  state.redoCount = 0;
+  $("deckTitle").textContent = topic.he;
+  show("view-deck");
+  renderCard();
+}
+
+function currentCard() { return state.queue[state.idx]; }
+
+function renderCard() {
+  const c = currentCard();
+  const total = state.queue.length;
+  $("deckCounter").textContent = (state.idx + 1) + "/" + total;
+  $("progressFill").style.width = (100 * state.idx / total) + "%";
+  $("tallyGood").innerHTML = "&#10003; " + state.goodCount;
+  $("tallyRedo").innerHTML = "&#8635; " + state.redoCount;
+
+  const flag = $("roundFlag");
+  if (state.round > 1) {
+    flag.textContent = "סבב חזרה " + (state.round - 1) + " — הכרטיסים שסימנת לחזרה";
+    flag.classList.remove("hidden");
+  } else {
+    flag.classList.add("hidden");
+  }
+
+  state.flipped = false;
+  $("flip").classList.remove("flipped");
+
+  $("cardTopic").textContent = c._topicHe || state.topic.he;
+  $("cardTerm").textContent = c.t;
+  $("cardTermBack").textContent = c.t;
+
+  const rows = $("cardRows");
+  rows.innerHTML = "";
+  const addRow = (cls, label, text) => {
+    if (!text) return;
+    const div = document.createElement("div");
+    div.className = "row " + cls;
+    const lbl = document.createElement("span");
+    lbl.className = "lbl";
+    lbl.textContent = label;
+    const txt = document.createElement("div");
+    txt.className = "txt";
+    txt.textContent = text;
+    div.appendChild(lbl);
+    div.appendChild(txt);
+    rows.appendChild(div);
+  };
+  addRow("tr", "תרגום", c.tr);
+  addRow("num", "Numbers", c.num);
+  addRow("def", "Reportable defect", c.def);
+  addRow("log", "Logic", c.log);
+}
+
+function flipCard() {
+  state.flipped = !state.flipped;
+  $("flip").classList.toggle("flipped", state.flipped);
+}
+
+function answer(known) {
+  const c = currentCard();
+  if (known) {
+    state.goodCount++;
+    if (state.round === 1) state.firstRoundKnown++;
+  } else {
+    state.redoCount++;
+    state.reviewPile.push(c);
+  }
+  state.idx++;
+  if (state.idx >= state.queue.length) {
+    if (state.reviewPile.length > 0) {
+      state.queue = shuffle(state.reviewPile);
+      state.reviewPile = [];
+      state.idx = 0;
+      state.round++;
+      renderCard();
+    } else {
+      finishDeck();
+    }
+  } else {
+    renderCard();
+  }
+}
+
+function finishDeck() {
+  saveScore(state.topic.id, state.firstRoundKnown, state.firstRoundTotal);
+  $("endTopicName").textContent = state.topic.he;
+  $("endKnown").textContent = state.firstRoundKnown;
+  $("endTotal").textContent = "/" + state.firstRoundTotal;
+  const reviewRounds = state.round - 1;
+  $("endDetail").textContent =
+    reviewRounds > 0
+      ? "ידעת " + state.firstRoundKnown + " מתוך " + state.firstRoundTotal + " בסבב הראשון, ואחרי " +
+        reviewRounds + " סבבי חזרה — הכל ישב. כל הכבוד!"
+      : "ידעת הכל מהסיבוב הראשון. מושלם!";
+  show("view-end");
+}
+
+/* ---------- events ---------- */
+$("flipInner").addEventListener("click", flipCard);
+$("flipInner").addEventListener("keydown", (e) => {
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); flipCard(); }
+});
+$("btnGood").addEventListener("click", () => answer(true));
+$("btnRedo").addEventListener("click", () => answer(false));
+$("btnBack").addEventListener("click", () => { renderTopics(); show("view-topics"); });
+$("btnBack2").addEventListener("click", () => { renderTopics(); show("view-topics"); });
+$("btnPick").addEventListener("click", () => { renderTopics(); show("view-topics"); });
+$("btnAgain").addEventListener("click", () => startDeck(state.topic));
+
+document.addEventListener("keydown", (e) => {
+  if ($("view-deck").classList.contains("hidden")) return;
+  if (e.defaultPrevented) return; /* flipInner already handled Space/Enter */
+  const tag = e.target && e.target.tagName;
+  if (e.key === " ") {
+    if (tag === "BUTTON") return; /* let a focused button keep native Space behavior */
+    e.preventDefault();
+    flipCard();
+  } else if (e.key === "1") {
+    answer(true);
+  } else if (e.key === "2") {
+    answer(false);
+  }
+});
+
+renderTopics();
+show("view-topics");
+</script>
