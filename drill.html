@@ -1,0 +1,700 @@
+<title>NHIE Weak-Topic Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+
+<style>
+:root{
+  --paper:#F4F7FA; --card:#FFFFFF; --card-2:#FAFCFD;
+  --ink:#16202E; --muted:#5B6B7C; --line:#DBE3EB; --line-soft:#EAF0F5;
+  --navy:#1F4E79; --navy-soft:#E8F0F8;
+  --good:#1B7F46; --good-soft:#E6F4EC;
+  --flag:#B23A2C; --flag-soft:#FBEDEB;
+  --amber:#B87A10; --amber-soft:#FCF3E2;
+  --shadow:0 1px 2px rgba(22,32,46,.05),0 8px 24px -12px rgba(22,32,46,.18);
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D141D; --card:#161F2B; --card-2:#1B2635;
+    --ink:#E3EAF2; --muted:#93A4B6; --line:#28374A; --line-soft:#1F2C3C;
+    --navy:#6BA6DE; --navy-soft:#17293C;
+    --good:#4CC280; --good-soft:#122C1F;
+    --flag:#E8776A; --flag-soft:#301A18;
+    --amber:#E0A63C; --amber-soft:#2C2313;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D141D; --card:#161F2B; --card-2:#1B2635;
+  --ink:#E3EAF2; --muted:#93A4B6; --line:#28374A; --line-soft:#1F2C3C;
+  --navy:#6BA6DE; --navy-soft:#17293C;
+  --good:#4CC280; --good-soft:#122C1F;
+  --flag:#E8776A; --flag-soft:#301A18;
+  --amber:#E0A63C; --amber-soft:#2C2313;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+
+/* ---------- status rail ---------- */
+.rail{
+  position:sticky; top:0; z-index:20; background:var(--card);
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:16px;
+  padding:10px max(16px,calc(50% - 460px));
+}
+.brand{display:flex;align-items:baseline;gap:9px;margin-right:auto;min-width:0}
+.brand b{font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.brand span{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap
+}
+.stat{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.stat u{
+  font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);text-decoration:none
+}
+.stat b{font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}
+.bar{position:absolute;left:0;bottom:-1px;height:2px;background:var(--navy);transition:width .3s ease;width:0}
+
+/* ---------- shell ---------- */
+main{max-width:920px;margin:0 auto;padding:28px 16px 80px}
+.hidden{display:none !important}
+
+h1{
+  font-size:clamp(26px,4.4vw,36px);line-height:1.1;letter-spacing:-.022em;
+  margin:0 0 8px;text-wrap:balance;font-weight:700
+}
+.lede{color:var(--muted);margin:0 0 24px;max-width:62ch}
+.rtl{direction:rtl;text-align:right}
+
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 10px
+}
+
+/* ---------- setup ---------- */
+.panel{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--shadow);margin-bottom:18px
+}
+.panel > h2{
+  font-size:13px;font-weight:600;letter-spacing:-.005em;margin:0 0 14px;
+  display:flex;align-items:center;gap:10px
+}
+.panel > h2::after{content:"";flex:1;height:1px;background:var(--line-soft)}
+
+.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:8px}
+.topic{
+  display:flex;align-items:center;gap:11px;padding:11px 13px;cursor:pointer;
+  border:1px solid var(--line);border-radius:8px;background:var(--card-2);
+  transition:border-color .15s,background .15s
+}
+.topic:hover{border-color:var(--navy)}
+.topic:has(input:checked){border-color:var(--navy);background:var(--navy-soft)}
+.topic:has(input:focus-visible){outline:2px solid var(--navy);outline-offset:2px}
+.topic input{width:16px;height:16px;accent-color:var(--navy);flex:none;margin:0}
+.topic .nm{flex:1;min-width:0;font-size:14px;font-weight:500;line-height:1.25}
+.topic .nm small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.chip{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+  padding:2px 7px;border-radius:20px;white-space:nowrap;flex:none
+}
+.c-crit{background:var(--flag-soft);color:var(--flag)}
+.c-warn{background:var(--amber-soft);color:var(--amber)}
+.c-ok{background:var(--good-soft);color:var(--good)}
+.c-new{background:var(--navy-soft);color:var(--navy)}
+
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{
+  font:inherit;font-size:13.5px;font-weight:500;padding:8px 15px;cursor:pointer;
+  background:var(--card-2);color:var(--ink);border:0;border-right:1px solid var(--line);
+  font-family:"IBM Plex Mono",monospace
+}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--navy);outline-offset:-2px}
+
+.btn{
+  font:inherit;font-weight:600;font-size:15px;padding:12px 22px;border-radius:8px;
+  border:1px solid var(--navy);background:var(--navy);color:#fff;cursor:pointer;
+  transition:filter .15s
+}
+.btn:hover{filter:brightness(1.09)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--navy)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.sm{font-size:13.5px;padding:9px 16px}
+
+/* ---------- question ---------- */
+.qcard{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden
+}
+.qhead{
+  display:flex;align-items:center;gap:10px;padding:12px 20px;
+  border-bottom:1px solid var(--line-soft);background:var(--card-2)
+}
+.qhead .tp{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--navy);font-weight:600
+}
+.qhead .ix{
+  margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted);
+  font-variant-numeric:tabular-nums
+}
+.qtext{
+  padding:22px 20px 4px;font-size:clamp(17px,2.2vw,19.5px);line-height:1.42;
+  font-weight:500;letter-spacing:-.01em;text-wrap:pretty
+}
+.opts{display:flex;flex-direction:column;gap:8px;padding:18px 20px 20px}
+.opt{
+  display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;
+  font:inherit;font-size:15.5px;line-height:1.4;color:var(--ink);
+  padding:13px 15px;border:1px solid var(--line);border-radius:8px;
+  background:var(--card-2);cursor:pointer;
+  transition:border-color .14s,background .14s,opacity .28s,transform .28s
+}
+.opt:hover:not(:disabled){border-color:var(--navy);background:var(--navy-soft)}
+.opt:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.opt kbd{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;flex:none;
+  width:20px;height:20px;display:grid;place-items:center;border-radius:5px;
+  background:var(--line-soft);color:var(--muted);margin-top:1px
+}
+.opt.is-right{border-color:var(--good);background:var(--good-soft);font-weight:600}
+.opt.is-right kbd{background:var(--good);color:#fff}
+.opt.is-wrong{border-color:var(--flag);background:var(--flag-soft)}
+.opt.is-wrong kbd{background:var(--flag);color:#fff}
+.opt.fade{opacity:0;transform:translateY(-5px);pointer-events:none}
+
+.opt.reveal{justify-content:flex-start;font-style:italic;color:var(--muted)}
+.grade{display:flex;gap:8px;margin-top:4px}
+.grade .btn{display:inline-flex;align-items:center;gap:8px}
+.grade kbd{
+  font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;
+  width:17px;height:17px;display:grid;place-items:center;border-radius:4px;
+  background:rgba(255,255,255,.22)
+}
+.grade .btn.ghost kbd{background:var(--line-soft);color:var(--muted)}
+.why{
+  margin:0 20px 20px;padding:14px 16px;border-radius:8px;
+  background:var(--card-2);border:1px solid var(--line-soft);
+  border-left:3px solid var(--navy);font-size:14.5px;line-height:1.5
+}
+.why b{
+  display:block;font-family:"IBM Plex Mono",monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--navy);margin-bottom:5px
+}
+.verdict{
+  display:flex;align-items:center;gap:9px;padding:0 20px 16px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.05em;
+  text-transform:uppercase;font-weight:600
+}
+.verdict.ok{color:var(--good)}
+.verdict.no{color:var(--flag)}
+.nav{display:flex;gap:10px;padding:0 20px 20px;align-items:center}
+.nav .hint{
+  margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted)
+}
+
+/* ---------- results ---------- */
+.score{
+  display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+  padding:22px;border-radius:var(--r);border:1px solid var(--line);
+  background:var(--card);box-shadow:var(--shadow);margin-bottom:18px
+}
+.score .big{
+  font-family:"IBM Plex Mono",monospace;font-size:clamp(40px,9vw,58px);
+  font-weight:600;line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums
+}
+.score .of{font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--muted)}
+.score .msg{flex:1 1 260px;min-width:0;font-size:14.5px;color:var(--muted);line-height:1.45}
+
+.tbar{display:grid;grid-template-columns:1fr;gap:9px}
+.tbar .t{display:grid;grid-template-columns:minmax(96px,1.5fr) 3fr auto;gap:11px;align-items:center;font-size:13.5px}
+.tbar .t .lbl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbar .t .track{display:block;height:7px;border-radius:4px;background:var(--line-soft);overflow:hidden}
+.tbar .t .fill{display:block;height:100%;min-width:2px;border-radius:4px;transition:width .5s ease}
+.tbar .t .pc{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.rev{display:flex;flex-direction:column;gap:10px}
+.rev .item{
+  padding:14px 16px;border:1px solid var(--line);border-left:3px solid var(--flag);
+  border-radius:8px;background:var(--card-2)
+}
+.rev .item .q{font-size:14.5px;font-weight:500;margin-bottom:7px;line-height:1.4}
+.rev .item .a{
+  font-size:14.5px;color:var(--good);font-weight:600;display:flex;gap:8px;align-items:flex-start
+}
+.rev .item .a::before{content:"→";flex:none;opacity:.65}
+.rev .item .n{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.45}
+
+.note{font-size:13px;color:var(--muted);margin-top:18px;line-height:1.5}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+@media (max-width:560px){
+  .rail{gap:11px;padding-left:14px;padding-right:14px}
+  .brand span{display:none}
+  .tbar .t{grid-template-columns:minmax(80px,1.3fr) 2fr auto;font-size:12.5px}
+}
+</style>
+
+<div class="rail">
+  <div class="brand"><b>NHIE Weak-Topic Drill</b><span id="railSub">155 questions</span></div>
+  <div class="stat"><u>Correct</u><b id="sCorrect">—</b></div>
+  <div class="stat"><u>Accuracy</u><b id="sAcc">—</b></div>
+  <div class="stat"><u>Time</u><b id="sTime" class="mono">0:00</b></div>
+  <div class="bar" id="progBar"></div>
+</div>
+
+<main>
+
+<!-- ============ SETUP ============ -->
+<section id="setup">
+  <p class="eyebrow">Retrieval practice · built from your own exam data</p>
+  <h1>Drill the topics that are costing you points</h1>
+  <p class="lede rtl">בחרי נושאים, לחצי על תשובה, וקבלי הסבר מיד. התשובות השגויות נעלמות ברגע שענית — נשאר על המסך רק מה שנכון.</p>
+
+  <div class="panel">
+    <h2>Topics</h2>
+    <div class="topics" id="topicList"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn ghost sm" data-preset="mine">My real mistakes</button>
+      <button class="btn ghost sm" data-preset="weak">Weak topics (under 75%)</button>
+      <button class="btn ghost sm" data-preset="untested">Never tested</button>
+      <button class="btn ghost sm" data-preset="all">Everything</button>
+      <button class="btn ghost sm" data-preset="none">Clear</button>
+      <button class="btn ghost sm hidden" id="missPreset">Questions I got wrong before</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Length</h2>
+    <div class="row">
+      <div class="seg" id="lenSeg">
+        <button data-len="10">10</button>
+        <button data-len="20" aria-pressed="true">20</button>
+        <button data-len="40">40</button>
+        <button data-len="0">All</button>
+      </div>
+      <span class="mono" id="poolNote" style="font-size:13px;color:var(--muted)"></span>
+    </div>
+  </div>
+
+  <button class="btn" id="startBtn">Start drill</button>
+  <p class="note">Answer before you look — recognising a right answer and producing one from nothing are different skills, and the exam only tests the second. Percentages below are your measured accuracy from exam 8; the two marked <em>never tested</em> are the blind spots CompuCram has never measured.</p>
+</section>
+
+<!-- ============ QUESTION ============ -->
+<section id="quiz" class="hidden">
+  <div class="qcard">
+    <div class="qhead">
+      <span class="tp" id="qTopic"></span>
+      <span class="ix" id="qIndex"></span>
+    </div>
+    <div class="qtext" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="verdict hidden" id="qVerdict"></div>
+    <div class="why hidden" id="qWhy"></div>
+    <div class="nav">
+      <button class="btn" id="nextBtn" disabled>Next</button>
+      <button class="btn ghost sm" id="quitBtn">End drill</button>
+      <span class="hint" id="hintTxt">1–4 to answer · Enter for next</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section id="done" class="hidden">
+  <p class="eyebrow">Drill complete</p>
+  <h1 id="dTitle">Results</h1>
+
+  <div class="score">
+    <span class="big" id="dPct">0%</span>
+    <span class="of" id="dOf"></span>
+    <span class="msg" id="dMsg"></span>
+  </div>
+
+  <div class="panel">
+    <h2>By topic</h2>
+    <div class="tbar" id="dTopics"></div>
+  </div>
+
+  <div class="panel" id="dRevPanel">
+    <h2>Worth another look</h2>
+    <div class="rev" id="dRev"></div>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="againMissed">Retry just these</button>
+    <button class="btn ghost" id="againNew">New drill</button>
+  </div>
+  <p class="note">Only correct answers appear above — the options you ruled out are never shown again, so nothing competes with the right one in memory.</p>
+</section>
+
+</main>
+
+<script>
+const BANK = [{"t":"Electrical","q":"The maximum breaker rating must not exceed the allowed ampacity of the:","a":"Conductor","w":["Appliance being served","Service panel","Grounding electrode"],"y":"The breaker protects the wire, not the appliance. A 20-amp breaker on 14-gauge wire rated 15 amps lets the wire overheat before the breaker ever trips."},{"t":"Electrical","q":"A live wire is sometimes referred to as a:","a":"Ungrounded conductor","w":["Grounded conductor","Grounding conductor","Bonding jumper"],"y":"Ungrounded = hot. Grounded conductor is the neutral; grounding conductor is the safety ground. Three near-identical phrases the exam relies on you confusing."},{"t":"Electrical","q":"A circuit breaker protects against too much:","a":"Current","w":["Voltage","Resistance","Wattage"],"y":"The breaker watches amps, because current is what heats a wire past its rating and starts a fire."},{"t":"Electrical","q":"The flow of electrons along a conductor, such as copper wire, is defined as:","a":"Electric current","w":["Voltage","Resistance","Capacitance"],"y":"Volts push, amps flow, ohms resist. 'Is defined as' signals a plain term."},{"t":"Electrical","q":"_____ is the amount of current or electricity flowing through the wire.","a":"Amperage","w":["Voltage","Wattage","Resistance"],"y":"Amperage is quantity of flow; voltage is the pressure pushing it."},{"t":"Electrical","q":"A ______ branch circuit is a three-wire circuit with two hot wires and one neutral.","a":"Multiwire","w":["Dedicated","Home run","Split-bus"],"y":"Two hot legs sharing one neutral. They must sit on opposite phases or the shared neutral carries the sum of both loads."},{"t":"Electrical","q":"The hot side of a polarized receptacle is:","a":"The narrow slot","w":["The wide slot","The round opening","The upper slot"],"y":"Narrow is hot, wide is neutral, round is ground. Reversed polarity is one of the commonest findings on an inspection."},{"t":"Electrical","q":"The grounding electrode system:","a":"Provides an alternate return path for electricity","w":["Limits the current drawn by an appliance","Reduces voltage drop on long runs","Prevents arcing inside the panel"],"y":"It gives fault current somewhere to go other than through a person."},{"t":"Electrical","q":"Which is designed to ensure continuity of the fault path, carry fault current safely, and help the overcurrent device operate?","a":"Bonding","w":["Grounding to earth","Polarization","Arc-fault protection"],"y":"The third clause is the giveaway: grounding to earth does not trip breakers, bonding does."},{"t":"Electrical","q":"Bonding of appliances in a home can be confirmed using a(n):","a":"Ohmmeter","w":["Ammeter","Voltmeter","Megohmmeter"],"y":"Bonding is continuity, and continuity means low resistance. Match the instrument to the quantity."},{"t":"Electrical","q":"GFCI protection:","a":"Operates by sensing current imbalances within the circuit","w":["Operates by sensing excess current on the hot leg","Requires an equipment ground to function","Protects the wiring rather than people"],"y":"It compares what leaves on the hot with what returns on the neutral. A GFCI protects people; a breaker protects wires."},{"t":"Electrical","q":"An ungrounded outlet can be replaced by a GFCI installed:","a":"Upstream of the outlet","w":["Downstream of the outlet","Only at the service panel","Only if a ground wire is added first"],"y":"A GFCI does not need a ground to work, so installed upstream it protects everything downstream. Label it 'No Equipment Ground'."},{"t":"Electrical","q":"The primary criterion for inlet service capacity is the:","a":"Size of the inlet service wire","w":["Rating of the main breaker","Number of panel spaces","Total connected load of the house"],"y":"The service is rated by what the wire can carry. Same principle as the branch-circuit rule."},{"t":"Electrical","q":"Electric service drop wires should be at least ______ above the pool water.","a":"22 1/2 feet","w":["10 feet","12 feet","18 feet"],"y":"22.5 feet vertical and 10 feet horizontal. High enough that a pool skimmer pole cannot reach it."},{"t":"Electrical","q":"All metal within ______ horizontally of the pool water must be bonded to the pool grid.","a":"Five feet","w":["Three feet","Ten feet","Twelve feet"],"y":"Five horizontal, twelve vertical. Everything conductive in that envelope joins one grid so there is no voltage difference to bridge."},{"t":"Electrical","q":"Most electric water heaters are served by a dedicated 240 volt, ______ amp circuit.","a":"30 amp","w":["20 amp","40 amp","50 amp"],"y":"15 and 20 for general circuits, 30 for water heater and dryer, 40 to 50 for the range."},{"t":"Electrical","q":"Which aluminum wire installation is most likely to overheat?","a":"A receptacle serving an electric heater","w":["The main service entrance conductors","A ceiling light fixture","A smoke alarm circuit"],"y":"Aluminium creeps under load so connections loosen. The worst case is a heavy continuous load on a small branch-circuit connection."},{"t":"Electrical","q":"An antioxidant must be applied to all ______ conductors.","a":"AL (aluminum)","w":["CU (copper)","Tinned copper","Copper-clad aluminum"],"y":"Aluminium oxide is a poor conductor, so the joint heats. Antioxidant paste keeps air off the connection."},{"t":"Electrical","q":"Which statement about knob and tube wiring is FALSE?","a":"The outlet receptacles are grounded","w":["It has no equipment grounding conductor","It must not be buried in insulation","The conductors run separately through porcelain tubes"],"y":"Knob and tube has no ground conductor at all. It also relies on open air to cool, which is why insulation over it is a defect."},{"t":"Electrical","q":"A(n) ______ rated recessed light fixture may contact insulation.","a":"IC","w":["AFCI","Type NM","UL-2"],"y":"IC means Insulation Contact. A non-IC fixture must stay 3 inches clear because it sheds heat into the air around it."},{"t":"Electrical","q":"What type of cable is listed for direct burial?","a":"UF","w":["NM","BX","MC"],"y":"UF is Underground Feeder. Its insulation is moulded solid around the conductors so moisture cannot travel inside."},{"t":"Electrical","q":"Which is TRUE regarding BX cable?","a":"It is in a metallic enclosure","w":["It is rated for direct burial","It contains an insulated grounding conductor","It may be used outdoors without a raceway"],"y":"BX is armoured cable. In older installations the sheath itself was the grounding path, so a rusted sheath is a real defect."},{"t":"Electrical","q":"Receptacles in habitable rooms must be spaced so no point along the wall is more than ______ from one.","a":"Six feet","w":["Four feet","Eight feet","Twelve feet"],"y":"The 6-foot rule puts receptacles at most 12 feet apart, so a standard cord reaches from anywhere. Its purpose is removing the excuse for extension cords."},{"t":"Electrical","q":"A three-way switch is required for stairs with ______ or more risers.","a":"Six","w":["Three","Four","Eight"],"y":"Six risers means the stair light must switch from both top and bottom. One of three 'six' answers in Electrical."},{"t":"Electrical","q":"The maximum permitted number of hand movements to disconnect all house electrical equipment is:","a":"Six","w":["One","Three","Four"],"y":"The six-throw rule. There is no requirement for a single main disconnect so long as six or fewer throws will kill everything."},{"t":"Electrical","q":"An electrical system with a fuse on both the hot and the neutral conductor:","a":"Is a safety hazard that needs to be corrected","w":["Is acceptable on older installations","Is required on ungrounded systems","Is acceptable if both fuses are the same rating"],"y":"If the neutral fuse blows the circuit stops working but the hot stays live. Never interrupt a grounded conductor."},{"t":"Electrical","q":"In the service box, the ungrounded service entrance wires connect to:","a":"The 'line' side of the main switch","w":["The 'load' side of the main switch","The neutral bus","The grounding electrode conductor"],"y":"Line is incoming, load is outgoing. Line-side conductors stay live even with the main switched off."},{"t":"Cooling","q":"The component in an air conditioner that liquefies the refrigerant gas by cooling it is the:","a":"Condenser","w":["Evaporator","Compressor","Metering device"],"y":"Condenser condenses and releases heat. Evaporator evaporates and absorbs heat. The names are the answer."},{"t":"Cooling","q":"The component that takes heat from the air around it and brings it to the refrigerant is the:","a":"Evaporator","w":["Condenser","Compressor","Reversing valve"],"y":"The indoor station. Cold liquid refrigerant boils inside it, and boiling absorbs heat."},{"t":"Cooling","q":"One ton of air conditioning equals:","a":"12,000 BTU per hour","w":["10,000 BTU per hour","15,000 BTU per hour","24,000 BTU per hour"],"y":"From the heat needed to melt one ton of ice in 24 hours. A 3-ton unit is 36,000 BTU/h."},{"t":"Cooling","q":"A substance used in the past to produce cooling by absorbing heat is:","a":"Freon","w":["Glycol","Ammonia brine","R-410A"],"y":"Freon is the old trade name for CFC and HCFC refrigerants such as R-22, phased out for ozone damage. 'Used in the past' is the signal."},{"t":"Cooling","q":"Evaporative cooler air conditioning systems are most likely found in the:","a":"Southwest","w":["Southeast","Pacific Northwest","Upper Midwest"],"y":"A swamp cooler cools by evaporating water, which only works when the air is already dry."},{"t":"Cooling","q":"Heat pumps are usually sized based on the:","a":"Cooling load","w":["Heating load","Square footage alone","Duct capacity"],"y":"Sized for cooling, with supplemental electric heat covering the winter shortfall. Size it for heating and it short-cycles all summer."},{"t":"Cooling","q":"The heat source for an air-to-air heat pump is:","a":"Outside air","w":["Ground water","The compressor","Supplemental resistance strips"],"y":"The name tells you: air-to-air takes heat from outside air and delivers it to indoor air."},{"t":"Cooling","q":"An oversized air conditioning unit:","a":"Is less likely to dehumidify the air","w":["Cools more efficiently per hour","Extends compressor life","Reduces duct static pressure"],"y":"It shuts off before running long enough to pull moisture out, leaving the house cold and clammy, and the short cycling wears out the compressor."},{"t":"Cooling","q":"Part of the AC unit is in the attic and there is moisture on the ceiling below. The likely cause is the:","a":"Evaporator coil drain pan","w":["Condenser fan","Refrigerant line set","Supply plenum"],"y":"The evaporator pulls water out of the air and it has to go somewhere. This is why an attic air handler needs a secondary pan."},{"t":"Cooling","q":"The best way to drain condensation from the evaporator coil is a plastic line running to:","a":"A floor drain, the exterior, or the sink side of a trap","w":["The nearest sanitary tee","The crawl space soil","The condensate pump reservoir only"],"y":"'Sink side of a trap' matters: discharging on the sewer side would let sewer gas back up the line into the air handler."},{"t":"Cooling","q":"A large metal chamber where hot air builds pressure before entering the ducts is the:","a":"Plenum","w":["Manifold","Register box","Flue collector"],"y":"The pressurised chamber the blower discharges into. It is also where the AC evaporator coil sits."},{"t":"Heating","q":"The part of the heating system that transfers heat to air or water is the:","a":"Heat exchanger","w":["Plenum","Burner assembly","Draft diverter"],"y":"The wall between the fire and the house. A cracked heat exchanger is a major defect because combustion products can reach the living space."},{"t":"Heating","q":"The best way to determine whether a hot water heating system is forced is to:","a":"Look for a circulating pump near the boiler","w":["Check for an expansion tank","Measure the supply temperature","Look for a low-water cutoff"],"y":"Forced means a pump moves the water. The alternative is gravity. The pump is the visible proof."},{"t":"Heating","q":"Coils immersed directly in the boiler water to supply domestic hot water form a:","a":"Tankless coil system","w":["Indirect-fired system","Sidearm heater","Storage-type system"],"y":"Tankless because there is no storage tank. Its weakness is capacity: a long shower outruns it."},{"t":"Heating","q":"Modern cast iron boilers have a projected life span of:","a":"25 to 30 years","w":["10 to 15 years","15 to 20 years","40 to 50 years"],"y":"Cast iron survives because water, not flame, sits on the far side of the metal."},{"t":"Heating","q":"Expansion tanks:","a":"Are only needed for hot water systems","w":["Are only needed for steam systems","Are required on both hot water and steam systems","Are only needed on gravity systems"],"y":"A closed hot water loop is solid water with nowhere to go. A steam boiler already carries air space above its water line."},{"t":"Heating","q":"A heat-emitting unit in which heat is produced by air moving around a metal surface is a:","a":"Convector","w":["Radiator","Register","Diffuser"],"y":"Convection means heat carried by moving air. A radiator is heavy and warms objects by radiating to them."},{"t":"Heating","q":"With a steam heat system, heat is conveyed to the radiators by:","a":"The boiler and pipes","w":["A circulating pump","A blower and ducts","An expansion tank"],"y":"Steam travels under its own pressure. The condensate returns by gravity, which is why steam piping must be pitched."},{"t":"Heating","q":"A steam heating system is a type of:","a":"Hydronic system","w":["Forced-air system","Radiant panel system","Gravity warm air system"],"y":"Hydronic means water-based, and steam is water. The category covers hot water and steam alike."},{"t":"Heating","q":"An automatic pressure relief valve on a forced hot water system:","a":"Should be located directly on the boiler","w":["May be located anywhere on the supply main","Should be downstream of a shutoff valve","Should be on the return line"],"y":"A relief valve protects a vessel, so it sits on that vessel with nothing shut-offable between."},{"t":"Heating","q":"An equalizer pipe would be found:","a":"Near a steam boiler","w":["Near a hot water boiler","At the furnace plenum","On the condensate drain"],"y":"It links the steam side back to the return so the boiler holds its water line. Equalizer is a steam-only word."},{"t":"Heating","q":"When a furnace is in a small enclosed area:","a":"Inlet and outlet ventilation openings must be provided","w":["A single high opening is sufficient","A single low opening is sufficient","Only a louvered door is required"],"y":"Both, not one. Air must enter low and leave high, or the appliance backdrafts."},{"t":"Heating","q":"Which is FALSE about horizontal sections of smoke pipe between furnace and chimney?","a":"The pipe should be installed in a level position","w":["The pipe should slope upward toward the chimney","The pipe should be secured at each joint","The pipe should have adequate clearance to combustibles"],"y":"A horizontal flue run must slope UP toward the chimney, about 1/4 inch per foot, so exhaust keeps rising."},{"t":"Heating","q":"The minimum working space in front of a gas furnace at the access panel is:","a":"30 inches","w":["24 inches","36 inches","42 inches"],"y":"30 inches. Keep it separate from the electrical panel, which is 36 deep by 30 wide by 6.5 feet high."},{"t":"Heating","q":"Which condition might indicate a defective heat exchanger?","a":"Rust and mineral deposits on the furnace plenum","w":["A dirty air filter","A noisy blower motor","A dented supply duct"],"y":"Deposits mean moisture is escaping where it should not, which suggests the exchanger has cracked and combustion gases are leaking into the supply air."},{"t":"Heating","q":"Failures of gas-fired furnace heat exchangers are caused mostly by:","a":"Metal fatigue and rust","w":["Poor maintenance","Overfiring the burner","Dirty filters"],"y":"The metal expands and contracts thousands of times a year until it cracks, and rust attacks from the condensate side."},{"t":"Life Safety","q":"The minimum net clear opening area of an emergency escape and rescue opening is:","a":"5.7 square feet","w":["5.0 square feet","3.3 square feet","6.5 square feet"],"y":"5.7 sq ft. The 5.0 figure exists but applies only to grade-floor openings."},{"t":"Life Safety","q":"The minimum net clear opening HEIGHT of an escape opening is:","a":"24 inches","w":["20 inches","22 inches","36 inches"],"y":"24 high, 20 wide. Both are floors, not a recipe."},{"t":"Life Safety","q":"The maximum height from the floor to the bottom of the clear opening is:","a":"44 inches","w":["36 inches","48 inches","54 inches"],"y":"One of only two maximums in the whole topic. The other is the 44-inch window well depth."},{"t":"Life Safety","q":"A bedroom window measures exactly 24 inches high by 20 inches wide. It:","a":"Fails, because it provides only 3.3 square feet","w":["Complies, because both minimum dimensions are met","Complies, because it is a grade-floor opening","Fails, because the sill is too high"],"y":"The most common trap in the topic. Area AND both dimensions apply at once, so one dimension must grow well past its minimum."},{"t":"Life Safety","q":"An escape opening must be operable from inside:","a":"Without keys, tools or special knowledge","w":["With a key kept within 12 inches of the opening","With ordinary household tools","By an adult only"],"y":"Bars, grilles and covers are permitted only if they release the same way. Bars needing a key are a reportable defect."},{"t":"Life Safety","q":"A window well deeper than ______ requires a permanent ladder or steps.","a":"44 inches","w":["36 inches","48 inches","60 inches"],"y":"Same number as the maximum sill height, which is exactly why the two get confused."},{"t":"Life Safety","q":"The minimum net clear area of a window well is:","a":"9 square feet","w":["5.7 square feet","6 square feet","12 square feet"],"y":"9 square feet, with a 36-inch horizontal projection and width."},{"t":"Life Safety","q":"Smoke alarms are required in each sleeping room, outside each sleeping area, and:","a":"On each additional story including basements and habitable attics","w":["In the kitchen","In the attached garage","In each hallway over 20 feet"],"y":"'Where are X required?' wants the full list of three. Partial credit does not exist."},{"t":"Life Safety","q":"An ionization smoke alarm must be at least ______ from a cooking appliance.","a":"20 feet","w":["6 feet","10 feet","3 feet"],"y":"20 feet, or 10 with a silencing switch. A photoelectric alarm may sit at 6 feet because it is far less nuisance-prone."},{"t":"Life Safety","q":"A smoke alarm must be at least ______ from the door of a bathroom with a tub or shower.","a":"3 feet","w":["6 feet","10 feet","20 feet"],"y":"Steam causes nuisance alarms, and people disable alarms that keep going off."},{"t":"Life Safety","q":"A carbon monoxide alarm is required where the dwelling has a fuel-fired appliance or:","a":"An attached garage with an opening communicating with the dwelling","w":["A finished basement","A fireplace of any type","More than two stories"],"y":"An all-electric house with no attached garage needs none, because there is no CO source."},{"t":"Life Safety","q":"The garage side of walls separating garage from residence requires:","a":"1/2 inch gypsum board","w":["5/8 inch Type X gypsum","3/8 inch gypsum board","Any non-combustible sheathing"],"y":"1/2 inch on the walls. It becomes 5/8 Type X on the ceiling where habitable rooms sit above."},{"t":"Life Safety","q":"A garage ceiling with habitable rooms above requires:","a":"5/8 inch Type X gypsum","w":["1/2 inch gypsum board","1/2 inch Type X gypsum","Two layers of 3/8 inch gypsum"],"y":"Thicker and fire-rated, because there are people directly above."},{"t":"Life Safety","q":"The minimum thickness of a solid wood garage-to-house door is:","a":"1-3/8 inches","w":["1-1/8 inches","1-3/4 inches","2 inches"],"y":"1-3/8 solid wood, solid steel or honeycomb-core steel, or a 20-minute rated assembly. All must be self-closing and self-latching."},{"t":"Life Safety","q":"An opening from a garage may never lead directly into:","a":"A sleeping room","w":["A kitchen","A laundry room","A hallway"],"y":"No door, no exception. If a question describes a garage opening into a bedroom, that is the defect."},{"t":"Life Safety","q":"A painted sprinkler head is a defect because:","a":"Paint insulates the heat-sensitive element so it will not trigger at the right temperature","w":["Paint corrodes the brass body","Paint blocks the water outlet","Paint voids the escutcheon seal"],"y":"The head has to sense heat. Anything insulating it delays or prevents operation."},{"t":"Fireplaces & Chimneys","q":"The outward projection of a masonry course beyond the course below is a:","a":"Corbel","w":["Lintel","Cricket","Parge"],"y":"Each course steps out slightly further than the one beneath, so masonry can carry something wider than its base."},{"t":"Fireplaces & Chimneys","q":"What supports masonry installed above a masonry fireplace opening?","a":"Lintel","w":["Corbel","Header course","Throat damper"],"y":"A lintel is the beam over any opening. Above a firebox it is steel, because it sits directly in the heat."},{"t":"Fireplaces & Chimneys","q":"A fireplace clay flue liner should be held in place with:","a":"Refractory mortar","w":["Type N mortar","Portland cement grout","High-temperature sealant"],"y":"Ordinary mortar cracks at flue temperatures. The liner keeps combustion gases out of the masonry, so its joints matter as much as the liner."},{"t":"Fireplaces & Chimneys","q":"Mortar mixed with extra water so it can be poured into block cores is called:","a":"Grout","w":["Parge","Slurry","Refractory mortar"],"y":"Grout is pourable by design. Mortar beds the units; grout fills the voids."},{"t":"Fireplaces & Chimneys","q":"A metal chimney requires at least ______ clearance to combustibles including insulation.","a":"Two inches","w":["One inch","Three inches","Six inches"],"y":"Two inches all round. 'Including insulation' is the part people miss: blown attic insulation piled against it removes the clearance."},{"t":"Fireplaces & Chimneys","q":"The process by which heat changes wood chemistry and makes it easier to ignite is:","a":"Pyrolysis","w":["Combustion","Oxidation","Calcination"],"y":"Repeated heating converts wood toward charcoal and its ignition temperature falls. It is the reason clearances exist at all."},{"t":"Fireplaces & Chimneys","q":"The best reason a chimney should terminate above nearby obstructions is that:","a":"Combustion products may be forced down the flue by wind","w":["Rain may enter the flue","The chimney may be struck by debris","The cap will corrode faster"],"y":"Wind striking a taller object creates a pressure zone that pushes down the flue. This is the reasoning behind the 3-2-10 rule."},{"t":"Fireplaces & Chimneys","q":"A fireplace may not share a flue or be used with any of the following EXCEPT:","a":"A fireplace flue-insert","w":["A second fireplace","A gas furnace","A wood stove"],"y":"One appliance per flue. An insert is not a second appliance: it sits inside the existing fireplace and uses that flue by design."},{"t":"Fireplaces & Chimneys","q":"A factory-built metal chimney passing through a framed chase requires:","a":"A metal pan or cap","w":["A masonry crown","A spark arrestor only","A fire-rated gypsum enclosure"],"y":"The chase is a hollow wooden box, so its top must be capped in metal to shed water."},{"t":"Fireplaces & Chimneys","q":"A clay flue liner should extend ______ above the crown.","a":"Four to six inches","w":["One to two inches","Two to three inches","Eight to ten inches"],"y":"The liner stands proud so water running off the crown cannot flow back down inside the flue."},{"t":"Fireplaces & Chimneys","q":"The correct material for a masonry chimney crown is:","a":"Concrete","w":["Mortar","Brick","A thin parge coat"],"y":"The crown is fully exposed to weather and must be cast concrete. Mortar, brick and parge all crack and fail."},{"t":"Fireplaces & Chimneys","q":"A fireplace hearth extension must be at least four inches thick and ______ deep where the firebox opening is six square feet or less.","a":"16 inches","w":["12 inches","20 inches","24 inches"],"y":"16 in front and 8 to each side for a small opening. Over six square feet it becomes 20 in front and 12 each side."},{"t":"Fireplaces & Chimneys","q":"A penetration through a firebox wall, such as for a gas line, requires:","a":"Fire-resistant caulk","w":["Expanding foam","Silicone sealant","Duct mastic"],"y":"Any hole through the firebox is a path for flame into the framing behind it, so the seal must survive fire."},{"t":"Interior","q":"Bulging of interior walls may indicate:","a":"A problem with the studs","w":["Excess humidity in the room","Improper paint adhesion","Settlement of the floor covering"],"y":"The finish follows the framing. Plaster and drywall do not bulge on their own."},{"t":"Interior","q":"Thin cracks at the exterior corner of a gypsum plaster wall are likely caused by:","a":"Too thin an application of plaster","w":["Foundation settlement","Excessive ceiling load","Improper stud spacing"],"y":"Corners take the most movement and knocks, so a thin coat cracks there first. Thin cracks confined to a corner are a finish defect."},{"t":"Interior","q":"Dark lines showing through paint at sheetrock joints indicate:","a":"Joint compound was damp when painted","w":["A roof leak above the wall","Missing drywall screws","Incompatible primer"],"y":"Sealing moisture in makes the joint dry at a different rate from the board around it. Workmanship, not water damage."},{"t":"Interior","q":"Which condition would NOT indicate flood potential in a garage?","a":"The garage floor is pitched towards a floor drain in the slab","w":["The driveway slopes toward the garage door","There is a water stain along the base of the rear wall","The garage slab sits below the surrounding grade"],"y":"That is the garage working correctly. Read 'would NOT indicate': the answer is the one healthy condition."},{"t":"Interior","q":"The pathway to the primary egress door out of the house cannot be through the:","a":"Garage","w":["Kitchen","Laundry room","Basement stair"],"y":"The main way out must not pass through a garage, because that is where fire and CO are most likely to begin."},{"t":"Interior","q":"Wood flooring installed over a concrete slab is supported on:","a":"Sleepers","w":["Furring strips","Battens","Shims"],"y":"Strips of wood laid on the slab. They lift the wood clear of concrete, which wicks moisture, and give a nailing surface."},{"t":"Interior","q":"Another name for vinyl flooring is:","a":"Resilient","w":["Laminate","Engineered","Composite"],"y":"Resilient means it gives underfoot and springs back. The category covers vinyl, linoleum, rubber and cork."},{"t":"Interior","q":"The common thickness of solid wood strip flooring is:","a":"Three-quarters inch","w":["One-half inch","Five-eighths inch","One inch"],"y":"3/4 inch, which is why it can be sanded and refinished several times."},{"t":"Interior","q":"Ceramic tile set in dry-set mortar or mastic is also known as:","a":"Thin-set","w":["Mud-set","Grout-bed","Float-set"],"y":"Thin-set is the thin bed of adhesive mortar under the tile."},{"t":"Interior","q":"The overhead garage door manual release rope should be installed at least ______ above the floor.","a":"72 inches","w":["48 inches","60 inches","84 inches"],"y":"Six feet, so a child cannot reach it and release the door onto themselves."},{"t":"Interior","q":"A garbage disposal power cord requires:","a":"A drip loop","w":["A strain relief clamp only","A GFCI plug","A grounded metal conduit"],"y":"The cord dips below the outlet so water running down it drips off the loop instead of entering the receptacle."},{"t":"Plumbing","q":"Vertical pipes into which waste flows from drainage pipes are:","a":"Soil or waste stacks","w":["Vent stacks","Branch drains","House drains"],"y":"A soil stack carries toilet waste; a waste stack carries everything else. Both are drainage, not venting."},{"t":"Plumbing","q":"The preferred slope on a waste pipe is:","a":"One-quarter to one-half inch per foot","w":["One-eighth inch per foot","One inch per foot","Two inches per foot"],"y":"Quarter inch per foot is the figure to carry. Too flat and solids settle; too steep and the water runs away leaving them behind."},{"t":"Plumbing","q":"The minimum allowable pressure for the plumbing drainage system is:","a":"None of the answers","w":["20 psi","40 psi","Whatever the supply pressure is"],"y":"There is no minimum, because drainage is not pressurised at all. It flows by gravity, so the premise of the question is false."},{"t":"Plumbing","q":"A drain coupling fitted with a removable plug to clear obstructions is a:","a":"Cleanout","w":["Trap primer","Backwater valve","Sanitary tee"],"y":"A capped access point for a drain snake. Missing, buried or painted-over cleanouts are a standard write-up."},{"t":"Plumbing","q":"The building sewer cleanout must be within ______ of the junction of building drain and building sewer.","a":"Ten feet","w":["Three feet","Five feet","Twenty feet"],"y":"The most blockage-prone point in the system must always be reachable."},{"t":"Plumbing","q":"A check valve preventing public sewage from flowing back into the house is a:","a":"Backwater valve","w":["Backflow preventer","Air admittance valve","Trap primer"],"y":"A one-way flap: waste out, nothing back in. It matters where fixtures sit below street sewer level."},{"t":"Plumbing","q":"A device that opens on negative pressure to admit air and closes to block sewer gas is a(n):","a":"Air admittance valve","w":["Backwater valve","Trap primer","Vacuum breaker"],"y":"Often called by the brand name Studor. It only works for incoming air, so it can never replace the main roof vent."},{"t":"Plumbing","q":"A vent serving fixtures from as many as two bathrooms on the same floor is a:","a":"Wet vent","w":["Circuit vent","Loop vent","Common vent"],"y":"A pipe doing two jobs: carrying drainage from one fixture while venting another. Limited to the same floor and two bathroom groups."},{"t":"Plumbing","q":"A trap primer:","a":"Requires an air gap","w":["Requires a check valve only","Must be vented separately","Must discharge to the exterior"],"y":"It is fed from the potable supply, so a physical air gap prevents drain water siphoning back into drinking water."},{"t":"Plumbing","q":"Plumbing vents must extend at least ______ above the roof.","a":"Six inches","w":["Three inches","Twelve inches","Twenty-four inches"],"y":"Six inches, or higher where snow accumulates. A blocked vent stops the system breathing and traps siphon dry."},{"t":"Plumbing","q":"A temperature and pressure relief valve must discharge at a temperature not higher than:","a":"210 degrees F","w":["120 degrees F","140 degrees F","180 degrees F"],"y":"210 is the SAFETY limit, because water flashes to steam at 212. Do not confuse it with the 120 thermostat setting."},{"t":"Plumbing","q":"To prevent scalding, water heater tanks should be set at no more than:","a":"120 degrees F","w":["110 degrees F","140 degrees F","210 degrees F"],"y":"120 is the COMFORT setting on the dial. 210 is the valve that saves the tank; 120 is the dial that saves the person."},{"t":"Plumbing","q":"The component introducing cold water near the bottom of a water heater tank is the:","a":"Dip tube","w":["Anode rod","Sacrificial sleeve","Draw tube"],"y":"Cold enters at the top but must be delivered to the bottom so it does not cool the hot water waiting above."},{"t":"Plumbing","q":"The most likely sign that the lower element of an electric water heater has failed is:","a":"Some hot water at first, then warm water at all locations","w":["No hot water at all","Hot water at one fixture only","Hot water that is too hot at every fixture"],"y":"The upper element still heats the top of the tank, so the first draw is hot. 'At all locations' rules out a single-fixture problem."},{"t":"Plumbing","q":"The reaction of copper in direct contact with galvanized piping is called:","a":"Electrolysis","w":["Oxidation","Cavitation","Chelation"],"y":"Two dissimilar metals in water form a small battery and the less noble metal corrodes. The fix is a dielectric union."},{"t":"Plumbing","q":"The problem with older galvanized steel pipes is that they:","a":"Rust internally, narrowing the diameter","w":["Leak at every threaded joint","Become brittle and crack","Leach zinc into the water"],"y":"The failure is invisible from outside. The symptom is falling flow, not a leak."},{"t":"Plumbing","q":"A valve that can either adjust or stop the flow of water is a:","a":"Globe valve","w":["Gate valve","Ball valve","Check valve"],"y":"A globe valve throttles and is built to sit part-open. A gate valve is meant to be fully open or fully shut."},{"t":"Plumbing","q":"The minimum size water line at entry to the home is:","a":"Three-quarters inch","w":["One-half inch","One inch","One and one-quarter inch"],"y":"3/4 inch at the service entry so several fixtures can run at once. Interior branches step down to 1/2 inch."},{"t":"Plumbing","q":"Gas water heaters will NOT have:","a":"A barometric damper","w":["A draft hood","A dip tube","A T&P relief valve"],"y":"A barometric damper belongs to oil-fired equipment. A gas water heater uses a draft hood instead."},{"t":"Mechanical Exhaust","q":"A clothes dryer exhaust should be ______ in diameter.","a":"Four inches","w":["Three inches","Five inches","Six inches"],"y":"Rigid, smooth-wall 4-inch metal duct. Narrower restricts airflow, so the dryer runs longer and lint builds up."},{"t":"Mechanical Exhaust","q":"A clothes dryer exhaust duct should not exceed ______ of developed length.","a":"35 feet","w":["25 feet","45 feet","50 feet"],"y":"Bends count against it: subtract about 2.5 feet per 45-degree elbow and 5 feet per 90."},{"t":"Mechanical Exhaust","q":"A dryer transition duct between the dryer and the wall should not exceed:","a":"Eight feet","w":["Four feet","Six feet","Twelve feet"],"y":"The short flexible piece behind the appliance is capped at 8 feet. Keep it separate from the 35-foot rigid duct limit."},{"t":"Mechanical Exhaust","q":"Fasteners joining dryer vent sections must not project more than ______ into the duct.","a":"1/8 inch","w":["1/4 inch","1/2 inch","3/8 inch"],"y":"Anything longer catches lint and starts the blockage."},{"t":"Mechanical Exhaust","q":"What is required on all exterior air intake and exhaust systems except dryer vents?","a":"A screen","w":["A backdraft damper","A rain hood","A fire damper"],"y":"Screens keep birds, rodents and insects out. A dryer vent is exempt because a screen would clog with lint, so it gets a backdraft damper instead."},{"t":"Mechanical Exhaust","q":"An HRV or ERV exterior opening must be at least ______ from a door, operable window or property line.","a":"Three feet","w":["One foot","Five feet","Ten feet"],"y":"Three feet stops exhaust being pulled straight back in through a nearby opening."},{"t":"Mechanical Exhaust","q":"The device transferring heat from outgoing air to incoming fresh air is a:","a":"Heat recovery ventilator","w":["Economizer","Heat pump","Air-to-air condenser"],"y":"The two streams pass close but never mix in the core. An ERV does the same and transfers moisture as well."},{"t":"Mechanical Exhaust","q":"Cool air entering at the eaves and warm air leaving at the ridge is an example of:","a":"Stack effect","w":["Venturi effect","Convection loop","Bernoulli effect"],"y":"Warm air is less dense so it rises and escapes high while cooler air is drawn in low. It is what makes passive attic ventilation work with no fan."},{"t":"Mechanical Exhaust","q":"Roof vents shaped like concrete roof tiles are called:","a":"O'Hagin","w":["Turbine vents","Ridge vents","Dormer vents"],"y":"A low-profile vent moulded to match the tile so nothing is visible from the street."},{"t":"Mechanical Exhaust","q":"The fan system that lets large amounts of conditioned air escape into the attic in winter is a:","a":"Whole house fan","w":["Attic power ventilator","Bath exhaust fan","Range hood"],"y":"It pulls air out of the living space into the attic. If the shutters do not seal in winter it is a large hole in the ceiling."},{"t":"Insulation & Ventilation","q":"Loose fill insulation is best suited for:","a":"The insulation of unconditioned attics","w":["Exterior wall cavities","Cathedral ceilings","Below-grade foundation walls"],"y":"It is blown in and lies where it lands, so it needs an open, horizontal, unfinished space."},{"t":"Insulation & Ventilation","q":"Which is NOT a material used for vapor barriers?","a":"Wood","w":["Polyethylene sheet","Aluminum foil","Kraft paper facing"],"y":"A vapor barrier must be effectively impermeable. Wood absorbs and releases moisture, which is the opposite of the job."},{"t":"Insulation & Ventilation","q":"A vapor retarder belongs on the:","a":"Warm-in-winter side of the insulation","w":["Cold side of the insulation","Both faces of the insulation","Exterior sheathing in all climates"],"y":"Warm air holds more moisture and moves toward the cold side. Stopping it at the warm face stops it before it can condense."},{"t":"Insulation & Ventilation","q":"Flexible insulation is:","a":"Manufactured in both batts and blankets","w":["Manufactured only in batts","Manufactured only in blankets","Sprayed in place"],"y":"Batts come in pre-cut lengths, blankets in continuous rolls. Same material, different packaging."},{"t":"Insulation & Ventilation","q":"The insulation made of 80 to 85 percent recycled newspaper with fire and pest retardants is:","a":"Cellulose","w":["Mineral wool","Fiberglass","Open-cell foam"],"y":"Shredded paper treated with borate. It is also the insulation most easily ruined by water."},{"t":"Insulation & Ventilation","q":"An oil-based, high density (1.25 to 2 pounds per cubic foot) hard foam is:","a":"Closed-cell foam","w":["Open-cell foam","Expanded polystyrene","Mineral wool board"],"y":"Sealed bubbles make it dense, rigid, high in R-value per inch, and its own vapor barrier. The density figure is what separates it from open-cell."},{"t":"Insulation & Ventilation","q":"Electrically powered roof and attic fans do all of the following EXCEPT:","a":"Bring fresh make-up air in","w":["Exhaust hot attic air","Lower attic temperature","Reduce moisture accumulation"],"y":"A powered fan only pushes air out. Block the soffit vents and it pulls conditioned air out of the house instead."},{"t":"Insulation & Ventilation","q":"Attic insulation may be wet as a result of any of the following EXCEPT:","a":"Insulation that is too close to chimneys","w":["A roof leak","Condensation on cold surfaces","Bath exhaust discharged into the attic"],"y":"Insulation against a chimney is a fire-clearance problem, not a moisture one."},{"t":"Insulation & Ventilation","q":"The base attic ventilation requirement is net free ventilating area of:","a":"1/150 of the attic floor area","w":["1/300 of the attic floor area","1/500 of the attic floor area","1/1500 of the attic floor area"],"y":"It halves to 1/300 only where the vents are balanced high and low, or in cold zones with a warm-side vapor retarder."},{"t":"Insulation & Ventilation","q":"Permeability is the property of a material that allows the passage of:","a":"Water vapor","w":["Liquid water","Air","Heat"],"y":"Specifically vapour, which is why it is the property that defines a vapor retarder."},{"t":"Insulation & Ventilation","q":"When can soffit venting be omitted?","a":"If gable vents are installed at opposing ends","w":["If a ridge vent is installed","If the attic is unconditioned","If a power ventilator is installed"],"y":"The requirement is cross-ventilation, not soffit vents specifically. Ask what the vent is for, not what it is called."},{"t":"Site, Exterior & Structural","q":"What basic drainage problem can create seepage into a basement or crawlspace?","a":"The ground adjacent to the house slopes toward the foundation","w":["The downspouts discharge six feet from the house","The lot is flat for the first twenty feet","The soil is predominantly sandy"],"y":"Grade must fall away, about one inch per foot. Sloping toward the foundation delivers every rainfall to the wall."},{"t":"Site, Exterior & Structural","q":"An eight-foot concrete block wall leans in a half-inch, is not cracked, and is damp with moderate efflorescence. The best specialist is:","a":"A landscape contractor","w":["A structural specialist","A masonry restoration firm","A waterproofing membrane installer"],"y":"No cracking and a half-inch lean means the wall is sound. The damp and efflorescence say the problem is water, which is a drainage issue."},{"t":"Site, Exterior & Structural","q":"A depression in the ground used to redirect surface water runoff is a:","a":"Swale","w":["Berm","Culvert","Sump"],"y":"A shallow channel that steers water away from the house, natural or shaped."},{"t":"Site, Exterior & Structural","q":"Footings for deck supports:","a":"Should be installed below the frost line","w":["May bear directly on grade","Should be at least 12 inches deep everywhere","May rest on compacted gravel only"],"y":"Water in soil expands when it freezes and lifts whatever sits above it."},{"t":"Site, Exterior & Structural","q":"Steep slope roof coverings rely on ______ to create a waterproof barrier.","a":"Underlayment","w":["The shingles themselves","The decking","The drip edge"],"y":"The shingles shed the bulk of the water; the underlayment beneath is the layer that actually waterproofs."},{"t":"Site, Exterior & Structural","q":"Both pitched and flat roofs are comprised of these basic elements:","a":"Decking and covering","w":["Rafters and sheathing","Trusses and underlayment","Joists and membrane"],"y":"Strip away the differences and every roof is a structural deck plus a covering. Slope changes how the covering works, not what a roof is."},{"t":"Site, Exterior & Structural","q":"Which problem could exist in single-ply membrane and roll roofing flat roofs?","a":"Loose joints and open seams resulting in water intrusion","w":["Cupping of individual shingles","Loss of granules at the eaves","Nail pops along the ridge"],"y":"A flat roof resists water rather than shedding it, so the membrane must be continuous. The seams are the only discontinuity."},{"t":"Site, Exterior & Structural","q":"Dimensional framing lumber is sold by the:","a":"Board foot","w":["Linear foot","Square foot","Cubic yard"],"y":"A board foot is 12 by 12 by 1 inch. It measures volume, not length."},{"t":"Site, Exterior & Structural","q":"In walls above grade where there is no hydrostatic pressure, the protection used is:","a":"Damp-proofing","w":["Waterproofing","A drainage mat","A capillary break"],"y":"Damp-proofing resists moisture. Waterproofing is a membrane for liquid water under pressure, required only where a high water table creates it."},{"t":"Site, Exterior & Structural","q":"Wood joists closer than ______ to exposed ground in a crawl space are subject to decay.","a":"18 inches","w":["8 inches","12 inches","24 inches"],"y":"The ground-clearance ladder: 18 for joists, 12 for girders, 8 for framing on the foundation."},{"t":"Reporting & Duties","q":"Inspectors should carry:","a":"Both general liability and errors and omissions insurance","w":["General liability insurance only","Errors and omissions insurance only","Neither, if operating as a sole proprietor"],"y":"You have missed this on six separate exams. The options accumulate rather than compete: general liability covers damage and injury, E&O covers professional mistakes."},{"t":"Reporting & Duties","q":"Professional liability insurance is commonly referred to as:","a":"Errors and omissions insurance","w":["General liability insurance","Surety bonding","Workers compensation"],"y":"Same policy, two names. In Texas it is also a statutory condition of licensure at $100,000 per occurrence."},{"t":"Reporting & Duties","q":"Suspect stained areas that appear to be mold should be handled by:","a":"Noting it and referring the buyer to a qualified person","w":["Identifying the species in the report","Recommending immediate remediation","Omitting it unless confirmed by testing"],"y":"You may report what you observe. You may not identify the organism, because that takes lab testing."},{"t":"Reporting & Duties","q":"If an inspector suspects asbestos is present, they should:","a":"Mention that it may be asbestos and recommend testing","w":["State that asbestos is present","Take a sample for the client","Omit it unless the client asks"],"y":"Note the hedged language. Stating it as fact exposes you; staying silent exposes the client."},{"t":"Reporting & Duties","q":"A home inspection must include a:","a":"Report stating which systems and components were not inspected and why","w":["Cost estimate for each defect found","Statement of the property's market value","Warranty against future failure"],"y":"What you did NOT inspect, and why, is a required part of the report. Silence about an inaccessible area later reads as a missed defect."},{"t":"Reporting & Duties","q":"Which is NOT generally tested or monitored by a home inspector?","a":"All of the answers","w":["Air quality","Water quality","Pest infestation"],"y":"A genuine cumulative 'all'. The options are separate things outside scope, not competing ones. When the list is a set of exclusions, 'all' is live."},{"t":"Reporting & Duties","q":"A homeowner complains the inspector did not comment on design defects. Which is TRUE?","a":"Only licensed professional engineers can comment on design defects","w":["The inspector must refund the fee","Design defects are always within the standard scope","The inspector must return and re-inspect"],"y":"Design is engineering. You report condition, not whether the original design was adequate."},{"t":"Reporting & Duties","q":"Upon completion of an inspection, the inspector gives a copy of the report only to:","a":"The client","w":["The listing agent","The seller","Any party to the transaction"],"y":"The report belongs to whoever hired you. Releasing it to anyone else needs the client's permission."},{"t":"Reporting & Duties","q":"The disclaimer attached to the inspection report protects:","a":"The home inspector","w":["The client","The real estate agent","The seller"],"y":"A disclaimer states the limits of the inspection, so it protects you. Pair it with reporting what you did not inspect."},{"t":"Reporting & Duties","q":"The well pump is not working. You should:","a":"Advise the client and suggest they hire a well professional","w":["Diagnose the fault and report the cause","Attempt to reset the pressure switch","Omit it as outside scope"],"y":"Report what you observed and refer to the specialist. You do not diagnose, repair or guess."},{"t":"Reporting & Duties","q":"The most serious implication of a leaking humidifier is:","a":"Rusting of the heat exchanger","w":["Staining of the plenum","Reduced humidification capacity","Mold in the ductwork"],"y":"A corroded exchanger cracks, which puts combustion gases into the supply air. 'Most serious' asks you to follow the chain to its end."},{"t":"Reporting & Duties","q":"All of the following are priority statements EXCEPT that:","a":"The asphalt shingle roofing has a remaining life of 10 to 15 years","w":["The heat exchanger is cracked","The stair guard is loose","There is no GFCI protection at the exterior receptacles"],"y":"A priority statement flags something unsafe, failing now, or expensive and imminent. A roof with 10 to 15 years left is reassurance."},{"t":"My Mistakes","q":"There is a crack at the upper corner of a wall on the lock side of an interior door. The crack gets wider as it runs toward the ceiling. The door rubs against the lock side jamb. What would be the best recommendation in this situation?","a":"Evaluation by a contractor","r":1,"y":"Missed 7×. Evaluation by a contractor would be the best recommendation."},{"t":"My Mistakes","q":"When the furnace is located in a small, enclosed area:","a":"Inlet and outlet ventilation openings must be provided","r":1,"y":"Missed 6×. Combustion air is required for gas-fired appliances in confined spaces."},{"t":"My Mistakes","q":"Inspectors should carry:","a":"Both — general liability AND errors and omissions insurance","r":1,"y":"Missed 6×. In some states, both types of insurance may be required by state or local law. This protects both the home inspector and the client."},{"t":"My Mistakes","q":"All perimeter concrete roof tiles should be fastened at least __________ inches from both sides of the ridge at the gable rakes and the eaves.","a":"36","r":1,"y":"Missed 6×. Tiles not located at the perimeter do not need fasteners when supported by battens."},{"t":"My Mistakes","q":"Gaps around doors and windows in exterior siding need to be caulked:","a":"As a temporary repair","r":1,"y":"Missed 5×. Caulking should always be considered as temporary."},{"t":"My Mistakes","q":"All of the following are improper materials for a masonry chimney crown EXCEPT:","a":"Concrete","r":1,"y":"Missed 5×. Concrete is best used for a cap or crown at the top of a masonry fireplace."},{"t":"My Mistakes","q":"When can soffit venting be omitted?","a":"If gable vents are installed at opposing ends","r":1,"y":"Missed 5×. Soffit venting is sometimes omitted if gable vents are installed at opposing ends."},{"t":"My Mistakes","q":"To counteract problems associated with a high water table, which of the following is used?","a":"Drain tiles","r":1,"y":"Missed 5×. Drain tiles carry water away from the foundation."},{"t":"My Mistakes","q":"The minimum width for a concrete or asphalt driveway is:","a":"Eight feet","r":1,"y":"Missed 4×. Minimum width of eight feet allows a driver to properly park a vehicle."},{"t":"My Mistakes","q":"The home inspector is required to report the location of the:","a":"Electric service equipment","r":1,"y":"Missed 4×. The location of all-electric service equipment is required to be noted in the inspection report."},{"t":"My Mistakes","q":"Both pitched roofs and flat roofs are comprised of the following basic elements:","a":"Decking and covering","r":1,"y":"Missed 4×. Because the roof's main function is to repel water, both pitched roofs and flat roofs are comprised of decking and covering."},{"t":"My Mistakes","q":"A fireplace hearth should be made of solid masonry or concrete that is at least four inches thick and ________ inches deep.","a":"16","r":1,"y":"Missed 4×. At a minimum, if the firebox opening is six square feet or less, the hearth extension should extend at least sixteen inches in front and at least eight inches to each side."},{"t":"My Mistakes","q":"The manufacturer of a wood-burning stove recommends a minimum of twelve inches to combustibles. What is the minimum clearance to combustibles using a sheet metal and air space clearance reduction device?","a":"Twelve inches","r":1,"y":"Missed 4×. Clearance reduction devices due not apply to solid fuel-burning appliances listed for 12\" clearance to combustibles."},{"t":"My Mistakes","q":"Problems are evident when the water level gauge in a steam heating system:","a":"All of the answers — the readings listed are separate warning signs","r":1,"y":"Missed 4×. Always recommend that a steam heating system is further evaluated by a certified contractor."},{"t":"My Mistakes","q":"If the main structure's heating system is located in the garage, which of the following is recommended?","a":"All of the answers — separate safety measures, so every one applies","r":1,"y":"Missed 4×. These recommendations improve the safety of a heating system installed in a garage."},{"t":"My Mistakes","q":"In what location would an equalizer pipe be found?","a":"Near a steam boiler","r":1,"y":"Missed 4×. An equalizer pipe would be found near a steam boiler."},{"t":"My Mistakes","q":"A closed hot water system:","a":"Provides an even distribution of heat","r":1,"y":"Missed 4×. Water is a very good source of heat."},{"t":"My Mistakes","q":"The overhead garage door operator control at the wall should be at least _____ off of the floor.","a":"60 inches","r":1,"y":"Missed 4×. The overhead garage door operator control at the wall should be at least 60 inches off of the floor. This height makes it more difficult for children to operate the door."},{"t":"My Mistakes","q":"Gable wall ventilation openings should be blocked when ____________ ventilation is installed.","a":"Ridge","r":1,"y":"Missed 4×. Depending on the wind speed and direction, the ridge ventilation may draw most or all of the air from the gable ventilation, thereby creating dead air zones in the lower part of the attic."},{"t":"My Mistakes","q":"Where is an air admittance valve used?","a":"In a kitchen island for the sink","r":1,"y":"Missed 4×. An air admittance valve is used at a kitchen island sink where a direct vent to the roof is not possible."},{"t":"My Mistakes","q":"Fasteners with lapped seam metal panel roofs need a _________ on the head end.","a":"Washer","r":1,"y":"Missed 4×. Fasteners need a washer on the head end and need to be compatible with the roof panels."},{"t":"My Mistakes","q":"When a driveway or walk runs up against a foundation wall:","a":"Some type of caulking is recommended","r":1,"y":"Missed 4×. Caulking is recommended even if the paved surface slopes away from the house."},{"t":"My Mistakes","q":"Common inspector mistakes include all of the following EXCEPT:","a":"Going back and checking things you may have overlooked","r":1,"y":"Missed 3×. Double-checking yourself is prudent."},{"t":"My Mistakes","q":"Which of the following is NOT a home inspection report form?","a":"Disclaimer","r":1,"y":"Missed 3×. A disclaimer is not an inspection report form."},{"t":"My Mistakes","q":"Visible defects should be noted:","a":"Where the condition is other than purely cosmetic","r":1,"y":"Missed 3×. Visible defects should be noted in the inspection report where the condition is other than purely cosmetic."},{"t":"My Mistakes","q":"Vegetation should be cut back ________ from a structure.","a":"At least one foot","r":1,"y":"Missed 3×. One foot of clearance allows for proper maintenance of the property."},{"t":"My Mistakes","q":"The overhead electrical service drop runs through tree branches. What would be the best recommendation?","a":"An arborist should evaluate the tree","r":1,"y":"Missed 3×. A tree expert should investigate and correct as needed."},{"t":"My Mistakes","q":"What can determine the home's electrical service capacity?","a":"The size of the service drop wires","r":1,"y":"Missed 3×. The size of the service drop wires determines the home's electrical service capacity."},{"t":"My Mistakes","q":"The grounding electrode system:","a":"Provides an alternate return path for electricity","r":1,"y":"Missed 3×. The house grounding electrode system gives an alternate path for electricity to take."},{"t":"My Mistakes","q":"The primary criteria for inlet service capacity is the:","a":"Size of the inlet service wire","r":1,"y":"Missed 3×. The wire amp rating is the system's service capacity."},{"t":"My Mistakes","q":"A gable roof has a:","a":"Ridge","r":1,"y":"Missed 3×. The ridge refers to the top of the roof."},{"t":"My Mistakes","q":"To protect the interior of a structure, a flat roof must have a/an:","a":"Watertight covering","r":1,"y":"Missed 3×. To protect the interior of a structure, a flat roof must have a watertight covering. Also, be sure to verify the installation of roof drains and flashing."},{"t":"My Mistakes","q":"Which problem could exist in single-ply membrane and roll roofing flat roof construction?","a":"Loose joints and open seams resulting in water intrusion","r":1,"y":"You have missed this 3 times."},{"t":"My Mistakes","q":"An opening in a fireplace hearth into which ashes may be swept into a pit below is called:","a":"An ash dump","r":1,"y":"Missed 3×. Ashes may be swept into a pit below the fireplace hearth called a cleanout or an ash dump."},{"t":"My Mistakes","q":"A large metal conduit box located inside the heating system where hot air builds up pressure and is then forced out to the heat registers is a:","a":"Plenum","r":1,"y":"Missed 3×. A plenum is typically constructed of galvanized metal or fiberglass duct paneling."},{"t":"My Mistakes","q":"Which of the following is the best example of conduction as it relates to heat flow?","a":"Heat flowing from the inside to the outside of a radiator","r":1,"y":"Missed 3×. An example of conduction would be heat flowing from the inside to the outside of a radiator."},{"t":"My Mistakes","q":"Which of the following would indicate that the boiler is being used for a steam heating system rather than a hot water heating system?","a":"There is a water level gauge on the boiler","r":1,"y":"Missed 3×. Always suggest servicing on all steam heating equipment."},{"t":"My Mistakes","q":"A flashlight can be used during wall inspections to:","a":"Shine parallel to the wall to look for irregularities","r":1,"y":"Missed 3×. Shining the flashlight parallel with the wall with lights on and then off may highlight irregularities."},{"t":"My Mistakes","q":"A free-standing electric range requires a/an:","a":"Anti-tip device","r":1,"y":"Missed 3×. An anti-tip device is needed on a free-standing electric range so that it will not tip over."},{"t":"My Mistakes","q":"A Type B vent should terminate at least _________ feet from a vertical sidewall or at least two feet above any obstruction within 10 feet.","a":"Eight","r":1,"y":"Missed 3×. A Type B vent should terminate at least eight feet from a vertical sidewall. These clearances include gravity air intake openings such as windows and eave ventilation openings."},{"t":"My Mistakes","q":"On an HRV system, the _____________ duct configuration relies on the local exhaust fans to remove most pollutants and on the HVAC system fan to circulate outside ventilation air.","a":"Simplified","r":1,"y":"Missed 3×. The simplified duct configuration draws some pollutants from the HVAC return duct and provides outside ventilation through the HVAC return duct by connecting the outside ventilation air further downstream from where the exhaust air duct connects to the return duct."},{"t":"My Mistakes","q":"Where is a trap primer used?","a":"At an emergency floor drain for a washing machine","r":1,"y":"Missed 3×. An emergency floor drain trap seldom sees water and will dry out without a trap primer."},{"t":"My Mistakes","q":"If clients want to discuss changes to a home, an agent should:","a":"Discuss the changes away from the seller","r":1,"y":"Missed 3×. Agents should discuss changes to the home away from the seller as it may make the seller uncomfortable."},{"t":"My Mistakes","q":"What helps protect the inspector should a dispute with a client arise?","a":"Photos kept on file, whether used in the report or not","r":1,"y":"Missed 3×. Pictures help explain conditions at the time of the inspection."},{"t":"My Mistakes","q":"A \"Limitation of Remedies\" clause in a pre-inspection agreement is most likely to have what effect?","a":"Reduce the client's recovery of damages from the home inspector","r":1,"y":"Missed 3×. A \"Limitation of Remedies\" clause in a pre-inspection agreement will most likely reduce the client's recovery of damages from the home inspector."},{"t":"My Mistakes","q":"Which of the following is not offered by home inspection organizations?","a":"Licensure","r":1,"y":"Missed 3×. Home inspection organizations are membership organizations, not licensing organizations."},{"t":"My Mistakes","q":"What is specified to be installed between courses of wood shake roof coverings?","a":"Felt Interlayment","r":1,"y":"Missed 3×. Interlayment is installed between layers of wood shake roof coverings but not between courses of wood shingles."},{"t":"My Mistakes","q":"Roofs surrounded by parapet walls may drain water through rectangular openings in the wall called __________.","a":"Scuppers","r":1,"y":"Missed 3×. Roof leaks at scuppers are common so inspectors should investigate interior ceilings and walls below."},{"t":"My Mistakes","q":"What is the function of diagonal bracing on a deck?","a":"It provides additional rigidity to the deck","r":1,"y":"Missed 3×. The function of diagonal bracing on a deck is to provide additional rigidity to the deck. These braces can be observed from below the deck."},{"t":"My Mistakes","q":"The loss of water from an area by its flow over the land's surface is known as _______.","a":"Surface runoff","r":1,"y":"Missed 3×. Runoff is surface water flowing over the land."},{"t":"My Mistakes","q":"Lumber that has been planned on all sides is called ______.","a":"S4S","r":1,"y":"Missed 3×. S4S means the lumber has been surfaced on all four sides."},{"t":"My Mistakes","q":"Topography is:","a":"The natural features of the land","r":1,"y":"Missed 2×. Topography describes the natural features of the land (swales, valleys, etc.). Studying topography helps to determine surface water flow."},{"t":"My Mistakes","q":"Rafter spread can be visually identified by:","a":"Soffits pulling away from the house wall","r":1,"y":"Missed 2×. When soffits pull away from an exterior wall, you should be able to see a line of unpainted soffit running parallel with the exterior wall."},{"t":"My Mistakes","q":"Correcting radon contamination:","a":"Should be conducted by a radon mitigation contractor","r":1,"y":"Missed 2×. Radon mitigation contractors may be licensed in your state."},{"t":"My Mistakes","q":"A professional inspector delivers a home inspection report written in paragraph form based on observations and opinions of the condition of a subject property. This form of report is known as a:","a":"Narrative report","r":1,"y":"Missed 2×. A narrative report is written in paragraph form."},{"t":"My Mistakes","q":"For a more complete picture of the property condition, the home inspector uses a narrative report with a _______.","a":"Checklist or rating system","r":1,"y":"Missed 2×. A narrative report combined with a checklist or rating system is referred to as a combination report."},{"t":"My Mistakes","q":"If a property does not have any carbon monoxide detectors, the home inspector should:","a":"Note the information on the home inspection report if required in that state and suggest that","r":1,"y":"You have missed this 2 times."},{"t":"My Mistakes","q":"A \"puff back\" is a problem found in what type of heating system?","a":"Oil-fired systems","r":1,"y":"Missed 2×. A puff back is a misfire in an oil furnace that, at its worst, can send soot throughout the home, requiring expensive cleaning in addition to repairs on the heating system."},{"t":"My Mistakes","q":"A thorough inspection of a typical property should take about:","a":"Three hours","r":1,"y":"Missed 2×. A thorough inspection of a typical property should take about three hours, not including drive time."},{"t":"My Mistakes","q":"A _______ is an air conditioning component that creates a flow of refrigerant from one part of the system to the other.","a":"Compressor","r":1,"y":"Missed 2×. A compressor is an air conditioning component that creates the flow of refrigerant; this is located in the outside air-cooled condenser."},{"t":"My Mistakes","q":"When the temperature is below 20 degrees, a heat pump:","a":"Will need auxiliary heaters to supplement the heat","r":1,"y":"Missed 2×. Heat pumps can only provide adequate heat under mild outside temperatures."},{"t":"My Mistakes","q":"For A/C, the temperature of the air leaving the register should be about _______ degrees cooler than the room temperature.","a":"15","r":1,"y":"Missed 2×. For A/C, the supply air should be between 12 and 20 degrees colder than the room temperature."},{"t":"My Mistakes","q":"Aluminum wiring is used primarily for which of the following?","a":"Electric ovens","r":1,"y":"Missed 2×. It is also used for single appliance circuits along with service entrances."},{"t":"My Mistakes","q":"A subpanel for a detached building has melted insulation on a neutral conductor. What is the most likely cause of this condition?","a":"The neutral conductor is loose at the terminal bar","r":1,"y":"Missed 2×. The neutral conductor is loose at the terminal bar is the most likely cause for melted insulation on a neutral conductor in a subpanel for a detached building."},{"t":"My Mistakes","q":"Electricity moves along wires that are known as:","a":"Conductors","r":1,"y":"Missed 2×. Conductors are also known as wires."},{"t":"My Mistakes","q":"The Grounding Electrode Conductor (GEC) requires a/an # ____ AWG copper wire for UFER grounding systems for a 200 Amp service.","a":"Four","r":1,"y":"Missed 2×. A four American Wire Gauge of copper is needed."},{"t":"My Mistakes","q":"A house has service entrance conductors designed for 100 amps and a main disconnect rated at 100 amps. Which of these conditions is unsafe?","a":"The service box is rated at 75 amps","r":1,"y":"Missed 2×. The service panel box rating can only handle up to 75 amps."},{"t":"My Mistakes","q":"A 14-gauge copper wire is protected by a 20-amp fuse. You should report that:","a":"This is a defect and recommended improvement","r":1,"y":"Missed 2×. In this case, the wire could overheat before the breaker trips."},{"t":"My Mistakes","q":"Ceramic granules protect asphalt shingles from:","a":"Ultraviolet rays","r":1,"y":"Missed 2×. UV rays from the sun break down unprotected shingles."},{"t":"My Mistakes","q":"Water from downspouts should not be:","a":"Allowed to accumulate around the foundation","r":1,"y":"Missed 2×. Water from downspouts should not be allowed to accumulate around the foundation as this may cause water seepage into the basement."},{"t":"My Mistakes","q":"The lowest part of the roof that projects beyond the structure walls is known as the _______.","a":"Eave","r":1,"y":"Missed 2×. This is the gable end of a gable roof system."},{"t":"My Mistakes","q":"The typical life expectancy of copper gutters is:","a":"40 years","r":1,"y":"Missed 2×. This estimate is based on normal wear and weather conditions."},{"t":"My Mistakes","q":"A chimney should not be located on an exterior wall because:","a":"The flue temperature may be too cold","r":1,"y":"Missed 2×. Mounting a chimney on an exterior wall reduces the flue temperature and the temperature of the flue gases which may not allow the stack effect to fully develop."},{"t":"My Mistakes","q":"A flue that penetrates directly through a roof should be flashed like a:","a":"Metal vent","r":1,"y":"Missed 2×. A flue that penetrates directly through a roof should be flashed using a roof jack, a storm collar, and sealant. The flashing should be properly integrated into the roof covering."},{"t":"My Mistakes","q":"Flues in masonry chimneys should be separated by at least one ________ of brick.","a":"Wythe","r":1,"y":"Missed 2×. Flue liners should not be adjacent to each other and should be separated by at least one wythe of brick."},{"t":"My Mistakes","q":"A clay flue liner should extend ________ inches above the crown.","a":"Four to six","r":1,"y":"Missed 2×. The masonry fireplace flue liner should extend four to six inches above the top of the concrete crown or cap."},{"t":"My Mistakes","q":"If the masonry fireplace firebox opening is ___________, the hearth extension should extend at least sixteen inches in front and at least eight inches to each side.","a":"Six square feet or less","r":1,"y":"Missed 2×. If the firebox opening is six square feet or less, the hearth extension should extend at least sixteen inches in front and at least eight inches to each side."},{"t":"My Mistakes","q":"An effective and safe way of cutting fuel consumption in a furnace can be accomplished by all of the following except:","a":"Installing an automatic flue damper","r":1,"y":"Missed 2×. An automatic flue damper does not increase the efficiency of the furnace."},{"t":"My Mistakes","q":"Which of the following statements about distribution piping is true?","a":"In two-pipe distribution, the cold water leaving the radiator does not mix with the hot water","r":1,"y":"You have missed this 2 times."},{"t":"My Mistakes","q":"The most efficient location for heat supply in a room is on a/an:","a":"Exterior wall near a window or door","r":1,"y":"Missed 2×. The heat supply should be located at the source of heat loss or gain, depending on cooling or heating season."},{"t":"My Mistakes","q":"If the relief valve on a hot water heating system is discharging water, which of the following would most likely be the cause?","a":"The system has a waterlogged or undersized expansion tank","r":1,"y":"Missed 2×. If the relief valve on a hot water heating system is discharging water, it is likely because the system has a waterlogged or undersized expansion tank. This should be noted in the home inspection report."},{"t":"My Mistakes","q":"Home inspectors inspect solar heating systems only when:","a":"They are qualified to do so and make that election","r":1,"y":"Missed 2×. Solar heating systems are not part of the standard of practice for home inspectors."},{"t":"My Mistakes","q":"Permeability is the property of a material that allows the passage of:","a":"Water vapor","r":1,"y":"Missed 2×. The property of a material that allows the passage of water vapor is known as permeability."},{"t":"My Mistakes","q":"Urea-formaldehyde foam insulation:","a":"Was taken off the market but is no longer considered a health threat","r":1,"y":"Missed 2×. This insulation is considered an environmental threat, not a health threat."},{"t":"My Mistakes","q":"In a well-insulated house that has storm windows, the greatest source of heat loss is through:","a":"Air leakage at moveable joints","r":1,"y":"Missed 2×. Window replacement may be required if excessive heat loss occurs."},{"t":"My Mistakes","q":"To ensure that rigid insulation is fire-resistant:","a":"It should be covered with at least 1/2\" gypsum wallboard","r":1,"y":"Missed 2×. Covering rigid insulation with at least 1/2\" gypsum wallboard provides a fire barrier."},{"t":"My Mistakes","q":"If a metal roof seems to have many leaks (but no specific leakage area) and it only leaks in the winter, you should consider which of the following?","a":"Condensation on the underside of the metal","r":1,"y":"Missed 2×. Condensation can occur without proper ventilation."},{"t":"My Mistakes","q":"All of the following are clues that excess humidity may be a problem in the house EXCEPT:","a":"Excessive drafts","r":1,"y":"Missed 2×. A draft would help to remove humidity in most conditions."},{"t":"My Mistakes","q":"Which of the following is not an issue in the attic inspection?","a":"Drainage","r":1,"y":"Missed 2×. Drainage is not an issue with the attic inspection."},{"t":"My Mistakes","q":"Cracks found in a plaster wall may indicate an underlying structural problem if they are:","a":"One-half inch wide","r":1,"y":"Missed 2×. One-half inch wide cracks may indicate a problem."},{"t":"My Mistakes","q":"When evaluating an attached garage, which of the following conditions would not be considered a potential safety hazard?","a":"The wood framing members are covered with plasterboard","r":1,"y":"Missed 2×. Plasterboard or drywall creates a firewall between garage and house."},{"t":"My Mistakes","q":"Most microwave oven manufacturers recommend that there is at least _____ between the floor and the top of the unit.","a":"66 inches","r":1,"y":"Missed 2×. While most manufacturers will recommend 66 inches of space between the floor and the top of the unit, an important consideration is how high above the cooktop the microwave oven should be mounted to avoid damage due to heat rising from the cooktop. The best practice here is to contact the manufacturer."},{"t":"My Mistakes","q":"A dishwasher is normally only mounted to the:","a":"Countertop","r":1,"y":"Missed 2×. A dishwasher is typically mounted to the underside of the countertop with two screws."},{"t":"My Mistakes","q":"When inspecting an oven, the inspector should:","a":"Check the operation of the self-clean lock lever","r":1,"y":"Missed 2×. Inspectors should check the operation of the self-clean lock lever, but they should not run the oven in cleaning mode."},{"t":"My Mistakes","q":"A freezer should be set at:","a":"Zero degrees Fahrenheit","r":1,"y":"Missed 2×. A freezer should be set at zero degrees Fahrenheit."},{"t":"My Mistakes","q":"To activate a trash compactor, what is usually required?","a":"A switch or a key","r":1,"y":"Missed 2×. Some compactors may also be operated with a foot pedal."},{"t":"My Mistakes","q":"What is the maximum length of a flexible gas connector behind a free-standing gas range?","a":"Six feet","r":1,"y":"Missed 2×. A single, flexible gas connector up to six feet long is okay behind a gas range for pull out access to the shutoff valve."},{"t":"My Mistakes","q":"What type of ducted HRV or ERV configuration uses exhaust ducts connected to grilles in bathrooms, kitchens, and utility rooms to remove pollutants and provide outside ventilation air to the living areas through the HVAC return duct?","a":"Partially ducted","r":1,"y":"Missed 2×. The partially ducted system provides outside ventilation air to the living areas through the HVAC return duct."},{"t":"My Mistakes","q":"What type of fan should NOT be used in the winter when a combustion appliance draws combustion air from inside the house?","a":"Whole house fan","r":1,"y":"Missed 2×. A whole house fan is not recommended in the winter especially when a gas appliance such as a furnace is running."},{"t":"My Mistakes","q":"Low water pressure in the house may be due to water pipes made of:","a":"Galvanized pipe","r":1,"y":"Missed 2×. Galvanized piping corrodes internally."},{"t":"My Mistakes","q":"A properly installed garbage disposal that makes no sound when turned on can sometimes be activated by:","a":"Pressing the thermal overload switch","r":1,"y":"Missed 2×. This device is found near the bottom of the disposal."},{"t":"My Mistakes","q":"The safety device that should be attached to the pressure relief valve on a water heater is:","a":"An extension pipe","r":1,"y":"Missed 2×. The extension pipe (pressure relief line) is attached to the pressure relief valve and allows the water and steam pressure to discharge safely."},{"t":"My Mistakes","q":"The absence of vent stacks indicates that the:","a":"Plumbing code has been violated","r":1,"y":"Missed 2×. Plumbing stacks help maintain a safe and working sanitary system."},{"t":"My Mistakes","q":"Mixed-use of pipe material in a water distribution piping system is:","a":"Not recommended","r":1,"y":"Missed 2×. All water piping should be the same material."},{"t":"My Mistakes","q":"Which statement about drinking water is FALSE?","a":"Municipal water is more susceptible to contamination by harmful bacteria than water from","r":1,"y":"You have missed this 2 times."},{"t":"My Mistakes","q":"Who should prepare the pre-inspection agreement form?","a":"Attorney","r":1,"y":"Missed 2×. When preparing the form, consult an attorney in the area in which you perform inspections. Nationally recognized non-profit home inspection organizations may also be a good source of guidance on such an agreement; however, contracts should be reviewed by an attorney before they go to the public."},{"t":"My Mistakes","q":"Exhaust system flashings are usually made from galvanized steel, plastic, or aluminum. These components are sometimes called:","a":"Roof jacks","r":1,"y":"Missed 2×. Such components are sometimes called \"roof jacks.\" Roof jacks have flanges that need to be integrated into the roof covering system to create a leak-free seal."},{"t":"My Mistakes","q":"Shingles should be attached with nails long enough to penetrate at least ________ into the sheathing.","a":"3/4 inch","r":1,"y":"Missed 2×. Nails should be aluminum roofing nails or galvanized steel roofing nails and should penetrate at least 3/4 inch into the sheathing."},{"t":"My Mistakes","q":"Downspouts should discharge on to a plastic or concrete tray called a __________.","a":"Splash block","r":1,"y":"Missed 2×. Downspouts should discharge on to a splash block and should extend water flow at least five feet away from foundations."},{"t":"My Mistakes","q":"Valley flashing should not be penetrated by plumbing vents, appliance vents, and other penetrations within _____________ inches of the center of the valley.","a":"Eighteen","r":1,"y":"Missed 2×. Valley flashing should not be penetrated by plumbing vents, appliance vents, and other penetrations within 18\" of the center of the valley. Penetrations or obstructions at roof valley locations are prone to leakage."},{"t":"My Mistakes","q":"Hip and ridge tiles are installed over a ____________.","a":"Nailer","r":1,"y":"Missed 2×. A wood nailer provides an attachment area for installed hip and ridge tiles."},{"t":"My Mistakes","q":"Asphalt-based roofing cement is a common material used to repair and seal shingles. It is also used as a bedding cement before installing flashing. What is the term for the cement used to bond shingles together?","a":"Lap cement","r":1,"y":"Missed 2×. Lap cement is the term for the cement used to bond shingles together; it has a thinner consistency than flashing cement which is intended for vertical surfaces."},{"t":"My Mistakes","q":"Steep slope roof coverings rely on _______________ to create a waterproof barrier.","a":"Underlayment","r":1,"y":"Missed 2×. A waterproof barrier is to be installed under steep roof coverings; this is also known as underlayment."},{"t":"My Mistakes","q":"Polyurethane foam roofing is a spray applied ___________ foam.","a":"Closed-cell","r":1,"y":"Missed 2×. Unlike other roof coverings, polyurethane foam is an insulating material."},{"t":"My Mistakes","q":"If the property has trees on it, the inspector should:","a":"Report limbs hanging over the house","r":1,"y":"Missed 2×. Limbs hanging over the house can cause damage to the roofing so they should be reported."},{"t":"My Mistakes","q":"The arrangement and preparation of the soil for construction by placing drainage areas where appropriate for water runoff is called:","a":"Grading","r":1,"y":"Missed 2×. Grading of the surface allows proper drainage."},{"t":"My Mistakes","q":"A poured concrete retaining wall with weep holes at the base is rotating. What is the most likely reason for the wall to rotate?","a":"There is no gravel behind the wall","r":1,"y":"Missed 2×. The lack of gravel behind the wall may allow it to rotate."},{"t":"My Mistakes","q":"The maximum notch allowed in non-bearing wall studs is ______.","a":"40%","r":1,"y":"Missed 2×. A non-bearing wall wood stud cannot be notched more than 40%."},{"t":"My Mistakes","q":"Foundation anchor bolts shall extend a minimum of ____ inches into concrete or grouted cells of masonry units.","a":"Seven","r":1,"y":"Missed 2×. The anchor bolts hold the house to the foundation and should extend a minimum of seven inches into concrete or grouted cells of masonry units."},{"t":"My Mistakes","q":"Wood sole plates need to be anchored to foundation walls with _______ anchor bolts.","a":"Half inch","r":1,"y":"Missed 2×. The building code requires half-inch thick anchor bolts."},{"t":"My Mistakes","q":"The actual size of an 8 x 8 x 16 masonry block is?","a":"7.625\" X 7.625\" X 15.625\"","r":1,"y":"Missed 2×. The actual size of an 8\" x 8\" x 16\" masonry block is 3/8\" less than stated numbers."},{"t":"My Mistakes","q":"Truss uplift is typically caused by:","a":"Differential humidity conditions in the attic","r":1,"y":"Missed 2×. Truss uplift is caused by differential humidity conditions in an attic between the bottom and top truss chords."},{"t":"My Mistakes","q":"Another name for \"rebar\" is:","a":"Deformed bars","r":1,"y":"Missed 2×. The ridges in deformed bars help to \"grab\" the concrete."},{"t":"My Mistakes","q":"In combustible construction, what is the maximum horizontal measurement allowed in a concealed wall space (between fire-blocking)?","a":"10 feet","r":1,"y":"Missed 2×. Between fire-blocking in a concealed wall space, the maximum horizontal measurement is 10 feet."},{"t":"My Mistakes","q":"A home inspector is being sued because a minor code violation was found after the inspection and had not been reported. Which of the following is TRUE?","a":"Home inspectors are not required to uncover code violations","r":1,"y":"You have missed this 1 time."},{"t":"My Mistakes","q":"Which of the following is NOT included in the home inspection report?","a":"List of all code violations","r":1,"y":"Home inspectors are not code officials and may not be aware of all of a property's code violations."},{"t":"My Mistakes","q":"Tanks located underground and utilized for the bulk storage of chemicals and petroleum are known as:","a":"Underground storage tank","r":1,"y":"These tanks are known as underground storage tanks. A ruptured underground storage tank can cause major environmental problems."},{"t":"My Mistakes","q":"Regarding air conditioning, home inspectors are not required to:","a":"Inspect the cooling capacity","r":1,"y":"Determining cooling capacity should be calculated by a mechanical engineer, not a home inspector."},{"t":"My Mistakes","q":"The most important maintenance component of an electric furnace is:","a":"The air filter","r":1,"y":"The air filter must be changed on a regular basis."},{"t":"My Mistakes","q":"When an air conditioner and gas furnace are combined on a roof, this is called:","a":"A packaged unit","r":1,"y":"As opposed to a split system, combining the air conditioner and a gas furnace in one cabinet is called a \"gas pack.\""},{"t":"My Mistakes","q":"Which of the following is TRUE concerning auxiliary drain pans?","a":"All of the answers are true","r":1,"y":"The auxiliary drain should run independently from the main condensate drain."},{"t":"My Mistakes","q":"Heat flowing through exterior wall studs is called:","a":"Thermal bridging","r":1,"y":"Heat flowing through exterior wall studs is called thermal bridging."},{"t":"My Mistakes","q":"A type of valve that limits the water pressure on certain heating equipment is known as a:","a":"Pressure regulator valve","r":1,"y":"The pressure regulator valve limits the water pressure. It may be found at the water service entrance."},{"t":"My Mistakes","q":"_______ is a substance that produces a cooling effect by absorbing heat as it vaporizes.","a":"Refrigerant","r":1,"y":"Refrigerant absorbs heat as it vaporizes, then condenses to a liquid as it expands."},{"t":"My Mistakes","q":"All of the following conditions violate electrical safety standards in detached garages EXCEPT:","a":"Exterior service wire","r":1,"y":"Exterior service wire is not a safety hazard."},{"t":"My Mistakes","q":"Wiring that travels from the main panel through the walls of the building to the outlets where the current is used is known as:","a":"Branch circuit wiring","r":1,"y":"This is also referred to as a distribution wiring circuit."},{"t":"My Mistakes","q":"According to the NEC, GFCIs must be installed near all of the following EXCEPT:","a":"Attic access opening","r":1,"y":"GFCIs receptacles should be installed in areas where a water source may be located, such as kitchens, bathrooms, and laundry rooms, as well as on most exterior outlets."},{"t":"My Mistakes","q":"A properly installed garbage disposal that makes no sound when turned on can sometimes be activated by which of the following?","a":"Pressing the thermal overload switch","r":1,"y":"Pressing the thermal overload switch or thermal cutoff switch will sometimes activate the unit."},{"t":"My Mistakes","q":"AFCI stands for:","a":"Arc Fault Circuit Interrupter","r":1,"y":"Electrical AFCI circuits must be installed to serve all bedrooms in homes built after January 1, 2002; they detect arc faults which can lead to fires."},{"t":"My Mistakes","q":"The primary purpose for a GFCI circuit at the pool equipment is:","a":"To protect the pool light","r":1,"y":"The GFCI at the pool equipment protects the pool light."},{"t":"My Mistakes","q":"An _____ AWG bonding conductor should be attached at the terminal provided on the exterior of the pool pump.","a":"Eight","r":1,"y":"An eight AWG (American Wire Gauge) bonding conductor should be attached at the terminal provided on the exterior of the pool pump motor."},{"t":"My Mistakes","q":"What are the units used to measure resistance?","a":"Ohms","r":1,"y":"Ohms are the units used to measure resistance."},{"t":"My Mistakes","q":"A device that shuts off a circuit immediately if it senses an arc is called a/an:","a":"Arc Fault Circuit Interrupter","r":1,"y":"These are commonly known as AFCI outlets."},{"t":"My Mistakes","q":"_______ is the amount of current or electricity flowing through the wire.","a":"Amperage","r":1,"y":"Voltage pushes amperage through the wire."},{"t":"My Mistakes","q":"Electric service drop wires should be at least _______ feet above the pool water and at least 10 feet horizontally in all directions from the pool water.","a":"22 1/2","r":1,"y":"Electric service drop wires and broadband cable wires should be at least 22 1/2 feet above the pool water and at least 10 feet horizontally in all directions from the pool water."},{"t":"My Mistakes","q":"Wood shingles and wood shake are usually made of:","a":"Cedar","r":1,"y":"Western red cedar is best for wood shakes and wood shingles."},{"t":"My Mistakes","q":"Which is most likely to be a problem when an emitter is located near the house?","a":"Water will enter the crawl space or basement","r":1,"y":"When an emitter is located close to the house, moisture problems can occur at the crawl space or basement."},{"t":"My Mistakes","q":"Tempered safety glass is required:","a":"In sliding patio doors","r":1,"y":"Shower doors also require safety glass."},{"t":"My Mistakes","q":"A closed valley means that the:","a":"Valley flashing is not visible","r":1,"y":"In a closed valley, the valley flashing cannot be seen."},{"t":"My Mistakes","q":"Which problem could exist in single-ply membrane and roll roofing flat roof construction?","a":"Loose joints and open seams resulting in water intrusion","r":1,"y":"The presence of these problems should be noted in the inspection report."},{"t":"My Mistakes","q":"A fireplace that obtains combustion air from outside the house and expels products of combustion outside the house is called a:","a":"Direct vent fireplace","r":1,"y":"Direct vent fireplaces are usually considered high efficiency and have a sealed combustion chamber."},{"t":"My Mistakes","q":"A masonry fireplace clay liner that changes direction should have _______ seams between liner sections.","a":"Mitered","r":1,"y":"The correct answer is mitered seams - large mortar filled seams may crack."},{"t":"My Mistakes","q":"When the furnace has a defective thermocouple:","a":"The pilot light will not light","r":1,"y":"In this situation, the gas is not allowed to pass through to ignite the pilot."},{"t":"My Mistakes","q":"Gas furnaces located in garages or basements need:","a":"Outside combustion air","r":1,"y":"Gas furnaces require ventilation."},{"t":"My Mistakes","q":"Soot in and around the furnace may indicate that the:","a":"Vent pipe is clogged","r":1,"y":"Soot may indicate a clogged flue; its presence should be observed and noted in the home inspection report."},{"t":"My Mistakes","q":"When inspecting the heating system, an inspector is not required to:","a":"Fully inspect the heat exchanger","r":1,"y":"Not all of the heat exchanger will be visible during the home inspection."},{"t":"My Mistakes","q":"A steam heating system is a type of:","a":"Hydronic system","r":1,"y":"Steam is a hydronic heating system."},{"t":"My Mistakes","q":"The best way to positively determine how much insulation is in a finished wall is to:","a":"Make a small hole in the wall and measure it","r":1,"y":"Though this is the best way to measure insulation, do not destroy property as part of the home inspection."},{"t":"My Mistakes","q":"A crawl space always requires:","a":"Access","r":1,"y":"A crawl space always requires access and depending on the construction and design, it may also require ventilation."},{"t":"My Mistakes","q":"The vapor barrier prevents:","a":"Moisture from building up inside the exterior wall","r":1,"y":"Vapor barriers should be properly installed on all exterior walls."},{"t":"My Mistakes","q":"Home inspectors should not discuss their findings with clients before:","a":"Obtaining a signature on the pre-inspection agreement and allowing the clients adequate","r":1,"y":"You have missed this 1 time."},{"t":"My Mistakes","q":"The overhead garage door manual release rope should be installed at least _____ above the garage floor.","a":"72\"","r":1,"y":"The overhead garage door manual release rope should be installed at least 72\" above the garage floor. This is a child safety precaution."},{"t":"My Mistakes","q":"A garbage disposal needs a power cord with:","a":"A drip loop","r":1,"y":"A garbage disposal power cord needs a drip loop in the line before it goes into the wall outlet."},{"t":"My Mistakes","q":"Where a roof slope is less than 2:12 or there is a cathedral roof with no attic space, the recommended vent area is ______ of the roof area.","a":"1/150","r":1,"y":"Flat roofs usually have ventilation on opposing sides to promote cross-ventilation."},{"t":"My Mistakes","q":"Installing extra ventilation in an attic can have what effect?","a":"It can cause negative pressure in the attic","r":1,"y":"Installing extra ventilation in an attic can cause negative pressure in the attic that promotes warm, moist air to enter at a faster rate."},{"t":"My Mistakes","q":"An interior ceiling paddle fan in a bathroom needs to be installed eight feet above the floor of a shower and _______ inches to the side of the shower.","a":"36","r":1,"y":"An interior ceiling paddle fan needs to be installed 36 inches to the side of the shower due to a possible electrocution hazard."},{"t":"My Mistakes","q":"What recovery mechanical ventilation system requires a condensate disposal system?","a":"HRV","r":1,"y":"Heat recovery ventilators or HRVs remove condensate and as such, require a condensate disposal system."},{"t":"My Mistakes","q":"What is the vertical upper portion above the topmost fixture through which gasses and odors escape the sanitary drainage system?","a":"Vent stack","r":1,"y":"Plumbing vent stacks vent gasses and odors."},{"t":"My Mistakes","q":"To test for water flow, an inspector will:","a":"This is out of scope for a home inspector","r":1,"y":"Water flow is measured in GPM, that is, gallons per minute. Water pressure is measured in pounds per square inch (PSI)."},{"t":"My Mistakes","q":"The valve used as the main shutoff valve to the property is known as the:","a":"Gate valve","r":1,"y":"A gate valve turns the stop down and shuts off the water to the property."},{"t":"My Mistakes","q":"The purpose of vent pipes in a drainage system is to:","a":"Ensure the rapid flow of waste","r":1,"y":"Vent pipes ensure the proper flow of waste."},{"t":"My Mistakes","q":"The waste line clean-out provides:","a":"Access for service","r":1,"y":"The drainage system is not under pressure and there are other vents that provide for proper ventilation. The waste line clean-out allows for service of the piping system."},{"t":"My Mistakes","q":"Plumbing vent pipes cannot be __________ in size.","a":"Decreased","r":1,"y":"Plumbing vent pipe stacks cannot be reduced in size as they go up."},{"t":"My Mistakes","q":"A pit in which raw sewage collects is a/an:","a":"Cesspool","r":1,"y":"A cesspool is a violation of plumbing codes and should be noted on the home inspection report."},{"t":"My Mistakes","q":"The pressure in a water system will be the greatest when it is:","a":"Located closest to the service entrance to the home","r":1,"y":"This would be at the main entry to the home; sometimes it can be tested at the hose bibb in this area."},{"t":"My Mistakes","q":"You can determine if well water is contaminated by:","a":"Having it analyzed by a qualified agency","r":1,"y":"Testing by a qualified agency should be recommended if there is a well system."},{"t":"My Mistakes","q":"What is the reason for the square shape of a plumbing drain cleanout?","a":"To avoid the possibility of stripping the plug during removal","r":1,"y":"A pipe wrench can be used during removal which will provide a better grip and lessen the chances of stripping the plug."},{"t":"My Mistakes","q":"How far above the plane of the roof should plumbing vents extend?","a":"Six inches","r":1,"y":"Vent pipes should extend at least six inches, more if the area where the home is located is prone to snow accumulation."},{"t":"My Mistakes","q":"Which is most likely to be thought of as an ethical breach by a home inspector?","a":"Paying to be a real estate agency's preferred home inspector","r":1,"y":"Paying the real estate company to be its preferred home inspector is an ethics breach."},{"t":"My Mistakes","q":"Sending a copy of the home inspection report to which party is least likely to be considered an ethical breach by a home inspector? Assume that all parties attended the inspection.","a":"The buyer's agent","r":1,"y":"The report is considered to be property of the Buyer and a courtesy copy is typically provided to the Buyers Agent for necessary action post inspection."},{"t":"My Mistakes","q":"Advertising and marketing your home inspection business is allowed as long as:","a":"You follow your state's requirements of advertising only with a current license and in good","r":1,"y":"You have missed this 1 time."},{"t":"My Mistakes","q":"Which composition shingle is the heaviest per square?","a":"Laminated","r":1,"y":"Laminated shingles are the heaviest per square. Laminated shingles are two shingles bonded together to present a more raised profile."},{"t":"My Mistakes","q":"Floor joists should be installed:","a":"Crown up","r":1,"y":"Crown up floor joists create maximum strength."},{"t":"My Mistakes","q":"The most common cause of wet basements is:","a":"Improper lot grading","r":1,"y":"Up to 90% of water problems are caused by improper slope away from foundation."},{"t":"My Mistakes","q":"The main problem associated with the edge of a patio that does not properly meet the surrounding vegetation is that it:","a":"Causes a trip hazard","r":1,"y":"Any raised edge on a patio can pose a trip hazard."},{"t":"My Mistakes","q":"Footings:","a":"Transfer the weight of the house to the ground","r":1,"y":"Footings are load-bearing, that is, they transfer the weight of the house to the ground."},{"t":"My Mistakes","q":"Footings for deck supports:","a":"Should be installed below the frost line","r":1,"y":"This prevents movement due to freezing and thawing."},{"t":"My Mistakes","q":"The primary source of problems encountered during a site inspection is:","a":"Drainage issues","r":1,"y":"Drainage issues are often latent (hidden) defects."},{"t":"My Mistakes","q":"Which of the following conditions would not be an indicator of previous water leakage in the basement?","a":"Small cracks in the basement floor","r":1,"y":"Water leakage would not create a crack on the floor."},{"t":"My Mistakes","q":"Cracks in a concrete driveway:","a":"Should be reported if they are one-quarter inch or wider","r":1,"y":"Cracking is inevitable, but it is generally agreed that one-quarter inch or wider cracks should be reported."},{"t":"My Mistakes","q":"A self-supporting eight-foot-high concrete block wall leans in a half-inch and is not cracked. The wall is damp with moderate efflorescence. Who is the BEST specialist to recommend?","a":"A landscape contractor","r":1,"y":"The wall does not appear to have any major structural issues, just mild efflorescence. A landscape contractor can investigate the watering system."},{"t":"My Mistakes","q":"What basic drainage problem can create water seepage into the basement or crawlspace?","a":"The ground adjacent to the house slopes toward the foundation","r":1,"y":"For proper drainage, the grade should slope one inch per foot away from the foundation."},{"t":"My Mistakes","q":"The measurement between the inside faces of the trimmers for a door is called what?","a":"The rough opening","r":1,"y":"The measurement between the inside faces of the trimmers for a door is called the rough opening. It is located between the trimmers."},{"t":"My Mistakes","q":"When an opening is made in a load-bearing wood framed wall, a _________ is used to help support the wall and its load.","a":"Header","r":1,"y":"A header is installed above the door or window opening to transfer loads."},{"t":"My Mistakes","q":"What is the most important property for mortar?","a":"Bonding strength","r":1,"y":"Bonding strength is the most important property for mortar."},{"t":"My Mistakes","q":"The 2 X 4 or 2 X 6 framing member placed horizontally on the concrete foundation and bolted down is the:","a":"Sill","r":1,"y":"The sill plate, also known as the \"mudsill,\" sits horizontally on the top of a concrete or masonry foundation wall."},{"t":"My Mistakes","q":"There shall be a minimum of two anchor bolts per plate section with one bolt located not more than ______ inches or less from each end of the plate section.","a":"Twelve","r":1,"y":"Foundation wall sill anchor bolts need to be within 12\" of the foundation corners or ends of sill plates."},{"t":"My Mistakes","q":"Notches in solid lumber joists, rafters, and beams should not be located:","a":"In the middle third of the span","r":1,"y":"Notches should not be located in the middle one-third of the span. However, notches of certain amounts can be located in the outer one-third of the span."},{"t":"My Mistakes","q":"The rough framed opening for attic access shall not be less than _____ X _____.","a":"22 X 30 inches","r":1,"y":"This attic access opening is required when the attic exceeds 30 square feet and has a vertical height of 30 inches. The vertical height shall be measured from the top of the ceiling framing members to the underside of the roof framing members."},{"t":"My Mistakes","q":"Dimensional lumbar (framing lumber) is sold by the ____________.","a":"Board foot","r":1,"y":"A board foot measures 12\" X 12\" X 1.\""}];
+
+/* measured accuracy from exam 8, and official EBPHI exam weight */
+const META = {
+  "Electrical":                 {acc:64,  w:7},
+  "Cooling":                    {acc:60,  w:4},
+  "Heating":                    {acc:70,  w:5},
+  "Interior":                   {acc:67,  w:4},
+  "Fireplaces & Chimneys":      {acc:73,  w:6},
+  "Plumbing":                   {acc:80,  w:6},
+  "Insulation & Ventilation":   {acc:81,  w:5},
+  "Site, Exterior & Structural":{acc:80,  w:16},
+  "Reporting & Duties":         {acc:92,  w:30},
+  "Life Safety":                {acc:null,w:6},
+  "Mechanical Exhaust":         {acc:null,w:5},
+  "My Mistakes":                {acc:0,   w:0, mine:true}
+};
+
+const $ = s => document.querySelector(s);
+const LS = "nhie-drill-misses";
+
+let pool = [], run = [], at = 0, answered = false, revealed = false, correct = 0, t0 = 0, timer = null;
+let missedIds = new Set();
+try { missedIds = new Set(JSON.parse(localStorage.getItem(LS) || "[]")); } catch (e) {}
+
+BANK.forEach((q, i) => q.id = i);
+
+/* ---------- setup screen ---------- */
+const topics = [...new Set(BANK.map(q => q.t))].sort((a, b) =>
+  (META[b]?.mine ? 1 : 0) - (META[a]?.mine ? 1 : 0) ||
+  (META[a]?.acc ?? -1) - (META[b]?.acc ?? -1));
+
+function sev(acc, mine){
+  if (mine) return ["c-crit", "0% — all missed"];
+  if (acc === null || acc === undefined) return ["c-new", "never tested"];
+  if (acc < 70) return ["c-crit", acc + "%"];
+  if (acc < 80) return ["c-warn", acc + "%"];
+  return ["c-ok", acc + "%"];
+}
+
+topics.forEach(t => {
+  const n = BANK.filter(q => q.t === t).length;
+  const m = META[t] || {};
+  const [cls, txt] = sev(m.acc, m.mine);
+  const el = document.createElement("label");
+  el.className = "topic";
+  el.innerHTML =
+    '<input type="checkbox" value="' + t + '">' +
+    '<span class="nm">' + t + '<small>' + n + (m.mine ? ' questions you got wrong on real exams' : ' questions · ' + (m.w || 0) + '% of the exam') + '</small></span>' +
+    '<span class="chip ' + cls + '">' + txt + '</span>';
+  $("#topicList").appendChild(el);
+});
+
+function checked(){ return [...document.querySelectorAll('#topicList input:checked')].map(i => i.value); }
+
+function applyPreset(kind){
+  document.querySelectorAll('#topicList input').forEach(i => {
+    const a = META[i.value]?.acc;
+    i.checked =
+      kind === "all"      ? true  :
+      kind === "none"     ? false :
+      kind === "mine"     ? !!META[i.value]?.mine :
+      kind === "untested" ? (a === null || a === undefined) :
+      /* weak */            (!META[i.value]?.mine &&
+                             (a === null || a === undefined || a < 75));
+  });
+  refreshPool();
+}
+
+document.querySelectorAll("[data-preset]").forEach(b =>
+  b.addEventListener("click", () => applyPreset(b.dataset.preset)));
+$("#topicList").addEventListener("change", refreshPool);
+
+let wantLen = 20, missOnly = false;
+$("#lenSeg").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  wantLen = +b.dataset.len;
+  [...$("#lenSeg").children].forEach(x => x.setAttribute("aria-pressed", x === b));
+  refreshPool();
+});
+
+function refreshPool(){
+  const ts = checked();
+  pool = BANK.filter(q => ts.includes(q.t));
+  if (missOnly) pool = pool.filter(q => missedIds.has(q.id));
+  const n = wantLen === 0 ? pool.length : Math.min(wantLen, pool.length);
+  $("#poolNote").textContent = pool.length
+    ? n + " of " + pool.length + " available"
+    : "select at least one topic";
+  $("#startBtn").disabled = pool.length === 0;
+}
+
+if (missedIds.size) {
+  const mp = $("#missPreset");
+  mp.classList.remove("hidden");
+  mp.textContent = "Only ones I got wrong (" + missedIds.size + ")";
+  mp.addEventListener("click", () => {
+    missOnly = !missOnly;
+    mp.style.borderColor = missOnly ? "var(--navy)" : "";
+    if (missOnly) applyPreset("all"); else refreshPool();
+  });
+}
+
+applyPreset("mine");
+
+/* ---------- run ---------- */
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--){ const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+function start(list){
+  run = list; at = 0; correct = 0;
+  $("#setup").classList.add("hidden");
+  $("#done").classList.add("hidden");
+  $("#quiz").classList.remove("hidden");
+  $("#railSub").textContent = run.length + " in this drill";
+  t0 = Date.now();
+  clearInterval(timer);
+  timer = setInterval(tick, 1000); tick();
+  render();
+}
+
+function tick(){
+  const s = ((Date.now() - t0) / 1000) | 0;
+  $("#sTime").textContent = ((s / 60) | 0) + ":" + String(s % 60).padStart(2, "0");
+}
+
+function render(){
+  answered = false; revealed = false;
+  const q = run[at];
+  $("#qTopic").textContent = q.t;
+  $("#qIndex").textContent = (at + 1) + " / " + run.length;
+  $("#qText").textContent = q.q;
+  $("#qVerdict").className = "verdict hidden";
+  $("#qWhy").className = "why hidden";
+  $("#nextBtn").disabled = true;
+  $("#nextBtn").textContent = at === run.length - 1 ? "See results" : "Next";
+  $("#progBar").style.width = (at / run.length * 100) + "%";
+  $("#sCorrect").textContent = correct + "/" + at;
+  $("#sAcc").textContent = at ? Math.round(correct / at * 100) + "%" : "—";
+
+  const box = $("#qOpts"); box.innerHTML = "";
+
+  if (q.r){
+    /* Recall question. These come from her own exam reviews, which record the
+       correct answer but never the options, so she produces the answer and
+       marks herself rather than picking from invented choices. */
+    $("#nextBtn").disabled = true;
+    const reveal = document.createElement("button");
+    reveal.className = "opt reveal"; reveal.type = "button";
+    reveal.innerHTML = '<kbd>↵</kbd><span>Say your answer out loud, then show it</span>';
+    reveal.addEventListener("click", () => showRecall(q));
+    box.appendChild(reveal);
+    $("#hintTxt").textContent = "Enter to reveal · then 1 had it, 2 missed it";
+    return;
+  }
+
+  $("#hintTxt").textContent = "1–4 to answer · Enter for next";
+  const opts = shuffle([q.a, ...q.w]);
+  opts.forEach((text, i) => {
+    const b = document.createElement("button");
+    b.className = "opt"; b.type = "button";
+    b.innerHTML = '<kbd>' + (i + 1) + '</kbd><span></span>';
+    b.querySelector("span").textContent = text;
+    b.addEventListener("click", () => choose(b, text, q));
+    box.appendChild(b);
+  });
+}
+
+function showRecall(q){
+  if (answered || revealed) return;
+  revealed = true;
+  const box = $("#qOpts"); box.innerHTML = "";
+  const a = document.createElement("div");
+  a.className = "opt is-right"; a.style.cursor = "default";
+  a.innerHTML = '<kbd>✓</kbd><span></span>';
+  a.querySelector("span").textContent = q.a;
+  box.appendChild(a);
+
+  const w = $("#qWhy");
+  w.className = "why";
+  w.innerHTML = "<b>Why</b>";
+  w.appendChild(document.createTextNode(q.y));
+
+  const grade = document.createElement("div");
+  grade.className = "grade";
+  grade.innerHTML =
+    '<button class="btn sm" id="gotIt"><kbd>1</kbd> I had it</button>' +
+    '<button class="btn ghost sm" id="missedIt"><kbd>2</kbd> I missed it</button>';
+  box.appendChild(grade);
+  $("#gotIt").addEventListener("click", () => gradeRecall(true, q));
+  $("#missedIt").addEventListener("click", () => gradeRecall(false, q));
+  $("#gotIt").focus();
+}
+
+function gradeRecall(right, q){
+  if (answered) return;
+  answered = true;
+  if (right){ correct++; missedIds.delete(q.id); }
+  else missedIds.add(q.id);
+  try { localStorage.setItem(LS, JSON.stringify([...missedIds])); } catch (e) {}
+  const v = $("#qVerdict");
+  v.className = "verdict " + (right ? "ok" : "no");
+  v.textContent = right ? "✓  Marked correct" : "Marked as missed — it will come back";
+  $("#qOpts").querySelectorAll(".grade button").forEach(b => b.disabled = true);
+  $("#sCorrect").textContent = correct + "/" + (at + 1);
+  $("#sAcc").textContent = Math.round(correct / (at + 1) * 100) + "%";
+  $("#nextBtn").disabled = false;
+  $("#nextBtn").focus();
+}
+
+function choose(btn, text, q){
+  if (answered) return;
+  answered = true;
+  const right = text === q.a;
+  const all = [...$("#qOpts").children];
+
+  all.forEach(b => b.disabled = true);
+  if (right){ correct++; missedIds.delete(q.id); btn.classList.add("is-right"); }
+  else { missedIds.add(q.id); btn.classList.add("is-wrong"); }
+
+  try { localStorage.setItem(LS, JSON.stringify([...missedIds])); } catch (e) {}
+
+  const v = $("#qVerdict");
+  v.className = "verdict " + (right ? "ok" : "no");
+  v.textContent = right ? "✓  Correct" : "The correct answer is below";
+
+  /* every option that is not the correct one leaves the screen for good */
+  setTimeout(() => {
+    all.forEach(b => {
+      const isRight = b.querySelector("span").textContent === q.a;
+      if (isRight){ b.classList.remove("is-wrong"); b.classList.add("is-right"); }
+      else b.classList.add("fade");
+    });
+    setTimeout(() => all.forEach(b => {
+      if (b.querySelector("span").textContent !== q.a) b.remove();
+    }), 300);
+  }, right ? 120 : 620);
+
+  const w = $("#qWhy");
+  w.className = "why";
+  w.innerHTML = "<b>Why</b>";
+  w.appendChild(document.createTextNode(q.y));
+
+  $("#sCorrect").textContent = correct + "/" + (at + 1);
+  $("#sAcc").textContent = Math.round(correct / (at + 1) * 100) + "%";
+  $("#nextBtn").disabled = false;
+  $("#nextBtn").focus();
+}
+
+$("#nextBtn").addEventListener("click", () => {
+  if (!answered) return;
+  at++;
+  if (at >= run.length) finish(); else render();
+});
+$("#quitBtn").addEventListener("click", () => finish(true));
+
+document.addEventListener("keydown", e => {
+  if ($("#quiz").classList.contains("hidden")) return;
+  const q = run[at];
+  if (q && q.r){
+    if (!revealed && (e.key === "Enter" || e.key === " ")){
+      e.preventDefault(); showRecall(q); return;
+    }
+    if (revealed && !answered && (e.key === "1" || e.key === "2")){
+      e.preventDefault(); gradeRecall(e.key === "1", q); return;
+    }
+    if (answered && (e.key === "Enter" || e.key === " ")){
+      e.preventDefault(); $("#nextBtn").click();
+    }
+    return;
+  }
+  if (e.key >= "1" && e.key <= "4" && !answered){
+    const b = $("#qOpts").children[+e.key - 1]; if (b) b.click();
+  } else if ((e.key === "Enter" || e.key === " ") && answered){
+    e.preventDefault(); $("#nextBtn").click();
+  }
+});
+
+/* ---------- results ---------- */
+let lastMissed = [];
+
+function finish(early){
+  clearInterval(timer);
+  const seen = early ? at + (answered ? 1 : 0) : run.length;
+  const done = run.slice(0, seen);
+  lastMissed = done.filter(q => missedIds.has(q.id));
+
+  $("#quiz").classList.add("hidden");
+  $("#done").classList.remove("hidden");
+  $("#progBar").style.width = "100%";
+
+  const pct = seen ? Math.round(correct / seen * 100) : 0;
+  $("#dPct").textContent = pct + "%";
+  $("#dOf").textContent = correct + " of " + seen + " correct";
+  $("#dTitle").textContent =
+    pct >= 85 ? "Strong run" : pct >= 75 ? "Above the line" : "Below the line";
+  $("#dMsg").textContent =
+    pct >= 85 ? "Comfortably clear of the estimated 71–75% raw pass mark. Re-drill these topics in a few days so it holds."
+  : pct >= 75 ? "Above the estimated 71–75% raw pass mark, but not by much. The topics below the line are where the margin comes from."
+  : "Under the estimated raw pass mark on this set. Work the lowest bars below — those are the cheapest points available to you.";
+
+  /* per-topic */
+  const byT = {};
+  done.forEach(q => {
+    (byT[q.t] = byT[q.t] || {n:0, ok:0}).n++;
+    if (!missedIds.has(q.id)) byT[q.t].ok++;
+  });
+  const box = $("#dTopics"); box.innerHTML = "";
+  Object.entries(byT).sort((a, b) => a[1].ok / a[1].n - b[1].ok / b[1].n).forEach(([t, v]) => {
+    const p = Math.round(v.ok / v.n * 100);
+    const col = p < 70 ? "var(--flag)" : p < 80 ? "var(--amber)" : "var(--good)";
+    const d = document.createElement("div");
+    d.className = "t";
+    d.innerHTML =
+      '<span class="lbl">' + t + '</span>' +
+      '<span class="track"><span class="fill" style="width:' + p + '%;background:' + col + '"></span></span>' +
+      '<span class="pc">' + v.ok + '/' + v.n + '</span>';
+    box.appendChild(d);
+  });
+
+  /* review — correct answers only, never the option she ruled out */
+  const rev = $("#dRev"); rev.innerHTML = "";
+  if (!lastMissed.length){
+    $("#dRevPanel").classList.add("hidden");
+  } else {
+    $("#dRevPanel").classList.remove("hidden");
+    lastMissed.forEach(q => {
+      const d = document.createElement("div");
+      d.className = "item";
+      const a = document.createElement("div"); a.className = "q"; a.textContent = q.q;
+      const b = document.createElement("div"); b.className = "a"; b.textContent = q.a;
+      const c = document.createElement("div"); c.className = "n"; c.textContent = q.y;
+      d.append(a, b, c); rev.appendChild(d);
+    });
+  }
+  $("#againMissed").disabled = !lastMissed.length;
+}
+
+$("#againMissed").addEventListener("click", () => start(shuffle(lastMissed.slice())));
+$("#againNew").addEventListener("click", () => {
+  $("#done").classList.add("hidden");
+  $("#setup").classList.remove("hidden");
+  $("#progBar").style.width = "0";
+  $("#sCorrect").textContent = "—"; $("#sAcc").textContent = "—"; $("#sTime").textContent = "0:00";
+  $("#railSub").textContent = BANK.length + " questions";
+  refreshPool();
+});
+
+$("#startBtn").addEventListener("click", () => {
+  const s = shuffle(pool.slice());
+  start(wantLen === 0 ? s : s.slice(0, wantLen));
+});
+
+$("#railSub").textContent = BANK.length + " questions";
+</script>

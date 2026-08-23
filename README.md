@@ -1,12 +1,17 @@
-# כרטיסיות NHIE — משחק חזרה 🏠
+# NHIE study
 
-משחק כרטיסיות היפוך ללימוד אוצר המילים למבחן פקח הבתים הלאומי (NHIE).
+Practice tools and lesson material for the National Home Inspector Examination
+and the Texas state portion.
 
-**לשחק:** https://sapirnisan22-lab.github.io/nhie-flashcards/
+**https://sapirnisan22-lab.github.io/nhie-flashcards/**
 
-- 452 כרטיסים ב-14 נושאים (תנאי שטח, חוץ, גג, שלד, חשמל, אינסטלציה ועוד)
-- כל כרטיס: מונח באנגלית ← תרגום בעברית, Numbers, Reportable defect, Logic
-- מסמנים ✓ ידעתי / ↻ לחזרה — מה שלא ידעת חוזר בסוף הסבב
-- עובד מהטלפון ומכל דפדפן, בלי התקנה
+- `topics.html` — 709 questions, one separate exam per topic
+- `texas-sop.html` — 46 questions on 22 TAC 535.227–535.233
+- `texas-law.html` — 42 questions on Occupations Code 1102 and 22 TAC 535
+- `drill.html` — the older mixed weak-topic drill
+- `flashcards.html` — the 452-card vocabulary game
+- `lessons/` — 56 lesson PDFs, 16 topics
+- `texas/` — the Texas source files and the printable SOP practice exam
 
-הקובץ `NHIE_Vocabulary_Flashcards.md` הוא מקור הכרטיסיות — המשחק (`index.html`) נבנה ממנו.
+Everything is generated from `_build scripts/` in the study folder; edit the
+generators, not the files here.

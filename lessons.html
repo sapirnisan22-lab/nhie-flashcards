@@ -1,0 +1,194 @@
+<title>Lessons by Topic</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F4F7FA; --card:#FFFFFF; --card-2:#FAFCFD;
+  --ink:#16202E; --muted:#5B6B7C; --line:#DBE3EB; --line-soft:#EAF0F5;
+  --navy:#1F4E79; --navy-soft:#E8F0F8;
+  --good:#1B7F46; --good-soft:#E6F4EC;
+  --flag:#B23A2C; --flag-soft:#FBEDEB;
+  --amber:#B87A10; --amber-soft:#FCF3E2;
+  --shadow:0 1px 2px rgba(22,32,46,.05),0 8px 24px -12px rgba(22,32,46,.18);
+  --on-accent:#FFFFFF;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D141D; --card:#161F2B; --card-2:#1B2635;
+    --ink:#E3EAF2; --muted:#93A4B6; --line:#28374A; --line-soft:#1F2C3C;
+    --navy:#6BA6DE; --navy-soft:#17293C;
+    --good:#4CC280; --good-soft:#122C1F;
+    --flag:#E8776A; --flag-soft:#301A18;
+    --amber:#E0A63C; --amber-soft:#2C2313;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+    --on-accent:#0D141D;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D141D; --card:#161F2B; --card-2:#1B2635;
+  --ink:#E3EAF2; --muted:#93A4B6; --line:#28374A; --line-soft:#1F2C3C;
+  --navy:#6BA6DE; --navy-soft:#17293C;
+  --good:#4CC280; --good-soft:#122C1F;
+  --flag:#E8776A; --flag-soft:#301A18;
+  --amber:#E0A63C; --amber-soft:#2C2313;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  --on-accent:#0D141D;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance;margin:0}
+button{font:inherit;color:inherit}
+
+/* ---------- rail ---------- */
+.rail{
+  position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+  padding:10px max(16px,calc(50% - 430px));
+}
+.brand{display:flex;align-items:baseline;gap:9px;margin-right:auto;min-width:0}
+.brand b{font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.brand span{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap
+}
+.stat{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.stat u{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;
+  font-family:"IBM Plex Mono",monospace}
+.stat b{font-size:15px;font-weight:600;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.bar{height:3px;background:var(--line-soft);position:sticky;top:53px;z-index:19}
+.bar .fill{height:100%;background:var(--navy);width:0;transition:width .25s ease}
+
+/* ---------- layout ---------- */
+.wrap{max-width:860px;margin:0 auto;padding:26px max(16px,4vw) 90px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:22px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted)}
+
+/* ---------- start screen ---------- */
+.hero h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px}
+.hero p{color:var(--muted);margin:0 0 18px;max-width:62ch}
+.modes{display:grid;gap:10px;margin:18px 0}
+.mode{display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%;
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.mode:hover,.mode:focus-visible{border-color:var(--navy);background:var(--navy-soft);outline:none}
+.mode i{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  color:var(--navy);border:1px solid var(--line);border-radius:6px;padding:3px 7px;flex:none;margin-top:1px}
+.mode b{display:block;font-weight:600;font-size:15px}
+.mode span{color:var(--muted);font-size:13.5px}
+.secs{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+  background:var(--card-2);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
+
+/* ---------- question ---------- */
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.ix{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.cite{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--navy);
+  background:var(--navy-soft);border-radius:5px;padding:2px 7px;margin-left:auto;
+  white-space:nowrap;flex:none;align-self:flex-start}
+.qtext{font-size:19px;font-weight:600;line-height:1.42;letter-spacing:-.01em;margin:0 0 16px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled),.opt:focus-visible{border-color:var(--navy);background:var(--navy-soft);outline:none}
+.opt:disabled{cursor:default}
+.opt u{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;flex:none;margin-top:2px;min-width:14px}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.right u{color:var(--good)}
+
+/* ---------- verdict ---------- */
+.verdict{margin-top:16px;border-radius:var(--r);padding:14px 16px;border:1px solid}
+.verdict.ok{background:var(--good-soft);border-color:var(--good)}
+.verdict.no{background:var(--flag-soft);border-color:var(--flag)}
+.verdict b{display:block;font-size:13px;letter-spacing:.02em;margin-bottom:5px}
+.verdict.ok b{color:var(--good)}
+.verdict.no b{color:var(--flag)}
+.verdict p{margin:0;font-size:14.5px;line-height:1.55}
+.reveal{margin-top:14px;background:var(--good-soft);border:1px solid var(--good);
+  border-radius:var(--r);padding:14px 16px}
+.reveal b{display:block;color:var(--good);font-size:16px;margin-bottom:5px}
+.reveal p{margin:0;font-size:14.5px;line-height:1.55}
+
+/* ---------- controls ---------- */
+.nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{background:var(--navy);color:var(--on-accent);border:1px solid var(--navy);border-radius:8px;
+  padding:11px 20px;font-weight:600;font-size:14.5px;cursor:pointer;transition:opacity .12s}
+.btn:hover,.btn:focus-visible{opacity:.88;outline:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--navy);color:var(--navy)}
+.btn.good{background:var(--good);border-color:var(--good)}
+.btn.flag{background:var(--flag);border-color:var(--flag)}
+.btn.ghost{color:var(--ink)}
+
+/* ---------- score ---------- */
+.score{text-align:center;padding:12px 0 4px}
+.score .pc{font-family:"IBM Plex Mono",monospace;font-size:58px;font-weight:600;line-height:1;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.score .of{color:var(--muted);font-size:14px;margin-top:8px}
+.pass{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;
+  border-radius:20px;padding:6px 15px;border:1px solid}
+.pass.y{color:var(--good);background:var(--good-soft);border-color:var(--good)}
+.pass.n{color:var(--flag);background:var(--flag-soft);border-color:var(--flag)}
+table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-soft)}
+th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);font-weight:500}
+td.n{font-family:"IBM Plex Mono",monospace;text-align:right;font-variant-numeric:tabular-nums;width:74px}
+.tw{overflow-x:auto}
+.rev{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+.rev h3{font-size:15px;margin:0 0 4px}
+.rev .item{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.rev .item p{margin:0 0 4px;font-size:14.5px;font-weight:600}
+.rev .item span{color:var(--good);font-size:14px;font-weight:600}
+.rev .item em{display:block;color:var(--muted);font-size:13px;font-style:normal;margin-top:3px}
+.note{background:var(--amber-soft);border:1px solid var(--amber);border-radius:var(--r);
+  padding:13px 15px;font-size:13.5px;margin-top:18px}
+.note b{color:var(--amber)}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){
+  .qtext{font-size:17.5px}
+  .score .pc{font-size:46px}
+  .cite{margin-left:0}
+}
+</style>
+<style>
+a{color:inherit;text-decoration:none}
+.card{display:flex;gap:14px;align-items:flex-start;
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 16px;margin-bottom:9px;transition:border-color .12s,background .12s}
+.card:hover,.card:focus-visible{border-color:var(--navy);background:var(--navy-soft);outline:none}
+.card i{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  color:var(--navy);border:1px solid var(--line);border-radius:6px;padding:4px 8px;flex:none;margin-top:2px}
+.card b{display:block;font-weight:600;font-size:16px;line-height:1.3}
+.card em{font-style:normal;display:block;font-family:"IBM Plex Mono",monospace;
+  font-size:11.5px;color:var(--muted);margin:2px 0 4px}
+.card span.d{color:var(--muted);font-size:13.5px;display:block}
+h2.grp{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--muted);
+  text-transform:uppercase;font-family:"IBM Plex Mono",monospace;
+  margin:26px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.pdfs{display:grid;gap:5px;margin-bottom:4px}
+.pdf{display:flex;gap:10px;align-items:baseline;padding:8px 11px;border-radius:7px;
+  background:var(--card-2);border:1px solid var(--line-soft);font-size:14px}
+.pdf:hover{border-color:var(--navy);background:var(--navy-soft)}
+.pdf u{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+  text-decoration:none;flex:none}
+.back{display:inline-block;margin-bottom:16px;font-family:"IBM Plex Mono",monospace;
+  font-size:12px;color:var(--muted)}
+.back:hover{color:var(--navy)}
+</style>
+<div class="rail"><div class="brand"><b>Lessons</b><span>16 topics</span></div></div>
+<div class="wrap"><div class="panel"><a class="back" href="index.html">&larr; back</a><div class="eyebrow">16 TOPICS &middot; 56 LESSONS</div><h1 style="font-size:26px;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px">Lessons by topic</h1><p style="color:var(--muted);margin:0 0 4px;max-width:62ch">Work down the list — it is ordered by what each topic can still add to your score. Two pages per lesson.</p><h2 class="grp">01 Site Conditions <span style="text-transform:none;font-weight:400">&mdash; 5% of the exam &middot; you score 78%</span></h2><div class="pdfs"><a class="pdf" href="lessons/01%20Site%20Conditions/01-01%20Grading%2C%20Drainage%20and%20the%20Water%20Table.pdf"><u>01-01</u><span>Grading, Drainage and the Water Table</span></a><a class="pdf" href="lessons/01%20Site%20Conditions/01-02%20Where%20Hard%20Surfaces%20Meet%20the%20House.pdf"><u>01-02</u><span>Where Hard Surfaces Meet the House</span></a><a class="pdf" href="lessons/01%20Site%20Conditions/01-03%20Footings%2C%20Retaining%20Walls%20and%20Decks.pdf"><u>01-03</u><span>Footings, Retaining Walls and Decks</span></a></div><h2 class="grp">02 Exterior <span style="text-transform:none;font-weight:400">&mdash; 5% of the exam &middot; you score 78%</span></h2><div class="pdfs"><a class="pdf" href="lessons/02%20Exterior/02-01%20Siding%20%E2%80%94%20Materials%2C%20Clearances%20and%20How%20They%20Fail.pdf"><u>02-01</u><span>Siding — Materials, Clearances and How They Fail</span></a><a class="pdf" href="lessons/02%20Exterior/02-02%20Caulk%2C%20Joints%20and%20Where%20Water%20Gets%20In.pdf"><u>02-02</u><span>Caulk, Joints and Where Water Gets In</span></a><a class="pdf" href="lessons/02%20Exterior/02-03%20Doors%20and%20Windows.pdf"><u>02-03</u><span>Doors and Windows</span></a><a class="pdf" href="lessons/02%20Exterior/02-04%20Masonry%20Veneer%20and%20Concrete.pdf"><u>02-04</u><span>Masonry Veneer and Concrete</span></a></div><h2 class="grp">03 Roof <span style="text-transform:none;font-weight:400">&mdash; 6% of the exam &middot; you score 91%</span></h2><div class="pdfs"><a class="pdf" href="lessons/03%20Roof/03-01%20Decking%2C%20Underlayment%20and%20Slope.pdf"><u>03-01</u><span>Decking, Underlayment and Slope</span></a><a class="pdf" href="lessons/03%20Roof/03-02%20Shingles%2C%20Shakes%20and%20Tiles%20%E2%80%94%20Materials%20and%20Fastening.pdf"><u>03-02</u><span>Shingles, Shakes and Tiles — Materials and Fastening</span></a><a class="pdf" href="lessons/03%20Roof/03-03%20Flat%20Roofs%2C%20Flashings%20and%20Getting%20Water%20Away.pdf"><u>03-03</u><span>Flat Roofs, Flashings and Getting Water Away</span></a></div><h2 class="grp">04 Structural <span style="text-transform:none;font-weight:400">&mdash; 6% of the exam &middot; you score 83%</span></h2><div class="pdfs"><a class="pdf" href="lessons/04%20Structural/04-01%20Lumber%2C%20Masonry%20and%20What%20They%20Are%20Sold%20By.pdf"><u>04-01</u><span>Lumber, Masonry and What They Are Sold By</span></a><a class="pdf" href="lessons/04%20Structural/04-02%20Framing%20Members%20and%20Openings.pdf"><u>04-02</u><span>Framing Members and Openings</span></a><a class="pdf" href="lessons/04%20Structural/04-03%20Anchorage%20and%20Fire-Blocking.pdf"><u>04-03</u><span>Anchorage and Fire-Blocking</span></a><a class="pdf" href="lessons/04%20Structural/04-04%20Notching%2C%20Boring%20and%20Crawl%20Space%20Clearances.pdf"><u>04-04</u><span>Notching, Boring and Crawl Space Clearances</span></a></div><h2 class="grp">05 Electrical <span style="text-transform:none;font-weight:400">&mdash; 7% of the exam &middot; you score 64%</span></h2><div class="pdfs"><a class="pdf" href="lessons/05%20Electrical/05-01%20Current%2C%20Pressure%20and%20What%20a%20Breaker%20Actually%20Protects.pdf"><u>05-01</u><span>Current, Pressure and What a Breaker Actually Protects</span></a><a class="pdf" href="lessons/05%20Electrical/05-02%20The%20Service%20%E2%80%94%20What%20Sets%20the%20House%27s%20Capacity.pdf"><u>05-02</u><span>The Service — What Sets the House&#x27;s Capacity</span></a><a class="pdf" href="lessons/05%20Electrical/05-03%20Grounding%20and%20Bonding%20%E2%80%94%20Two%20Different%20Jobs.pdf"><u>05-03</u><span>Grounding and Bonding — Two Different Jobs</span></a><a class="pdf" href="lessons/05%20Electrical/05-04%20GFCI%2C%20AFCI%20and%20the%20Protection%20Devices.pdf"><u>05-04</u><span>GFCI, AFCI and the Protection Devices</span></a><a class="pdf" href="lessons/05%20Electrical/05-05%20Wiring%2C%20Cables%20and%20the%20Panels%20With%20Names.pdf"><u>05-05</u><span>Wiring, Cables and the Panels With Names</span></a><a class="pdf" href="lessons/05%20Electrical/05-06%20Pools%2C%20Outbuildings%20and%20the%20Spacing%20Numbers.pdf"><u>05-06</u><span>Pools, Outbuildings and the Spacing Numbers</span></a></div><h2 class="grp">06 Cooling Systems <span style="text-transform:none;font-weight:400">&mdash; 4% of the exam &middot; you score 60%</span></h2><div class="pdfs"><a class="pdf" href="lessons/06%20Cooling%20Systems/06-01%20The%20Refrigeration%20Cycle.pdf"><u>06-01</u><span>The Refrigeration Cycle</span></a><a class="pdf" href="lessons/06%20Cooling%20Systems/06-02%20Capacity%2C%20Heat%20Pumps%20and%20the%20Limits%20of%20the%20Inspection.pdf"><u>06-02</u><span>Capacity, Heat Pumps and the Limits of the Inspection</span></a><a class="pdf" href="lessons/06%20Cooling%20Systems/06-03%20Condensate%20%E2%80%94%20Where%20the%20Water%20Goes.pdf"><u>06-03</u><span>Condensate — Where the Water Goes</span></a></div><h2 class="grp">07 Heating Systems <span style="text-transform:none;font-weight:400">&mdash; 5% of the exam &middot; you score 70%</span></h2><div class="pdfs"><a class="pdf" href="lessons/07%20Heating%20Systems/07-01%20Combustion%2C%20Venting%20and%20Furnace%20Safety.pdf"><u>07-01</u><span>Combustion, Venting and Furnace Safety</span></a><a class="pdf" href="lessons/07%20Heating%20Systems/07-02%20Heat%20Transfer%2C%20Exchangers%20and%20Where%20Heat%20Goes.pdf"><u>07-02</u><span>Heat Transfer, Exchangers and Where Heat Goes</span></a><a class="pdf" href="lessons/07%20Heating%20Systems/07-03%20Hot%20Water%20Boilers%20and%20Expansion.pdf"><u>07-03</u><span>Hot Water Boilers and Expansion</span></a><a class="pdf" href="lessons/07%20Heating%20Systems/07-04%20Steam%20Systems.pdf"><u>07-04</u><span>Steam Systems</span></a></div><h2 class="grp">08 Insulation and Ventilation <span style="text-transform:none;font-weight:400">&mdash; 5% of the exam &middot; you score 81%</span></h2><div class="pdfs"><a class="pdf" href="lessons/08%20Insulation%20and%20Ventilation/08-01%20Insulation%20Materials%20and%20Where%20Heat%20Escapes.pdf"><u>08-01</u><span>Insulation Materials and Where Heat Escapes</span></a><a class="pdf" href="lessons/08%20Insulation%20and%20Ventilation/08-02%20Vapor%2C%20Barriers%20and%20Wet%20Insulation.pdf"><u>08-02</u><span>Vapor, Barriers and Wet Insulation</span></a><a class="pdf" href="lessons/08%20Insulation%20and%20Ventilation/08-03%20Attic%20and%20Crawl%20Space%20Ventilation.pdf"><u>08-03</u><span>Attic and Crawl Space Ventilation</span></a></div><h2 class="grp">09 Mechanical Exhaust <span style="text-transform:none;font-weight:400">&mdash; 5% of the exam &middot; never measured</span></h2><div class="pdfs"><a class="pdf" href="lessons/09%20Mechanical%20Exhaust/09-01%20Dryer%20Exhaust.pdf"><u>09-01</u><span>Dryer Exhaust</span></a><a class="pdf" href="lessons/09%20Mechanical%20Exhaust/09-02%20Heat%20Recovery%20Ventilators%20and%20Whole%20House%20Fans.pdf"><u>09-02</u><span>Heat Recovery Ventilators and Whole House Fans</span></a><a class="pdf" href="lessons/09%20Mechanical%20Exhaust/09-03%20Bathroom%2C%20Attic%20and%20Roof%20Ventilation%20Hardware.pdf"><u>09-03</u><span>Bathroom, Attic and Roof Ventilation Hardware</span></a></div><h2 class="grp">10 Plumbing <span style="text-transform:none;font-weight:400">&mdash; 6% of the exam &middot; you score 80%</span></h2><div class="pdfs"><a class="pdf" href="lessons/10%20Plumbing/10-01%20The%20Drainage%20System%20%E2%80%94%20Stacks%2C%20Slope%20and%20Cleanouts.pdf"><u>10-01</u><span>The Drainage System — Stacks, Slope and Cleanouts</span></a><a class="pdf" href="lessons/10%20Plumbing/10-02%20Traps%2C%20Vents%20and%20Sewer%20Gas.pdf"><u>10-02</u><span>Traps, Vents and Sewer Gas</span></a><a class="pdf" href="lessons/10%20Plumbing/10-03%20Water%20Supply%20%E2%80%94%20Pressure%2C%20Materials%20and%20Valves.pdf"><u>10-03</u><span>Water Supply — Pressure, Materials and Valves</span></a><a class="pdf" href="lessons/10%20Plumbing/10-04%20Water%20Heaters.pdf"><u>10-04</u><span>Water Heaters</span></a><a class="pdf" href="lessons/10%20Plumbing/10-05%20Fixtures%2C%20Wells%20and%20What%20Is%20Out%20of%20Scope.pdf"><u>10-05</u><span>Fixtures, Wells and What Is Out of Scope</span></a></div><h2 class="grp">11 Interior <span style="text-transform:none;font-weight:400">&mdash; 4% of the exam &middot; you score 67%</span></h2><div class="pdfs"><a class="pdf" href="lessons/11%20Interior/11-01%20Reading%20Walls%20and%20Ceilings.pdf"><u>11-01</u><span>Reading Walls and Ceilings</span></a><a class="pdf" href="lessons/11%20Interior/11-02%20Stairs%2C%20Handrails%20and%20Guards.pdf"><u>11-02</u><span>Stairs, Handrails and Guards</span></a><a class="pdf" href="lessons/11%20Interior/11-03%20Plaster%2C%20Drywall%20and%20Trim.pdf"><u>11-03</u><span>Plaster, Drywall and Trim</span></a><a class="pdf" href="lessons/11%20Interior/11-04%20Floors%2C%20Cabinets%20and%20Finishes.pdf"><u>11-04</u><span>Floors, Cabinets and Finishes</span></a><a class="pdf" href="lessons/11%20Interior/11-05%20The%20Attached%20Garage%20From%20the%20Inside.pdf"><u>11-05</u><span>The Attached Garage From the Inside</span></a></div><h2 class="grp">12 Fireplaces and Chimneys <span style="text-transform:none;font-weight:400">&mdash; 6% of the exam &middot; you score 73%</span></h2><div class="pdfs"><a class="pdf" href="lessons/12%20Fireplaces%20and%20Chimneys/12-01%20The%20Masonry%20Fireplace%20%E2%80%94%20Parts%20and%20Materials.pdf"><u>12-01</u><span>The Masonry Fireplace — Parts and Materials</span></a><a class="pdf" href="lessons/12%20Fireplaces%20and%20Chimneys/12-02%20Hearth%20Extensions%20and%20Clearances%20to%20Combustibles.pdf"><u>12-02</u><span>Hearth Extensions and Clearances to Combustibles</span></a><a class="pdf" href="lessons/12%20Fireplaces%20and%20Chimneys/12-03%20Chimneys%2C%20Draft%20and%20Termination.pdf"><u>12-03</u><span>Chimneys, Draft and Termination</span></a></div><h2 class="grp">13 Kitchen Appliances <span style="text-transform:none;font-weight:400">&mdash; not separately weighted &middot; never measured</span></h2><div class="pdfs"><a class="pdf" href="lessons/13%20Kitchen%20Appliances/13-01%20Ranges%2C%20Ovens%20and%20Gas%20Connections.pdf"><u>13-01</u><span>Ranges, Ovens and Gas Connections</span></a><a class="pdf" href="lessons/13%20Kitchen%20Appliances/13-02%20Dishwashers%2C%20Disposals%2C%20Compactors%20and%20Cold%20Storage.pdf"><u>13-02</u><span>Dishwashers, Disposals, Compactors and Cold Storage</span></a></div><h2 class="grp">14 Life Safety <span style="text-transform:none;font-weight:400">&mdash; 6% of the exam &middot; never measured</span></h2><div class="pdfs"><a class="pdf" href="lessons/14%20Life%20Safety/14-01%20Emergency%20Escape%20Openings%20and%20Window%20Wells.pdf"><u>14-01</u><span>Emergency Escape Openings and Window Wells</span></a><a class="pdf" href="lessons/14%20Life%20Safety/14-02%20Smoke%20and%20Carbon%20Monoxide%20Alarms.pdf"><u>14-02</u><span>Smoke and Carbon Monoxide Alarms</span></a><a class="pdf" href="lessons/14%20Life%20Safety/14-03%20The%20Garage%20Separation%20and%20Sprinklers.pdf"><u>14-03</u><span>The Garage Separation and Sprinklers</span></a></div><h2 class="grp">15 Analysis of Findings and Reporting <span style="text-transform:none;font-weight:400">&mdash; 20% of the exam &middot; you score 93%</span></h2><div class="pdfs"><a class="pdf" href="lessons/15%20Analysis%20of%20Findings%20and%20Reporting/15-01%20Who%20You%20Refer%20To.pdf"><u>15-01</u><span>Who You Refer To</span></a><a class="pdf" href="lessons/15%20Analysis%20of%20Findings%20and%20Reporting/15-02%20What%20Goes%20in%20the%20Report%2C%20and%20What%20Does%20Not.pdf"><u>15-02</u><span>What Goes in the Report, and What Does Not</span></a><a class="pdf" href="lessons/15%20Analysis%20of%20Findings%20and%20Reporting/15-03%20Reading%20Symptoms%20and%20the%20Site%20Vocabulary.pdf"><u>15-03</u><span>Reading Symptoms and the Site Vocabulary</span></a></div><h2 class="grp">16 Professional Responsibilities <span style="text-transform:none;font-weight:400">&mdash; 10% of the exam &middot; you score 90%</span></h2><div class="pdfs"><a class="pdf" href="lessons/16%20Professional%20Responsibilities/16-01%20Insurance%2C%20Agreements%20and%20Protecting%20Yourself.pdf"><u>16-01</u><span>Insurance, Agreements and Protecting Yourself</span></a><a class="pdf" href="lessons/16%20Professional%20Responsibilities/16-02%20Ethics%20and%20Who%20You%20Work%20For.pdf"><u>16-02</u><span>Ethics and Who You Work For</span></a></div></div></div>

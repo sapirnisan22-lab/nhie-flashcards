@@ -1,0 +1,358 @@
+<title>Texas Law State Exam</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --paper:#F4F7FA; --card:#FFFFFF; --card-2:#FAFCFD;
+  --ink:#16202E; --muted:#5B6B7C; --line:#DBE3EB; --line-soft:#EAF0F5;
+  --navy:#1F4E79; --navy-soft:#E8F0F8;
+  --good:#1B7F46; --good-soft:#E6F4EC;
+  --flag:#B23A2C; --flag-soft:#FBEDEB;
+  --amber:#B87A10; --amber-soft:#FCF3E2;
+  --shadow:0 1px 2px rgba(22,32,46,.05),0 8px 24px -12px rgba(22,32,46,.18);
+  --on-accent:#FFFFFF;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D141D; --card:#161F2B; --card-2:#1B2635;
+    --ink:#E3EAF2; --muted:#93A4B6; --line:#28374A; --line-soft:#1F2C3C;
+    --navy:#6BA6DE; --navy-soft:#17293C;
+    --good:#4CC280; --good-soft:#122C1F;
+    --flag:#E8776A; --flag-soft:#301A18;
+    --amber:#E0A63C; --amber-soft:#2C2313;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+    --on-accent:#0D141D;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D141D; --card:#161F2B; --card-2:#1B2635;
+  --ink:#E3EAF2; --muted:#93A4B6; --line:#28374A; --line-soft:#1F2C3C;
+  --navy:#6BA6DE; --navy-soft:#17293C;
+  --good:#4CC280; --good-soft:#122C1F;
+  --flag:#E8776A; --flag-soft:#301A18;
+  --amber:#E0A63C; --amber-soft:#2C2313;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  --on-accent:#0D141D;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+h1,h2{text-wrap:balance;margin:0}
+button{font:inherit;color:inherit}
+
+/* ---------- rail ---------- */
+.rail{
+  position:sticky;top:0;z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+  padding:10px max(16px,calc(50% - 430px));
+}
+.brand{display:flex;align-items:baseline;gap:9px;margin-right:auto;min-width:0}
+.brand b{font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.brand span{
+  font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);white-space:nowrap
+}
+.stat{display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.stat u{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);text-decoration:none;
+  font-family:"IBM Plex Mono",monospace}
+.stat b{font-size:15px;font-weight:600;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+.bar{height:3px;background:var(--line-soft);position:sticky;top:53px;z-index:19}
+.bar .fill{height:100%;background:var(--navy);width:0;transition:width .25s ease}
+
+/* ---------- layout ---------- */
+.wrap{max-width:860px;margin:0 auto;padding:26px max(16px,4vw) 90px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:22px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--muted)}
+
+/* ---------- start screen ---------- */
+.hero h1{font-size:30px;font-weight:700;letter-spacing:-.02em;margin:8px 0 6px}
+.hero p{color:var(--muted);margin:0 0 18px;max-width:62ch}
+.modes{display:grid;gap:10px;margin:18px 0}
+.mode{display:flex;gap:13px;align-items:flex-start;text-align:left;width:100%;
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.mode:hover,.mode:focus-visible{border-color:var(--navy);background:var(--navy-soft);outline:none}
+.mode i{font-style:normal;font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
+  color:var(--navy);border:1px solid var(--line);border-radius:6px;padding:3px 7px;flex:none;margin-top:1px}
+.mode b{display:block;font-weight:600;font-size:15px}
+.mode span{color:var(--muted);font-size:13.5px}
+.secs{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.chip{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);
+  background:var(--card-2);border:1px solid var(--line);border-radius:20px;padding:4px 10px}
+
+/* ---------- question ---------- */
+.qhead{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.ix{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted);letter-spacing:.06em}
+.cite{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--navy);
+  background:var(--navy-soft);border-radius:5px;padding:2px 7px;margin-left:auto;
+  white-space:nowrap;flex:none;align-self:flex-start}
+.qtext{font-size:19px;font-weight:600;line-height:1.42;letter-spacing:-.01em;margin:0 0 16px}
+.opts{display:grid;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 15px;cursor:pointer;transition:border-color .12s,background .12s}
+.opt:hover:not(:disabled),.opt:focus-visible{border-color:var(--navy);background:var(--navy-soft);outline:none}
+.opt:disabled{cursor:default}
+.opt u{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;color:var(--muted);
+  text-decoration:none;flex:none;margin-top:2px;min-width:14px}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.right u{color:var(--good)}
+
+/* ---------- verdict ---------- */
+.verdict{margin-top:16px;border-radius:var(--r);padding:14px 16px;border:1px solid}
+.verdict.ok{background:var(--good-soft);border-color:var(--good)}
+.verdict.no{background:var(--flag-soft);border-color:var(--flag)}
+.verdict b{display:block;font-size:13px;letter-spacing:.02em;margin-bottom:5px}
+.verdict.ok b{color:var(--good)}
+.verdict.no b{color:var(--flag)}
+.verdict p{margin:0;font-size:14.5px;line-height:1.55}
+.reveal{margin-top:14px;background:var(--good-soft);border:1px solid var(--good);
+  border-radius:var(--r);padding:14px 16px}
+.reveal b{display:block;color:var(--good);font-size:16px;margin-bottom:5px}
+.reveal p{margin:0;font-size:14.5px;line-height:1.55}
+
+/* ---------- controls ---------- */
+.nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{background:var(--navy);color:var(--on-accent);border:1px solid var(--navy);border-radius:8px;
+  padding:11px 20px;font-weight:600;font-size:14.5px;cursor:pointer;transition:opacity .12s}
+.btn:hover,.btn:focus-visible{opacity:.88;outline:none}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--navy);color:var(--navy)}
+.btn.good{background:var(--good);border-color:var(--good)}
+.btn.flag{background:var(--flag);border-color:var(--flag)}
+.btn.ghost{color:var(--ink)}
+
+/* ---------- score ---------- */
+.score{text-align:center;padding:12px 0 4px}
+.score .pc{font-family:"IBM Plex Mono",monospace;font-size:58px;font-weight:600;line-height:1;
+  letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.score .of{color:var(--muted);font-size:14px;margin-top:8px}
+.pass{display:inline-block;margin-top:14px;font-size:13px;font-weight:600;
+  border-radius:20px;padding:6px 15px;border:1px solid}
+.pass.y{color:var(--good);background:var(--good-soft);border-color:var(--good)}
+.pass.n{color:var(--flag);background:var(--flag-soft);border-color:var(--flag)}
+table{width:100%;border-collapse:collapse;margin-top:22px;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line-soft)}
+th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted);font-weight:500}
+td.n{font-family:"IBM Plex Mono",monospace;text-align:right;font-variant-numeric:tabular-nums;width:74px}
+.tw{overflow-x:auto}
+.rev{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+.rev h3{font-size:15px;margin:0 0 4px}
+.rev .item{padding:11px 0;border-bottom:1px solid var(--line-soft)}
+.rev .item p{margin:0 0 4px;font-size:14.5px;font-weight:600}
+.rev .item span{color:var(--good);font-size:14px;font-weight:600}
+.rev .item em{display:block;color:var(--muted);font-size:13px;font-style:normal;margin-top:3px}
+.note{background:var(--amber-soft);border:1px solid var(--amber);border-radius:var(--r);
+  padding:13px 15px;font-size:13.5px;margin-top:18px}
+.note b{color:var(--amber)}
+.hidden{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:560px){
+  .qtext{font-size:17.5px}
+  .score .pc{font-size:46px}
+  .cite{margin-left:0}
+}
+</style>
+
+<div class="rail">
+  <div class="brand"><b>Texas Law</b><span>TREC state portion</span></div>
+  <div class="stat"><u>Question</u><b id="pos">—</b></div>
+  <div class="stat"><u>Right</u><b id="right">0</b></div>
+</div>
+<div class="bar"><div class="fill" id="fill"></div></div>
+
+<div class="wrap">
+  <div class="panel" id="stage"></div>
+</div>
+
+<script>
+const BANK = [
+{s:"Licences",c:"Ch. 1102",q:"An inspector is working alone at a property with no other licence holder present. Which licence must they hold?",a:"Professional Inspector",w:["Apprentice Inspector", "Real Estate Inspector", "Any level, with the sponsor's written permission"],y:"Professional Inspector is the only level that works without supervision. If a question describes someone inspecting on their own, this is the answer."},
+{s:"Licences",c:"Ch. 1102",q:"An Apprentice Inspector works under:",a:"Direct supervision",w:["Indirect supervision", "No supervision", "Indirect supervision after the first 12 months"],y:"Apprentice = direct. Real Estate Inspector = indirect. Professional = none. That ladder is the most examinable distinction in the module."},
+{s:"Licences",c:"Ch. 1102",q:"A Real Estate Inspector works under:",a:"Indirect supervision of a Professional Inspector",w:["Direct supervision of a Professional Inspector", "No supervision", "Direct supervision of any licensed inspector"],y:"Indirect supervision, and they must be sponsored. They may perform an inspection for a buyer or seller, unlike an Apprentice."},
+{s:"Licences",c:"Ch. 1102",q:"Which licence level needs no sponsor?",a:"Professional Inspector",w:["Real Estate Inspector", "Apprentice Inspector", "All three require a sponsor"],y:"The Professional Inspector is the only independent level. It needs no sponsor and may sponsor and supervise the other two."},
+{s:"Licences",c:"Ch. 1102",q:"Before a Professional Inspector may sponsor another inspector, they must have:",a:"Submitted at least 200 inspections and received written notice from TREC that they are eligible",w:["Submitted at least 175 inspections", "Held the licence for five years", "Completed a TREC sponsor training course"],y:"A Professional Inspector is not automatically eligible to sponsor. Two conditions: 200 submitted inspections, and written notice from TREC. Note 200 here against 175 for the licence itself."},
+{s:"Licences",c:"Ch. 1102",q:"May an Apprentice Inspector perform an inspection alone?",a:"No, an Apprentice may not inspect alone",w:["Yes, if the sponsor reviews the report afterwards", "Yes, for a seller but not a buyer", "Yes, once 50 inspections are logged"],y:"Direct supervision means the supervising inspector is present. An Apprentice may not inspect alone under any arrangement."},
+{s:"Getting licensed",c:"Ch. 1102",q:"On the standard path to Professional Inspector, how many real estate inspections must be completed under indirect supervision?",a:"175",w:["200", "100", "150"],y:"175 inspections for the licence. 200 submitted inspections is the separate threshold for becoming eligible to sponsor. The exam will offer you both numbers."},
+{s:"Getting licensed",c:"Ch. 1102",q:"How much active Real Estate Inspector experience is required, and in what window?",a:"12 months within the preceding 24 months",w:["24 months within the preceding 36 months", "12 months at any time in the past", "6 months within the preceding 12 months"],y:"Twelve months of active experience, and it has to be recent — within the preceding 24 months."},
+{s:"Getting licensed",c:"Ch. 1102",q:"Total qualifying education on the standard path is:",a:"134 hours",w:["194 hours", "120 hours", "154 hours"],y:"40 + 40 + 10 + 20 + 24 = 134. The 194-hour figure is the substitution path, which adds 20 hours of Analysis of Findings and Reporting and a 40-hour Texas Practicum."},
+{s:"Getting licensed",c:"Ch. 1102",q:"The Texas Law qualifying education module is:",a:"20 hours",w:["24 hours", "10 hours", "40 hours"],y:"Texas Law is 20 hours; Texas Standards of Practice is 24. The two are easy to swap, and the exam knows it."},
+{s:"Getting licensed",c:"Ch. 1102",q:"The Texas Standards of Practice qualifying module is:",a:"24 hours",w:["20 hours", "40 hours", "10 hours"],y:"24 hours for SOP against 20 for Law. Property and Building Inspection Modules I and II are 40 hours each, and Business Operations and Professional Responsibility is 10."},
+{s:"Getting licensed",c:"Ch. 1102",q:"Someone substituting three years of related personal experience for the inspector experience must supply:",a:"Two affidavits supporting the experience",w:["A letter from a sponsoring Professional Inspector", "A notarised employment history", "Proof of five years in the construction trades"],y:"The substitution path allows 3 years of personal experience in a field directly related to home inspection, supported by two affidavits, and raises the education requirement to 194 hours."},
+{s:"Getting licensed",c:"Ch. 1102",q:"Fingerprints must be on file with:",a:"The Texas Department of Public Safety",w:["TREC", "The county clerk", "The FBI directly"],y:"Fingerprints go to the Texas Department of Public Safety, not to TREC itself."},
+{s:"Getting licensed",c:"Ch. 1102",q:"From the date the application is filed, how long do you have to satisfy every requirement?",a:"One year",w:["Two years", "Six months", "No time limit applies"],y:"One year from filing. Miss it and the application lapses."},
+{s:"Getting licensed",c:"Ch. 1102",q:"Fail the examination three times and you must:",a:"Take additional education before retaking it",w:["Wait twelve months before retaking it", "Reapply for an initial licence", "Retake it under TREC supervision"],y:"Three failures triggers an education requirement, not a waiting period."},
+{s:"Getting licensed",c:"Ch. 1102",q:"Since the March 2021 rule change, the national and state portions:",a:"May be taken separately, national before state",w:["Must be taken on the same day", "Must be taken state portion first", "May be taken in any order but within 30 days"],y:"They no longer have to be taken together. The national portion opens once Modules I and II, Business Operations and Analysis of Findings are complete; the state portion once Texas Law, Texas SOP and the Practicum are complete."},
+{s:"Insurance",c:"22 TAC 535",q:"The minimum professional liability coverage a Texas inspector must carry is:",a:"$100,000 per occurrence",w:["$50,000 per occurrence", "$250,000 per occurrence", "$100,000 in aggregate"],y:"$100,000 per occurrence. Note the wording — per occurrence, not aggregate."},
+{s:"Insurance",c:"22 TAC 535",q:"Proof of financial responsibility is required:",a:"Before the licence issues, and current proof at every active renewal",w:["Only at the first renewal", "Only if the inspector sponsors others", "Within 30 days of the first inspection"],y:"It is a condition of the licence issuing in the first place, and it must stay current at every active renewal."},
+{s:"Insurance",c:"22 TAC 535",q:"The required insurance must cover violations of:",a:"Occupations Code Chapter 1102, Subchapter G",w:["Occupations Code Chapter 535", "22 TAC 535.220 only", "The federal RESPA"],y:"Professional liability insurance, or other insurance covering violations of Occupations Code Chapter 1102, Subchapter G."},
+{s:"Insurance",c:"22 TAC 535",q:"Which insurance does Texas make a statutory condition of holding the licence?",a:"Professional liability, or equivalent coverage",w:["General liability", "Workers' compensation", "Commercial auto"],y:"On the national exam an inspector should carry BOTH general liability and errors and omissions — the options accumulate. Texas goes further and makes E&O, or equivalent, the one required by statute. General liability protects the business; E&O is what Texas actually requires."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"A Texas inspector licence term is:",a:"2 years",w:["1 year", "3 years", "4 years"],y:"Two years, and the CE requirement is measured per two-year cycle."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"Continuing education required per renewal cycle:",a:"32 hours",w:["16 hours", "24 hours", "8 hours"],y:"32 hours of inspector CE per two-year cycle, all completed during the current licence period."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"Which course is mandatory within the CE requirement?",a:"An 8-hour Inspector Legal & Ethics and Standards of Practice Review",w:["A 4-hour Texas Law update", "A 16-hour Standards of Practice review", "A 10-hour Business Operations refresher"],y:"Eight hours of Legal & Ethics and SOP Review, mandatory inside the 32."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"You take 20 hours of CE on structural systems in one cycle. How much counts?",a:"16 hours",w:["20 hours", "10 hours", "None, because it exceeds the cap"],y:"No single subject may contribute more than 16 of the 32 required hours. The excess is not lost as a penalty — it simply does not count toward the requirement."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"Your licence expired seven months ago. What must you do?",a:"Reapply for an initial licence",w:["Renew normally with a late fee", "Reapply and pass the examination again", "Nothing, the licence remains valid for a year"],y:"The ladder: up to 6 months you may still renew; beyond 6 months you reapply for an initial licence; beyond 2 years you reapply AND sit the examination again."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"Your licence expired more than two years ago. What must you do?",a:"Reapply for an initial licence and pass the examination again",w:["Reapply for an initial licence only", "Renew with additional CE", "Apply for reinstatement without an exam"],y:"Past two years the examination comes back. That is the third rung of the late-renewal ladder."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"An inactive licence holder:",a:"May not perform inspections, and renews with no CE and no insurance required",w:["May perform inspections under direct supervision", "Must still complete 32 hours of CE", "May perform inspections but not advertise"],y:"Inactive means genuinely out of practice. No CE, no insurance, and no inspections."},
+{s:"Renewal and CE",c:"22 TAC 535",q:"Active renewal for an Apprentice or Real Estate Inspector additionally requires:",a:"A sponsoring Professional Inspector",w:["Twice the CE hours", "A supervisor's written performance review", "An additional $100,000 of coverage"],y:"Sponsorship is not just for getting the licence — the sponsored levels need a sponsor in place at every active renewal."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"You inspected a house in March. In August the buyer asks you to replace the water heater you wrote up. May you take the work?",a:"No — the bar runs for 12 months after the inspection",w:["Yes, because the client requested it", "Yes, with written disclosure to all parties", "Yes, provided you did not recommend yourself in the report"],y:"An inspector may not accept employment to repair, replace, maintain or upgrade any system or component of a property they inspected, for 12 months following the inspection. If one number from this rule is on your exam, it is twelve months."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"A real estate agency offers to add you to their preferred-inspector list for a small annual fee. May you pay it?",a:"No — paying for inclusion on a list of inspectors or preferred providers is prohibited",w:["Yes, if the fee is disclosed to clients", "Yes, if it is a flat fee rather than per referral", "Yes, provided the agency lists more than one inspector"],y:"You may not pay or accept a fee for a referral, for inclusion on a list of inspectors, or for a preferred-provider list. It may also breach the federal RESPA."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"The buyer's agent phones and asks what you found. What may you say?",a:"Nothing, without the client's prior approval",w:["A summary of the major findings only", "Anything, since the agent represents the client", "Whatever is already in the written report"],y:"You may not disclose inspection results or client information without the client's prior approval. The agent is not the client."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"What is the one exception to the confidentiality rule?",a:"An immediate safety hazard, where disclosure is feasible",w:["A request from the listing agent", "A code violation of any kind", "A request from the lender"],y:"A narrow exception, and both halves matter: the hazard must be immediate, and disclosure must be feasible."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"May you accept an inspection where your fee depends on the transaction closing?",a:"No",w:["Yes, if the client agrees in writing", "Yes, if the fee does not vary with the findings", "Yes, for a seller's inspection only"],y:"You may not inspect where compensation or future referrals depend on the reported findings, or on the closing or settlement of the transaction. Independence is the whole point of the rule."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"You learn that another inspector has violated the rules. What must you do?",a:"Report the violation to the Commission",w:["Raise it privately with that inspector", "Nothing — reporting peers is not required", "Report it to the client's agent"],y:"Reporting known violations to the Commission is an affirmative duty, alongside cooperating professionally with other inspectors."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"Accepting a fee from a settlement service provider may also violate:",a:"The federal RESPA",w:["The Texas Deceptive Trade Practices Act", "The federal Fair Housing Act", "Occupations Code Chapter 535"],y:"RESPA — the federal Real Estate Settlement Procedures Act. The Texas rule and the federal statute overlap here."},
+{s:"Conduct and ethics",c:"22 TAC 535.220",q:"Receiving consideration for referring non-settlement services requires:",a:"The client's written consent",w:["Disclosure in the inspection report", "Nothing, if the service is unrelated to the sale", "Approval from the Commission"],y:"Written consent from the client. The rule does not ban the referral outright — it bans doing it behind the client's back."},
+{s:"Recovery Fund",c:"§1102.003",q:"The maximum the Real Estate Inspection Recovery Fund pays toward a loss claim is:",a:"$12,500",w:["$25,000", "$100,000", "$12,500 per year"],y:"$12,500 toward a loss claim. Keep it apart from the $100,000 insurance figure — two different numbers doing two different jobs."},
+{s:"Recovery Fund",c:"§1102.003",q:"A client wins a $40,000 judgment against an inspector who cannot pay. What can the Fund do?",a:"Pay up to $12,500, and the inspector remains liable for the rest",w:["Pay the full $40,000", "Pay nothing, since insurance covers it", "Pay $12,500 and discharge the inspector's remaining liability"],y:"It is a fund of last resort for a qualified claimant holding an unpaid civil judgment. It does not discharge the inspector's liability for the balance."},
+{s:"Recovery Fund",c:"§1102.003",q:"The Recovery Fund exists to protect:",a:"The consumer",w:["The inspector", "The sponsoring Professional Inspector", "The real estate brokerage"],y:"It protects the consumer, not the inspector. This is the sentence the exam tests."},
+{s:"Where the law lives",c:"Ch. 1102 / 22 TAC 535",q:"Which is the statute, and which is the rules?",a:"Occupations Code Chapter 1102 is the statute; 22 TAC Chapter 535 is TREC's rules",w:["22 TAC Chapter 535 is the statute; Chapter 1102 is the rules", "Both are statutes passed by the Legislature", "Both are rules written by TREC"],y:"The Legislature writes the Occupations Code; TREC writes the Administrative Code rules under the authority the Code gives it. If a question names a chapter number: 1102 is the statute, 535 is the rule."},
+{s:"Where the law lives",c:"22 TAC 535.220",q:"Professional Conduct and Ethics for inspectors is found at:",a:"22 TAC 535.220",w:["22 TAC 535.227", "Occupations Code §1102.003", "22 TAC 535.223"],y:"535.220 is conduct and ethics. 535.227 to 535.233 are the Standards of Practice, and §1102.003 is the Recovery Fund."},
+{s:"Where the law lives",c:"22 TAC 535",q:"The Consumer Protection Notice tells the consumer:",a:"How to file a complaint with the Commission",w:["What the inspection does not cover", "How to claim against the inspector's insurance", "The inspector's licence number and expiry"],y:"It is a complaint-route notice, and TREC requires it to be provided and displayed. Providing it is part of the conduct rule."}
+];
+
+const PASS = 0.75;
+let mode="exam", order=[], i=0, right=0, answered=[], shown=[];
+
+const $ = s => document.querySelector(s);
+const stage = $("#stage");
+
+function shuffle(a){for(let k=a.length-1;k>0;k--){const j=Math.floor(Math.random()*(k+1));[a[k],a[j]]=[a[j],a[k]];}return a;}
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function start(m){
+  mode=m; order=shuffle(BANK.map((_,k)=>k)); i=0; right=0; answered=[]; shown=[];
+  render();
+}
+
+function setRail(){
+  $("#pos").textContent = i<order.length ? (i+1)+"/"+order.length : order.length+"/"+order.length;
+  $("#right").textContent = right;
+  $("#fill").style.width = (i/order.length*100)+"%";
+}
+
+function home(){
+  const secs=[...new Set(BANK.map(q=>q.s))];
+  stage.innerHTML=`
+   <div class="hero">
+    <div class="eyebrow">TREC state portion &middot; 22 TAC 535 &amp; Occupations Code 1102</div>
+    <h1>Texas Law</h1>
+    <p>${BANK.length} questions on the Law half of the state exam — the licences, the money, the ethics rule and the Recovery Fund. Everything here comes from your four Texas Law files, checked against trec.texas.gov on 22 August 2026.</p>
+    <div class="secs">${secs.map(s=>`<span class="chip">${esc(s)} &middot; ${BANK.filter(q=>q.s===s).length}</span>`).join("")}</div>
+    <div class="modes">
+      <button class="mode" onclick="start('exam')"><i>A B C</i><span><b>Exam mode</b><span>Multiple choice, like the real thing. The state exam is entirely multiple choice — there is no writing on it.</span></span></button>
+      <button class="mode" onclick="start('recall')"><i>&#8212;</i><span><b>Recall mode</b><span>No options. Say the answer out loud, then reveal and mark yourself. Harder than the exam, and the practice your score actually needs.</span></span></button>
+    </div>
+    <div class="note"><b>Pass mark 75%.</b> You are sitting as a Professional Inspector, so you need ${Math.ceil(BANK.length*PASS)} of ${BANK.length} here. The Real Estate Inspector level passes at 70% — that is not your track.</div>
+   </div>`;
+  $("#pos").textContent="—"; $("#right").textContent="0"; $("#fill").style.width="0";
+}
+
+function render(){
+  if(i>=order.length) return results();
+  const q=BANK[order[i]];
+  setRail();
+  if(mode==="exam"){
+    const opts=shuffle([q.a,...q.w]);
+    shown=opts;
+    stage.innerHTML=`
+      <div class="qhead"><span class="ix">QUESTION ${i+1}</span><span class="cite mono">${esc(q.c)}</span></div>
+      <h2 class="qtext">${esc(q.q)}</h2>
+      <div class="opts" id="opts">
+        ${opts.map((o,k)=>`<button class="opt" data-k="${k}"><u>${"ABCD"[k]}</u><span>${esc(o)}</span></button>`).join("")}
+      </div>
+      <div id="after"></div>`;
+    document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(+b.dataset.k,q));
+  } else {
+    stage.innerHTML=`
+      <div class="qhead"><span class="ix">QUESTION ${i+1}</span><span class="cite mono">${esc(q.c)}</span></div>
+      <h2 class="qtext">${esc(q.q)}</h2>
+      <p style="color:var(--muted);font-size:14px;margin:0">Say your answer out loud before you reveal it.</p>
+      <div class="nav"><button class="btn" onclick="revealNow()">Reveal the answer</button></div>
+      <div id="after"></div>`;
+  }
+}
+
+function answer(k,q){
+  const ok = shown[k]===q.a;
+  if(ok) right++;
+  answered.push({q,ok});
+  // Standing rule: the wrong options come off the screen the moment the
+  // question is answered, so only the correct one is left to remember.
+  const box=$("#opts");
+  box.innerHTML=`<button class="opt right" disabled><u>&#10003;</u><span>${esc(q.a)}</span></button>`;
+  $("#after").innerHTML=`
+    <div class="verdict ${ok?"ok":"no"}">
+      <b>${ok?"Correct":"Not this time"}</b>
+      <p>${esc(q.y)}</p>
+    </div>
+    <div class="nav"><button class="btn" id="next">${i+1<order.length?"Next question":"See your score"}</button></div>`;
+  $("#next").onclick=()=>{i++;render();};
+  $("#next").focus();
+  setRail();
+}
+
+function revealNow(){
+  const q=BANK[order[i]];
+  $("#after").innerHTML=`
+    <div class="reveal"><b>${esc(q.a)}</b><p>${esc(q.y)}</p></div>
+    <div class="nav">
+      <button class="btn good" id="got">I had it</button>
+      <button class="btn flag" id="miss">I did not</button>
+    </div>`;
+  $("#got").onclick=()=>{right++;answered.push({q,ok:true});i++;render();};
+  $("#miss").onclick=()=>{answered.push({q,ok:false});i++;render();};
+  $("#got").focus();
+}
+
+function results(){
+  const pc=Math.round(right/order.length*100);
+  const passed=pc>=PASS*100;
+  const secs=[...new Set(BANK.map(q=>q.s))];
+  const rows=secs.map(s=>{
+    const inSec=answered.filter(a=>a.q.s===s);
+    const got=inSec.filter(a=>a.ok).length;
+    return `<tr><td>${esc(s)}</td><td class="n">${got}/${inSec.length}</td>
+            <td class="n" style="color:${got===inSec.length?"var(--good)":(got/inSec.length<PASS?"var(--flag)":"var(--ink)")}">${inSec.length?Math.round(got/inSec.length*100):0}%</td></tr>`;
+  }).join("");
+  const missed=answered.filter(a=>!a.ok);
+  $("#fill").style.width="100%";
+  $("#pos").textContent=order.length+"/"+order.length;
+  $("#right").textContent=right;
+  stage.innerHTML=`
+    <div class="score">
+      <div class="eyebrow">${mode==="exam"?"EXAM MODE":"RECALL MODE"}</div>
+      <div class="pc" style="color:${passed?"var(--good)":"var(--flag)"}">${pc}%</div>
+      <div class="of">${right} right out of ${order.length} &middot; pass mark 75%</div>
+      <div class="pass ${passed?"y":"n"}">${passed?"Above the line":"Below the line — "+(Math.ceil(order.length*PASS)-right)+" more needed"}</div>
+    </div>
+    <div class="tw"><table>
+      <tr><th>Section</th><th class="n">Right</th><th class="n">Score</th></tr>
+      ${rows}
+    </table></div>
+    ${missed.length?`<div class="rev"><h3>What to go back over</h3>
+      <p style="color:var(--muted);font-size:13.5px;margin:0 0 6px">Correct answers only — nothing here shows you what you picked.</p>
+      ${missed.map(a=>`<div class="item"><p>${esc(a.q.q)}</p><span>${esc(a.q.a)}</span><em>${esc(a.q.c)} &middot; ${esc(a.q.y)}</em></div>`).join("")}
+     </div>`:`<div class="note" style="margin-top:22px"><b>Nothing missed.</b> Run it again in recall mode — producing these cold is a different skill from recognising them.</div>`}
+    <div class="nav">
+      <button class="btn" onclick="start('${mode}')">Run it again</button>
+      <button class="btn ghost" onclick="start('${mode==="exam"?"recall":"exam"}')">Try ${mode==="exam"?"recall":"exam"} mode</button>
+      <button class="btn ghost" onclick="home()">Back to the start</button>
+    </div>`;
+}
+
+home();
+</script>

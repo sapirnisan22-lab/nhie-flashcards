@@ -1,0 +1,5 @@
+# PDFs are binary. Without this git applies CRLF conversion and corrupts them.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
