@@ -1,0 +1,289 @@
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Week One Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --paper:#F4F7FA; --card:#FFFFFF; --card-2:#FAFCFD; --sunk:#EFF4F8;
+  --ink:#16202E; --muted:#5B6B7C; --faint:#8A9AAB;
+  --line:#DBE3EB; --line-soft:#EAF0F5;
+  --navy:#1F4E79; --navy-soft:#E8F0F8; --navy-line:#B9D2E8;
+  --good:#1B7F46; --good-soft:#E6F4EC; --good-line:#A9D8BE;
+  --bad:#B23A2C;  --bad-soft:#FBEDEB;  --bad-line:#EEBDB6;
+  --amber:#B87A10; --amber-soft:#FCF3E2; --amber-line:#E7CF9A;
+  --on-accent:#FFFFFF;
+  --shadow:0 1px 2px rgba(22,32,46,.05),0 8px 24px -14px rgba(22,32,46,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D141D; --card:#161F2B; --card-2:#1B2635; --sunk:#111925;
+    --ink:#E3EAF2; --muted:#93A4B6; --faint:#6F8095;
+    --line:#28374A; --line-soft:#1F2C3C;
+    --navy:#6BA6DE; --navy-soft:#17293C; --navy-line:#2C4F71;
+    --good:#4CC280; --good-soft:#122C1F; --good-line:#245C3C;
+    --bad:#E8776A;  --bad-soft:#301A18;  --bad-line:#5E2E28;
+    --amber:#E0A63C; --amber-soft:#2C2313; --amber-line:#5A4620;
+    --on-accent:#0D141D;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -16px rgba(0,0,0,.75);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D141D; --card:#161F2B; --card-2:#1B2635; --sunk:#111925;
+  --ink:#E3EAF2; --muted:#93A4B6; --faint:#6F8095;
+  --line:#28374A; --line-soft:#1F2C3C;
+  --navy:#6BA6DE; --navy-soft:#17293C; --navy-line:#2C4F71;
+  --good:#4CC280; --good-soft:#122C1F; --good-line:#245C3C;
+  --bad:#E8776A;  --bad-soft:#301A18;  --bad-line:#5E2E28;
+  --amber:#E0A63C; --amber-soft:#2C2313; --amber-line:#5A4620;
+  --on-accent:#0D141D;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -16px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);direction:rtl;
+  font-family:"IBM Plex Sans Hebrew","IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--navy)}
+:focus-visible{outline:2px solid var(--navy);outline-offset:2px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px}
+
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);
+  border-bottom:1px solid var(--line)}
+.rail-in{max-width:760px;margin:0 auto;padding:9px 16px;display:flex;align-items:center;gap:12px}
+.rail b{font-size:14px;font-weight:600;margin-inline-end:auto}
+.prog{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+.icon-btn{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;
+  border:1px solid var(--line);color:var(--muted);flex:none}
+.icon-btn:hover{background:var(--sunk);color:var(--ink)}
+
+.hero{padding-block:28px 6px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint)}
+.hero h1{margin:6px 0 0;font-size:clamp(24px,5vw,31px);font-weight:600;letter-spacing:-.02em;text-wrap:balance}
+.hero p{margin:10px 0 0;color:var(--muted);font-size:15.5px;max-width:60ch}
+
+.why{margin:20px 0 0;padding:13px 15px;border-inline-start:3px solid var(--navy);
+  background:var(--navy-soft);border-radius:0 10px 10px 0;font-size:14.5px}
+.why b{font-weight:600}
+.why.warn{border-inline-start-color:var(--amber);background:var(--amber-soft)}
+
+.days{display:flex;flex-direction:column;gap:12px;margin:24px 0 0}
+.day{border:1px solid var(--line);border-radius:12px;background:var(--card);
+  box-shadow:var(--shadow);overflow:hidden}
+.day.done{opacity:.62}
+.day.key{border-color:var(--navy-line)}
+.day-h{display:flex;align-items:center;gap:11px;padding:13px 15px;border-bottom:1px solid var(--line-soft);
+  background:var(--card-2)}
+.tick{flex:none;width:26px;height:26px;border-radius:8px;border:1.5px solid var(--line);
+  background:var(--card);display:grid;place-items:center;font-size:14px;color:transparent}
+.day.done .tick{background:var(--good);border-color:var(--good);color:var(--on-accent)}
+.day-n{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--faint)}
+.day-t{font-size:16px;font-weight:600;line-height:1.3}
+.day-h .time{margin-inline-start:auto;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  color:var(--muted);background:var(--sunk);border:1px solid var(--line);
+  padding:2px 8px;border-radius:999px;white-space:nowrap}
+.day-b{padding:14px 15px;display:flex;flex-direction:column;gap:11px}
+.day-b p{margin:0;font-size:14.5px;line-height:1.6}
+.steps{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.steps li{padding-inline-start:16px;position:relative;font-size:14.5px;line-height:1.55}
+.steps li::before{content:"";position:absolute;inset-inline-start:0;top:9px;width:5px;height:5px;
+  border-radius:50%;background:var(--navy-line)}
+.where{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;
+  border:1px solid var(--line);background:var(--sunk);font-size:12px;white-space:nowrap}
+.chip.go{border-color:var(--navy-line);background:var(--navy-soft);color:var(--navy);font-weight:600}
+.ask{background:var(--amber-soft);border:1px solid var(--amber-line);border-radius:9px;
+  padding:10px 12px;font-size:14px}
+.ask b{color:var(--amber);font-weight:600}
+.day.key .day-h{background:var(--navy-soft)}
+
+.foot{padding:24px 0 44px;margin-top:26px;border-top:1px solid var(--line-soft);
+  color:var(--faint);font-size:12.5px;line-height:1.75}
+</style>
+
+<div class="rail"><div class="rail-in">
+  <b>שבוע 1</b>
+  <span class="prog mono" id="prog">0 / 7</span>
+  <button class="icon-btn" id="themeBtn" aria-label="מצב תצוגה">◐</button>
+</div></div>
+
+<main class="wrap">
+
+<section class="hero">
+  <span class="eyebrow">Week One · 8 hours total</span>
+  <h1>לסגור את מבחן המדינה, ולקחת מדידה אמיתית לארצי</h1>
+  <p>שבעה ימים, בערך שעה ליום. שני ימים מהם הם החלטות ולא לימוד — ואלה השניים שחשובים.</p>
+</section>
+
+<div class="why">
+  <b>הסדר כאן לא מקרי.</b> מבחן המדינה הוא הניצחון הקרוב — חסרות לך שתי שאלות, והוא תקף לשנה.
+  הארצי מקבל השבוע דבר אחד בלבד: <b>קו בסיס שנמדד על מבחן שלא אני כתבתי.</b>
+  כל מה שבנינו ניפח אותך ב-9 עד 22 נקודות, ואני לא בונה תוכנית של 13 שבועות על מספר שאני המצאתי.
+</div>
+
+<div class="days" id="days">
+
+  <article class="day key" data-d="1">
+    <div class="day-h"><button class="tick" data-t="1">✓</button>
+      <span><span class="day-n">יום 1 · החלטה</span><br><span class="day-t">קו הבסיס לארצי</span></span>
+      <span class="time">~2.5 שעות</span></div>
+    <div class="day-b">
+      <p>לפני הכול — אני צריך לדעת אם המכשיר הזה בכלל קיים.</p>
+      <ul class="steps">
+        <li>היכנסי ל-<span class="mono">ahit.leaponline.com</span> ← <b>Home Inspector Practice Exams</b></li>
+        <li><b>תספרי כמה מבחני תרגול יש שם, וכמה כבר ישבת.</b> תכתבי לי את שני המספרים.</li>
+        <li>אם יש מבחן שלא ישבת — <b>שבי אותו עכשיו, קר.</b> בלי לחזור על כלום לפני.</li>
+        <li>תרשמי את הציון ואת הפילוח לפי תחומים, ותשלחי לי.</li>
+      </ul>
+      <div class="ask"><b>אם אין שם מבחן חדש</b> — תגידי לי מיד ואל תתחילי שום דבר אחר לארצי.
+        נצטרך מכשיר מדידה אחר, וזה משנה את כל התוכנית.</div>
+    </div>
+  </article>
+
+  <article class="day" data-d="2">
+    <div class="day-h"><button class="tick" data-t="2">✓</button>
+      <span><span class="day-n">יום 2 · טקסס</span><br><span class="day-t">חוק הרישוי — מנה ראשונה</span></span>
+      <span class="time">~1 שעה</span></div>
+    <div class="day-b">
+      <p>החלק שבו נמדדת באמת: <b>7 מתוך 11</b>, והוא 9 שאלות מתוך 25 במבחן.</p>
+      <div class="where"><span>חדר התרגול ←</span><span class="chip">Texas</span><span>←</span>
+        <span class="chip go">IV · חוק 1102</span><span>←</span><span class="chip">💡 מצב לימוד</span></div>
+      <ul class="steps">
+        <li>שלוש מנות של 15 — <b>45 שאלות</b></li>
+        <li>מצב לימוד <b>דלוק</b>: קראי את הכלל, ואז עני</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day" data-d="3">
+    <div class="day-h"><button class="tick" data-t="3">✓</button>
+      <span><span class="day-n">יום 3 · טקסס</span><br><span class="day-t">חוק הרישוי — מנה שנייה</span></span>
+      <span class="time">~1 שעה</span></div>
+    <div class="day-b">
+      <div class="where"><span class="chip">Texas</span><span>←</span>
+        <span class="chip go">IV · חוק 1102</span><span>←</span><span class="chip">💡 מצב לימוד</span></div>
+      <ul class="steps">
+        <li>המנות הבאות — עוד <b>45 שאלות</b></li>
+        <li>אם משהו חוזר ולא נתפס, <b>סמני אותו ב-f</b> — נחזור אליו ביום 5</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day" data-d="4">
+    <div class="day-h"><button class="tick" data-t="4">✓</button>
+      <span><span class="day-n">יום 4 · טקסס</span><br><span class="day-t">חוק הרישוי — לסיים את הבלוק</span></span>
+      <span class="time">~1 שעה</span></div>
+    <div class="day-b">
+      <div class="where"><span class="chip">Texas</span><span>←</span>
+        <span class="chip go">IV · חוק 1102</span></div>
+      <ul class="steps">
+        <li>43 השאלות האחרונות — <b>הבלוק נסגר על 133</b></li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day" data-d="5">
+    <div class="day-h"><button class="tick" data-t="5">✓</button>
+      <span><span class="day-n">יום 5 · טקסס</span><br><span class="day-t">חשמל, והמסומנות</span></span>
+      <span class="time">~1 שעה</span></div>
+    <div class="day-b">
+      <p>החלק השני שצריך לזוז. <b>2 מתוך 4</b> — מדגם קטן, אבל 30 נקודות מתחת לממוצע הארצי.</p>
+      <div class="where"><span class="chip">Texas</span><span>←</span>
+        <span class="chip go">II · חשמל</span><span class="mono">35</span><span>ואז</span>
+        <span class="chip">⚑ מסומנות</span></div>
+      <ul class="steps">
+        <li>כל 35 שאלות החשמל, מצב לימוד דלוק</li>
+        <li>ואז כל מה שסימנת ב-f במהלך השבוע</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="day key" data-d="6">
+    <div class="day-h"><button class="tick" data-t="6">✓</button>
+      <span><span class="day-n">יום 6 · החלטה</span><br><span class="day-t">טופס B — קר, על השעון</span></span>
+      <span class="time">45 דקות</span></div>
+    <div class="day-b">
+      <p>זה היום שמחליט אם את קובעת את מבחן המדינה.</p>
+      <ul class="steps">
+        <li><b>מצב לימוד כבוי.</b> בלי לחזור על כלום לפני. 45 דקות על השעון, ברצף.</li>
+        <li><a href="https://claude.ai/artifact/VdAW72pUjHPukHDLttGbMg">מבחני דמה · טקסס</a> ← <b>טופס B</b></li>
+        <li>תשלחי לי את הציון <b>ואת טבלת חמשת החלקים</b></li>
+      </ul>
+      <div class="ask"><b>23 ומעלה</b> — קובעים את מבחן המדינה השבוע.
+        <b>מתחת ל-23</b> — נסתכל איפה בדיוק, ונחליט אם זה עוד שלושה ימים או משהו אחר.
+        טופס C נשאר סגור לפעם הבאה.</div>
+    </div>
+  </article>
+
+  <article class="day" data-d="7">
+    <div class="day-h"><button class="tick" data-t="7">✓</button>
+      <span><span class="day-n">יום 7 · ארצי</span><br><span class="day-t">זיהוי בשטח — ההתחלה</span></span>
+      <span class="time">~1 שעה</span></div>
+    <div class="day-b">
+      <p>הקטגוריה שבה את על <b>25%</b> — הכי חלשה שלך בפער גדול, ושלוש התמונות שתיארת מהמבחן האחרון
+         היו כולן «מה זה».</p>
+      <div class="where"><a href="https://claude.ai/artifact/GquJdRoKpBoHvEsrdH7FuZ">זיהוי בשטח</a>
+        <span>← 68 רכיבים, 42 שאלות</span></div>
+      <ul class="steps">
+        <li>שתי משפחות בלבד: <b>פליטה וארובות</b> ואז <b>כבלי חשמל</b></li>
+        <li>פליטה קודם — שם נמצא מרווח 6 האינץ' <b>שפספסת פעמיים</b></li>
+        <li>לא לרוץ על כל השבע. שתיים, לעומק.</li>
+      </ul>
+    </div>
+  </article>
+
+</div>
+
+<div class="why warn" style="margin-top:22px">
+  <b>מה שלא נמצא בשבוע הזה, בכוונה.</b> אין כאן NHIE מעבר לקו הבסיס ולשתי משפחות זיהוי.
+  13 השבועות של הארצי מתחילים רק אחרי שמבחן המדינה סגור — אחרת שני המבחנים נלחמים על אותן שעות
+  ואף אחד מהם לא נגמר.
+</div>
+
+<div class="foot">
+  הציון בטופס A היה 20/30. הפילוח: I 1/2 · II 2/4 · III 3/4 · IV 7/11 · V 7/9.
+  הממוצעים הארציים של TREC: I 87% · II 80% · III 86% · IV 74% · V 77%.
+  רף המעבר במדינה כ-Professional Inspector הוא 19 מתוך 25, ובטפסים של 30 — 23.
+</div>
+</main>
+
+<script>
+try{ var t = localStorage.getItem("wk1-theme"); if(t) document.documentElement.setAttribute("data-theme", t); }catch(e){}
+document.getElementById("themeBtn").onclick = function(){
+  var cur = document.documentElement.getAttribute("data-theme");
+  var dark = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  var next = cur ? (cur === "dark" ? "light" : "dark") : (dark ? "light" : "dark");
+  document.documentElement.setAttribute("data-theme", next);
+  try{ localStorage.setItem("wk1-theme", next); }catch(e){}
+};
+
+var done = {};
+try{ done = JSON.parse(localStorage.getItem("wk1-done") || "{}") || {}; }catch(e){ done = {}; }
+function paint(){
+  var n = 0;
+  [].forEach.call(document.querySelectorAll(".day"), function(d){
+    var on = !!done[d.dataset.d];
+    d.classList.toggle("done", on);
+    d.querySelector(".tick").setAttribute("aria-pressed", on);
+    if(on) n++;
+  });
+  document.getElementById("prog").textContent = n + " / 7";
+}
+document.getElementById("days").addEventListener("click", function(ev){
+  var b = ev.target.closest("[data-t]"); if(!b) return;
+  var k = b.dataset.t;
+  done[k] = !done[k];
+  try{ localStorage.setItem("wk1-done", JSON.stringify(done)); }catch(e){}
+  paint();
+});
+paint();
+</script>
